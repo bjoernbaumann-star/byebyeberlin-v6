@@ -1,24 +1,25 @@
+@import "tailwindcss";
+
 @font-face {
-  font-family: 'SangBleuSunrise';
-  src: url('/fonts/SangBleuSunrise-Light-WebS.woff2') format('woff2');
+  font-family: "SangBleuSunrise";
+  src: url("/fonts/SangBleuSunrise-Light-WebS.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-  font-family: 'SangBleuSunrise';
-  src: url('/fonts/SangBleuSunrise-Bold-WebXL.woff2') format('woff2');
+  font-family: "SangBleuSunrise";
+  src: url("/fonts/SangBleuSunrise-Bold-WebXL.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
-}
-body {
-  font-family: 'SangBleuSunrise', serif !important;
+  font-display: swap;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'SangBleuSunrise', serif !important;
+.font-sangbleu {
+  font-family: "SangBleuSunrise", ui-serif, Georgia, Cambria, "Times New Roman",
+    Times, serif;
 }
-@import "tailwindcss";
 
 :root {
   --background: #ffffff;
