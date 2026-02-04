@@ -408,10 +408,13 @@ export default function LandingPage() {
           headerTextColor,
         )}
       >
-        <div className="mx-auto flex h-[76px] max-w-6xl items-start justify-between px-5 pt-4">
+        <div className="relative mx-auto flex h-[76px] max-w-6xl items-center justify-end px-5">
           <motion.div
             style={{ opacity: headerLogoOpacity, y: headerLogoY }}
-            className="font-sangbleu text-[15px] font-bold tracking-tight"
+            className={cn(
+              "pointer-events-none absolute inset-x-0 flex justify-center",
+              "font-sangbleu text-[18px] font-bold tracking-tight",
+            )}
             aria-hidden={!isScrolled}
           >
             BYE BYE BERLIN
