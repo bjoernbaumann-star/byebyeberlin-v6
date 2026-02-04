@@ -129,6 +129,81 @@ function IconSparkle(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
+function IconUser(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M16.5 8.5a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M4.5 20.5a7.5 7.5 0 0 1 15 0"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function IconSearch(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M16.3 16.3 21 21"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function IconMenu(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M4 7h16M4 12h16M4 17h16"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function HeaderIconButton({
+  onClick,
+  label,
+  children,
+}: {
+  onClick?: () => void;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className={cn(
+        "grid place-items-center rounded-full p-2",
+        "text-white/90 hover:text-white",
+        "transition",
+        "focus:outline-none focus:ring-2 focus:ring-[rgba(212,175,55,.45)] focus:ring-offset-2 focus:ring-offset-black",
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
 function ProductVisual({ color, label }: { color: Product["color"]; label: string }) {
   const palette =
     color === "emerald"
@@ -467,6 +542,111 @@ function MiniCart({
   );
 }
 
+function MenuDrawer({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
+  return (
+    <div
+      className={cn(
+        "fixed inset-0 z-[60]",
+        open ? "pointer-events-auto" : "pointer-events-none",
+      )}
+      aria-hidden={!open}
+    >
+      <div
+        className={cn(
+          "absolute inset-0 bg-black/55 backdrop-blur-sm transition-opacity",
+          open ? "opacity-100" : "opacity-0",
+        )}
+        onClick={onClose}
+      />
+      <aside
+        className={cn(
+          "absolute right-0 top-0 h-full w-full max-w-md",
+          "border-l border-white/10 bg-neutral-950 text-white",
+          "shadow-[0_40px_120px_-70px_rgba(0,0,0,.95)]",
+          "transition-transform",
+          open ? "translate-x-0" : "translate-x-full",
+        )}
+        role="dialog"
+        aria-label="Menü"
+      >
+        <div className="flex items-center justify-between p-5">
+          <div>
+            <div className="text-xs uppercase tracking-[0.3em] text-white/60">
+              Bye Bye Berlin
+            </div>
+            <div className="mt-1 font-[var(--font-display)] text-xl">Menu</div>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className={cn(
+              "rounded-full border px-4 py-2 text-sm",
+              "border-white/10 bg-white/5 hover:bg-white/10",
+              "focus:outline-none focus:ring-2 focus:ring-[rgba(212,175,55,.45)]",
+            )}
+          >
+            Close
+          </button>
+        </div>
+
+        <div className="px-5 pb-6">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+            <div className="mb-3 text-[11px] uppercase tracking-[0.35em] text-white/60">
+              Navigation
+            </div>
+            <div className="grid gap-2">
+              {[
+                { href: "#kollektion", label: "Kollektion" },
+                { href: "#story", label: "Story" },
+                { href: "#service", label: "Service" },
+              ].map((x) => (
+                <a
+                  key={x.href}
+                  href={x.href}
+                  onClick={onClose}
+                  className={cn(
+                    "group flex items-center justify-between rounded-2xl px-4 py-3",
+                    "bg-white/5 hover:bg-white/10",
+                    "transition",
+                  )}
+                >
+                  <span className="font-[var(--font-display)] text-lg">
+                    {x.label}
+                  </span>
+                  <span className="text-white/40 group-hover:text-white/70">
+                    →
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-4 rounded-3xl border border-white/10 bg-white/5 p-5">
+            <div className="mb-3 text-[11px] uppercase tracking-[0.35em] text-white/60">
+              Capsule
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-36">
+                <HeritageStripe className="opacity-85" />
+              </div>
+              <div className="text-sm text-white/80">Heritage capsule 2026</div>
+            </div>
+            <p className="mt-3 text-sm text-white/70">
+              Clean luxury with a heritage twist — emerald, ivory, crimson.
+            </p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  );
+}
+
 export default function LandingPage() {
   const products = useMemo<Product[]>(
     () => [
@@ -523,6 +703,7 @@ export default function LandingPage() {
   );
 
   const [cartOpen, setCartOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [cart, setCart] = useState<Record<string, number>>({});
 
   const cartCount = Object.values(cart).reduce((a, b) => a + b, 0);
@@ -556,136 +737,112 @@ export default function LandingPage() {
         <div className="absolute inset-0 opacity-[0.10] dark:opacity-[0.12] bg-[radial-gradient(circle_at_0%_0%,rgba(255,255,255,.20),transparent_40%),radial-gradient(circle_at_100%_0%,rgba(255,255,255,.14),transparent_35%)]" />
       </div>
 
-      <header className="sticky top-0 z-40 border-b border-black/5 bg-white/70 backdrop-blur dark:border-white/10 dark:bg-neutral-950/60">
-        <div className="border-b border-black/5 bg-white/60 dark:border-white/10 dark:bg-neutral-950/40">
-          <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-2">
-            <div className="flex items-center gap-3">
-              <div className="w-28">
-                <HeritageStripe className="opacity-85" />
-              </div>
-              <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-700 dark:text-white/70">
-                Heritage capsule
-              </div>
-            </div>
-            <div className="hidden text-[11px] uppercase tracking-[0.35em] text-neutral-600 dark:text-white/60 sm:block">
-              Kostenloser Versand ab {formatEUR(250)}
-            </div>
-          </div>
-        </div>
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-2xl bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 grid place-items-center shadow-[0_20px_60px_-40px_rgba(0,0,0,.75)]">
-              <span className="font-[var(--font-display)] text-lg">B</span>
-            </div>
-            <div>
-              <div className="font-[var(--font-display)] text-lg leading-none">
-                Bye Bye Berlin
-              </div>
-              <div className="mt-1 text-[11px] uppercase tracking-[0.35em] text-neutral-600 dark:text-white/60">
-                Luxury essentials
-              </div>
-            </div>
-          </div>
-
-          <nav className="hidden items-center gap-7 text-sm text-neutral-700 dark:text-white/70 md:flex">
-            <a className="hover:text-neutral-950 dark:hover:text-white" href="#kollektion">
-              Kollektion
-            </a>
-            <a className="hover:text-neutral-950 dark:hover:text-white" href="#story">
-              Story
-            </a>
-            <a className="hover:text-neutral-950 dark:hover:text-white" href="#service">
-              Service
-            </a>
-          </nav>
-
-          <div className="flex items-center gap-2">
-            <CartButton count={cartCount} onOpen={() => setCartOpen(true)} />
+      <header className="fixed inset-x-0 top-0 z-50">
+        <div className="bg-gradient-to-b from-black/55 via-black/25 to-transparent">
+          <div className="mx-auto flex max-w-6xl items-center justify-end gap-1 px-5 py-5 sm:gap-2">
+            <HeaderIconButton
+              label="Warenkorb öffnen"
+              onClick={() => setCartOpen(true)}
+            >
+              <span className="relative">
+                <IconBag className="h-5 w-5" />
+                {cartCount > 0 && (
+                  <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-[rgba(212,175,55,1)] ring-2 ring-black" />
+                )}
+              </span>
+            </HeaderIconButton>
+            <HeaderIconButton label="Account">
+              <IconUser className="h-5 w-5" />
+            </HeaderIconButton>
+            <HeaderIconButton label="Suche">
+              <IconSearch className="h-5 w-5" />
+            </HeaderIconButton>
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              className={cn(
+                "ml-1 inline-flex items-center gap-2 rounded-full px-3 py-2",
+                "text-white/90 hover:text-white",
+                "transition",
+                "focus:outline-none focus:ring-2 focus:ring-[rgba(212,175,55,.45)] focus:ring-offset-2 focus:ring-offset-black",
+              )}
+              aria-label="Menü öffnen"
+            >
+              <IconMenu className="h-5 w-5" />
+              <span className="text-xs uppercase tracking-[0.35em]">Menu</span>
+            </button>
           </div>
         </div>
       </header>
 
       <main>
-        <section className="mx-auto max-w-6xl px-5 pt-14 sm:pt-20">
-          <div className="grid items-end gap-10 lg:grid-cols-2">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-2 text-xs tracking-wide text-neutral-700 backdrop-blur dark:border-white/10 dark:bg-neutral-950/40 dark:text-white/70">
-                <IconSparkle className="h-4 w-4 text-[rgba(212,175,55,1)]" />
-                Neue Capsule · präzise. leise. luxuriös.
-                <span className="hidden w-16 sm:block">
-                  <HeritageStripe className="opacity-80" />
-                </span>
-              </div>
-              <h1 className="mt-6 text-balance font-[var(--font-display)] text-4xl leading-[0.98] tracking-tight sm:text-5xl sm:leading-[0.96] lg:text-6xl">
-                Eleganz, die nicht laut sein muss.
-              </h1>
-              <p className="mt-5 max-w-xl text-base leading-relaxed text-neutral-700 dark:text-white/70">
-                Bye Bye Berlin kuratiert Essentials mit klarer Linie: schwere Materialien,
-                perfekte Kanten, goldene Akzente. Eine moderne Luxus-Ästhetik — ohne
-                Kompromisse.
-              </p>
+        <section className="relative min-h-dvh bg-black text-white">
+          <div
+            className={cn(
+              "absolute inset-0",
+              "bg-[radial-gradient(circle_at_30%_10%,rgba(255,255,255,.12),transparent_45%),radial-gradient(circle_at_80%_20%,rgba(212,175,55,.22),transparent_45%),radial-gradient(circle_at_20%_85%,rgba(16,185,129,.18),transparent_55%)]",
+            )}
+          />
+          <div
+            className={cn(
+              "absolute inset-0 opacity-[0.12]",
+              "bg-[repeating-linear-gradient(135deg,rgba(255,255,255,.18)_0,rgba(255,255,255,.18)_1px,transparent_1px,transparent_18px)]",
+            )}
+          />
+          <div
+            className={cn(
+              "absolute inset-0 bg-cover bg-center opacity-40",
+              "bg-[url('/hero.jpg')]",
+            )}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/80" />
 
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+          <div className="relative mx-auto flex min-h-dvh max-w-6xl flex-col items-center justify-center px-5 pt-24 pb-16">
+            <div className="mb-6 w-40 sm:w-56">
+              <HeritageStripe className="opacity-95" />
+            </div>
+
+            <h1 className="text-center font-[var(--font-display)] uppercase tracking-tight">
+              <span className="block text-[clamp(3.4rem,14vw,12rem)] leading-[0.82]">
+                Bye Bye
+              </span>
+              <span className="block text-[clamp(3.8rem,16vw,13rem)] leading-[0.82]">
+                Berlin
+              </span>
+            </h1>
+
+            <div className="mt-8 text-center">
+              <div className="text-sm tracking-[0.35em] uppercase text-white/70">
+                Luxury essentials
+              </div>
+              <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <a
                   href="#kollektion"
                   className={cn(
-                    "group relative isolate inline-flex items-center justify-center overflow-hidden rounded-2xl px-5 py-4 text-sm tracking-wide",
-                    "bg-neutral-950 text-white",
-                    "shadow-[0_24px_80px_-55px_rgba(0,0,0,.9)]",
-                    "ring-1 ring-[rgba(212,175,55,.22)]",
-                    "transition hover:translate-y-[-1px]",
+                    "inline-flex h-12 items-center justify-center rounded-md px-7 text-xs font-medium uppercase tracking-[0.25em]",
+                    "bg-white text-black hover:bg-white/90",
+                    "ring-1 ring-white/40",
                   )}
                 >
-                  <span className="pointer-events-none absolute inset-x-6 top-2 opacity-70">
-                    <HeritageStripe />
-                  </span>
-                  <span className="pointer-events-none absolute -left-24 top-0 h-full w-24 rotate-12 bg-white/10 blur-sm transition-transform duration-700 group-hover:translate-x-[38rem]" />
-                  Kollektion entdecken
+                  For her
                 </a>
                 <a
-                  href="#story"
+                  href="#kollektion"
                   className={cn(
-                    "inline-flex items-center justify-center rounded-2xl border px-5 py-4 text-sm",
-                    "border-black/10 bg-white/70 text-neutral-950 backdrop-blur",
-                    "transition hover:bg-white",
-                    "dark:border-white/10 dark:bg-neutral-950/40 dark:text-white dark:hover:bg-neutral-950/60",
+                    "inline-flex h-12 items-center justify-center rounded-md px-7 text-xs font-medium uppercase tracking-[0.25em]",
+                    "bg-white text-black hover:bg-white/90",
+                    "ring-1 ring-white/40",
                   )}
                 >
-                  Unsere Story
+                  For him
                 </a>
               </div>
-
-              <dl className="mt-10 grid grid-cols-3 gap-4">
-                <div className="rounded-2xl border border-black/10 bg-white/70 p-4 dark:border-white/10 dark:bg-neutral-950/40">
-                  <dt className="text-[11px] uppercase tracking-[0.3em] text-neutral-600 dark:text-white/60">
-                    Versand
-                  </dt>
-                  <dd className="mt-2 text-sm">24–48h DE</dd>
-                </div>
-                <div className="rounded-2xl border border-black/10 bg-white/70 p-4 dark:border-white/10 dark:bg-neutral-950/40">
-                  <dt className="text-[11px] uppercase tracking-[0.3em] text-neutral-600 dark:text-white/60">
-                    Verpackung
-                  </dt>
-                  <dd className="mt-2 text-sm">Gift-ready</dd>
-                </div>
-                <div className="rounded-2xl border border-black/10 bg-white/70 p-4 dark:border-white/10 dark:bg-neutral-950/40">
-                  <dt className="text-[11px] uppercase tracking-[0.3em] text-neutral-600 dark:text-white/60">
-                    Retouren
-                  </dt>
-                  <dd className="mt-2 text-sm">30 Tage</dd>
-                </div>
-              </dl>
             </div>
 
-            <div className="relative">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <ProductVisual color="emerald" label="Runway" />
-                <div className="hidden sm:block">
-                  <ProductVisual color="noir" label="Noir" />
-                </div>
-              </div>
-              <div className="pointer-events-none absolute -bottom-6 -left-6 h-28 w-28 rounded-full bg-[rgba(212,175,55,.18)] blur-2xl" />
-              <div className="pointer-events-none absolute -top-8 -right-8 h-32 w-32 rounded-full bg-[rgba(16,185,129,.18)] blur-2xl" />
+            <div className="mt-10 flex items-center gap-3 text-xs uppercase tracking-[0.35em] text-white/60">
+              <span className="h-px w-10 bg-white/20" />
+              <span>Scroll</span>
+              <span className="h-px w-10 bg-white/20" />
             </div>
           </div>
         </section>
@@ -860,6 +1017,7 @@ export default function LandingPage() {
         onRemoveOne={removeOne}
         onClear={clear}
       />
+      <MenuDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
     </div>
   );
 }
