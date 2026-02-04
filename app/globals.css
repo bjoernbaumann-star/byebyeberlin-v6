@@ -1,3 +1,23 @@
+@font-face {
+  font-family: 'SangBleuSunrise';
+  src: url('/fonts/SangBleuSunrise-Light-WebS.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SangBleuSunrise';
+  src: url('/fonts/SangBleuSunrise-Bold-WebXL.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+body {
+  font-family: 'SangBleuSunrise', serif !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'SangBleuSunrise', serif !important;
+}
 @import "tailwindcss";
 
 :root {
