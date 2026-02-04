@@ -832,7 +832,7 @@ export default function LandingPage() {
             <div
               ref={headerWordmarkTargetRef}
               className={cn(
-                "select-none font-[var(--font-display)] uppercase tracking-tight text-white",
+                "select-none font-[var(--font-display)] font-bold uppercase tracking-tight text-white",
                 "text-[clamp(1.0rem,2.2vw,1.35rem)]",
                 reducedMotion ? (isDocked ? "opacity-100" : "opacity-0") : "opacity-100",
               )}
