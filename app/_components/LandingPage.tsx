@@ -23,6 +23,69 @@ function cn(...parts: Array<string | false | undefined | null>) {
   return parts.filter(Boolean).join(" ");
 }
 
+const HERITAGE_STRIPE_BG =
+  "bg-[linear-gradient(90deg,rgba(16,185,129,1)_0%,rgba(16,185,129,1)_42%,rgba(245,245,245,1)_42%,rgba(245,245,245,1)_46%,rgba(138,28,36,1)_46%,rgba(138,28,36,1)_54%,rgba(245,245,245,1)_54%,rgba(245,245,245,1)_58%,rgba(16,185,129,1)_58%,rgba(16,185,129,1)_100%)]";
+
+function HeritageStripe({ className }: { className?: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn("block h-1.5 w-full rounded-full", HERITAGE_STRIPE_BG, className)}
+    />
+  );
+}
+
+function BBBMonogram({
+  className,
+  tone,
+}: {
+  className?: string;
+  tone: "light" | "dark";
+}) {
+  const patternId = React.useId();
+  return (
+    <svg
+      aria-hidden="true"
+      className={cn(
+        "absolute inset-0 h-full w-full",
+        tone === "dark" ? "text-neutral-900/15" : "text-white/10",
+        className,
+      )}
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+    >
+      <defs>
+        <pattern id={patternId} width="18" height="14" patternUnits="userSpaceOnUse">
+          <text
+            x="0"
+            y="10.5"
+            fontSize="8"
+            fontWeight="700"
+            letterSpacing="1.5"
+            style={{ fontFamily: "var(--font-playfair)" }}
+            fill="currentColor"
+          >
+            BBB
+          </text>
+          <text
+            x="9"
+            y="14"
+            fontSize="8"
+            fontWeight="700"
+            letterSpacing="1.5"
+            style={{ fontFamily: "var(--font-playfair)" }}
+            fill="currentColor"
+            opacity="0.9"
+          >
+            BBB
+          </text>
+        </pattern>
+      </defs>
+      <rect x="0" y="0" width="100%" height="100%" fill={`url(#${patternId})`} />
+    </svg>
+  );
+}
+
 function IconBag(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -89,6 +152,9 @@ function ProductVisual({ color, label }: { color: Product["color"]; label: strin
         palette,
       )}
     >
+      <div className="absolute inset-x-5 top-5">
+        <HeritageStripe className={cn("opacity-85", color === "ivory" && "opacity-70")} />
+      </div>
       <div
         className={cn(
           "absolute inset-0 opacity-[0.16] mix-blend-overlay",
@@ -99,6 +165,13 @@ function ProductVisual({ color, label }: { color: Product["color"]; label: strin
         className={cn(
           "absolute inset-0 opacity-[0.18]",
           "bg-[repeating-linear-gradient(135deg,rgba(212,175,55,.22)_0,rgba(212,175,55,.22)_1px,transparent_1px,transparent_12px)]",
+        )}
+      />
+      <BBBMonogram
+        tone={color === "ivory" ? "dark" : "light"}
+        className={cn(
+          "opacity-[0.55]",
+          color !== "ivory" && "mix-blend-overlay",
         )}
       />
       <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-4">
@@ -225,6 +298,9 @@ function CartButton({
       )}
       aria-label="Warenkorb öffnen"
     >
+      <span className="pointer-events-none absolute inset-x-4 -top-1">
+        <HeritageStripe className="opacity-80" />
+      </span>
       <IconBag className="h-4 w-4 text-[rgba(212,175,55,1)]" />
       <span className="text-sm tracking-wide">Warenkorb</span>
       <span
@@ -471,11 +547,27 @@ export default function LandingPage() {
   return (
     <div className="min-h-dvh bg-white text-neutral-950 dark:bg-neutral-950 dark:text-white">
       <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(212,175,55,.20),transparent_35%),radial-gradient(circle_at_90%_15%,rgba(16,185,129,.22),transparent_40%),radial-gradient(circle_at_50%_90%,rgba(0,0,0,.55),transparent_55%)] dark:opacity-100" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(212,175,55,.20),transparent_35%),radial-gradient(circle_at_90%_15%,rgba(16,185,129,.22),transparent_40%),radial-gradient(circle_at_70%_55%,rgba(138,28,36,.10),transparent_45%),radial-gradient(circle_at_50%_90%,rgba(0,0,0,.55),transparent_55%)] dark:opacity-100" />
         <div className="absolute inset-0 opacity-[0.06] dark:opacity-[0.08] bg-[repeating-linear-gradient(135deg,#000_0,#000_1px,transparent_1px,transparent_14px)]" />
+        <div className="absolute inset-0 opacity-[0.10] dark:opacity-[0.12] bg-[radial-gradient(circle_at_0%_0%,rgba(255,255,255,.20),transparent_40%),radial-gradient(circle_at_100%_0%,rgba(255,255,255,.14),transparent_35%)]" />
       </div>
 
       <header className="sticky top-0 z-40 border-b border-black/5 bg-white/70 backdrop-blur dark:border-white/10 dark:bg-neutral-950/60">
+        <div className="border-b border-black/5 bg-white/60 dark:border-white/10 dark:bg-neutral-950/40">
+          <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-2">
+            <div className="flex items-center gap-3">
+              <div className="w-28">
+                <HeritageStripe className="opacity-85" />
+              </div>
+              <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-700 dark:text-white/70">
+                Heritage capsule
+              </div>
+            </div>
+            <div className="hidden text-[11px] uppercase tracking-[0.35em] text-neutral-600 dark:text-white/60 sm:block">
+              Kostenloser Versand ab {formatEUR(250)}
+            </div>
+          </div>
+        </div>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-2xl bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 grid place-items-center shadow-[0_20px_60px_-40px_rgba(0,0,0,.75)]">
@@ -516,6 +608,9 @@ export default function LandingPage() {
               <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-2 text-xs tracking-wide text-neutral-700 backdrop-blur dark:border-white/10 dark:bg-neutral-950/40 dark:text-white/70">
                 <IconSparkle className="h-4 w-4 text-[rgba(212,175,55,1)]" />
                 Neue Capsule · präzise. leise. luxuriös.
+                  <span className="hidden w-16 sm:block">
+                    <HeritageStripe className="opacity-80" />
+                  </span>
               </div>
               <h1 className="mt-6 font-[var(--font-display)] text-4xl tracking-tight sm:text-5xl lg:text-6xl">
                 Eleganz, die nicht laut sein muss.
