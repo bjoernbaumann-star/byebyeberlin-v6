@@ -738,8 +738,8 @@ export default function LandingPage() {
       </div>
 
       <header className="fixed inset-x-0 top-0 z-50">
-        <div className="bg-gradient-to-b from-black/55 via-black/25 to-transparent">
-          <div className="mx-auto flex max-w-6xl items-center justify-end gap-1 px-5 py-5 sm:gap-2">
+        <div className="bg-gradient-to-b from-black/60 via-black/25 to-transparent">
+          <div className="mx-auto flex max-w-6xl items-center justify-end gap-2 px-5 py-6 sm:gap-3">
             <HeaderIconButton
               label="Warenkorb öffnen"
               onClick={() => setCartOpen(true)}
@@ -761,15 +761,16 @@ export default function LandingPage() {
               type="button"
               onClick={() => setMenuOpen(true)}
               className={cn(
-                "ml-1 inline-flex items-center gap-2 rounded-full px-3 py-2",
-                "text-white/90 hover:text-white",
-                "transition",
+                "ml-1 inline-flex items-center gap-2",
+                "text-white/90 hover:text-white transition",
                 "focus:outline-none focus:ring-2 focus:ring-[rgba(212,175,55,.45)] focus:ring-offset-2 focus:ring-offset-black",
               )}
               aria-label="Menü öffnen"
             >
               <IconMenu className="h-5 w-5" />
-              <span className="text-xs uppercase tracking-[0.35em]">Menu</span>
+              <span className="text-xs font-medium uppercase tracking-[0.35em]">
+                Menu
+              </span>
             </button>
           </div>
         </div>
@@ -779,48 +780,37 @@ export default function LandingPage() {
         <section className="relative min-h-dvh bg-black text-white">
           <div
             className={cn(
-              "absolute inset-0",
-              "bg-[radial-gradient(circle_at_30%_10%,rgba(255,255,255,.12),transparent_45%),radial-gradient(circle_at_80%_20%,rgba(212,175,55,.22),transparent_45%),radial-gradient(circle_at_20%_85%,rgba(16,185,129,.18),transparent_55%)]",
-            )}
-          />
-          <div
-            className={cn(
-              "absolute inset-0 opacity-[0.12]",
-              "bg-[repeating-linear-gradient(135deg,rgba(255,255,255,.18)_0,rgba(255,255,255,.18)_1px,transparent_1px,transparent_18px)]",
-            )}
-          />
-          <div
-            className={cn(
-              "absolute inset-0 bg-cover bg-center opacity-40",
+              "absolute inset-0 bg-cover bg-center opacity-60",
               "bg-[url('/hero.jpg')]",
             )}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/80" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/25 to-black/75" />
+          <div className="absolute inset-0 opacity-[0.08] bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,.18),transparent_45%),radial-gradient(circle_at_80%_20%,rgba(212,175,55,.20),transparent_45%)]" />
 
-          <div className="relative mx-auto flex min-h-dvh max-w-6xl flex-col items-center justify-center px-5 pt-24 pb-16">
-            <div className="mb-6 w-40 sm:w-56">
-              <HeritageStripe className="opacity-95" />
+          <div className="relative mx-auto min-h-dvh max-w-6xl px-5 pt-28">
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+              <h1
+                className={cn(
+                  "whitespace-nowrap text-center font-[var(--font-display)] uppercase text-white",
+                  "tracking-[-0.02em]",
+                  "text-[clamp(2.9rem,10.5vw,10.5rem)] leading-[0.78]",
+                )}
+              >
+                BYE BYE BERLIN
+              </h1>
             </div>
 
-            <h1 className="text-center font-[var(--font-display)] uppercase tracking-tight">
-              <span className="block text-[clamp(3.4rem,14vw,12rem)] leading-[0.82]">
-                Bye Bye
-              </span>
-              <span className="block text-[clamp(3.8rem,16vw,13rem)] leading-[0.82]">
-                Berlin
-              </span>
-            </h1>
-
-            <div className="mt-8 text-center">
-              <div className="text-sm tracking-[0.35em] uppercase text-white/70">
-                Luxury essentials
+            <div className="absolute inset-x-0 bottom-18 flex flex-col items-center px-5 pb-10 text-center sm:bottom-20">
+              <div className="text-[clamp(1.05rem,2.5vw,1.6rem)] text-white/90">
+                Capsule Gifts
               </div>
-              <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <div className="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
                 <a
                   href="#kollektion"
                   className={cn(
-                    "inline-flex h-12 items-center justify-center rounded-md px-7 text-xs font-medium uppercase tracking-[0.25em]",
+                    "inline-flex h-12 min-w-40 items-center justify-center px-10",
                     "bg-white text-black hover:bg-white/90",
+                    "text-xs font-semibold uppercase tracking-[0.28em]",
                     "ring-1 ring-white/40",
                   )}
                 >
@@ -829,20 +819,15 @@ export default function LandingPage() {
                 <a
                   href="#kollektion"
                   className={cn(
-                    "inline-flex h-12 items-center justify-center rounded-md px-7 text-xs font-medium uppercase tracking-[0.25em]",
+                    "inline-flex h-12 min-w-40 items-center justify-center px-10",
                     "bg-white text-black hover:bg-white/90",
+                    "text-xs font-semibold uppercase tracking-[0.28em]",
                     "ring-1 ring-white/40",
                   )}
                 >
                   For him
                 </a>
               </div>
-            </div>
-
-            <div className="mt-10 flex items-center gap-3 text-xs uppercase tracking-[0.35em] text-white/60">
-              <span className="h-px w-10 bg-white/20" />
-              <span>Scroll</span>
-              <span className="h-px w-10 bg-white/20" />
             </div>
           </div>
         </section>
