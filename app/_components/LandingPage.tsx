@@ -133,14 +133,13 @@ function HeroMarquee({
   const progress = useTransform(scrollY, [0, 320], [0, 1]);
   const y = useTransform(progress, [0, 1], [0, -120]);
   const scale = useTransform(progress, [0, 1], [1, 0.16]);
-  const opacity = useTransform(progress, [0, 0.85, 1], [0.9, 0.25, 0]);
+  const opacity = useTransform(progress, [0, 0.85, 1], [1, 0.25, 0]);
 
   return (
     <motion.div
       aria-hidden="true"
       className={cn(
         "pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2",
-        "mix-blend-overlay",
       )}
       style={{ y, scale, opacity, transformOrigin: "center" }}
     >
@@ -475,9 +474,6 @@ export default function LandingPage() {
 
           {/* Bottom CTAs */}
           <div className="absolute inset-x-0 bottom-10 flex flex-col items-center px-5">
-            <div className="mb-5 font-sangbleu text-[clamp(1.05rem,2.5vw,1.6rem)] font-bold text-white/95">
-              Capsule Gifts
-            </div>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
               <a
                 href="#kollektion"
@@ -488,7 +484,7 @@ export default function LandingPage() {
                   "ring-1 ring-white/40",
                 )}
               >
-                For her
+                Clothes
               </a>
               <a
                 href="#kollektion"
@@ -499,7 +495,7 @@ export default function LandingPage() {
                   "ring-1 ring-white/40",
                 )}
               >
-                For him
+                Bags
               </a>
             </div>
           </div>
