@@ -705,6 +705,15 @@ export default function LandingPage() {
   const [cartOpen, setCartOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [cart, setCart] = useState<Record<string, number>>({});
+  const [dockProgress, setDockProgress] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  const dockWordmarkRef = React.useRef<HTMLHeadingElement | null>(null);
+  const headerWordmarkTargetRef = React.useRef<HTMLDivElement | null>(null);
+  const dockMetricsRef = React.useRef<{
+    start: { x: number; y: number; w: number; h: number } | null;
+    target: { x: number; y: number; w: number; h: number } | null;
+  }>({ start: null, target: null });
 
   const cartCount = Object.values(cart).reduce((a, b) => a + b, 0);
   const cartItems = products
@@ -729,6 +738,86 @@ export default function LandingPage() {
     setCart({});
   }
 
+  React.useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReducedMotion(Boolean(media.matches));
+    update();
+    media.addEventListener?.("change", update);
+    return () => media.removeEventListener?.("change", update);
+  }, []);
+
+  React.useEffect(() => {
+    let raf = 0;
+
+    const measure = () => {
+      const startEl = dockWordmarkRef.current;
+      const targetEl = headerWordmarkTargetRef.current;
+      if (!startEl || !targetEl) return;
+
+      const startRect = startEl.getBoundingClientRect();
+      const targetRect = targetEl.getBoundingClientRect();
+
+      dockMetricsRef.current = {
+        start: {
+          x: startRect.left + startRect.width / 2,
+          y: startRect.top + startRect.height / 2,
+          w: startRect.width,
+          h: startRect.height,
+        },
+        target: {
+          x: targetRect.left + targetRect.width / 2,
+          y: targetRect.top + targetRect.height / 2,
+          w: targetRect.width,
+          h: targetRect.height,
+        },
+      };
+    };
+
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const threshold = 260; // px until fully docked
+        const p = Math.max(0, Math.min(1, window.scrollY / threshold));
+        setDockProgress(p);
+      });
+    };
+
+    const onResize = () => {
+      measure();
+      onScroll();
+    };
+
+    // initial
+    measure();
+    onScroll();
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+    };
+  }, []);
+
+  const isDocked = dockProgress >= 0.999;
+  const dockTransform = (() => {
+    const m = dockMetricsRef.current;
+    if (!m.start || !m.target) return "translate3d(0,0,0) scale(1)";
+
+    // Move from centered (start) to header wordmark slot (target)
+    const dx = m.target.x - m.start.x;
+    const dy = m.target.y - m.start.y;
+
+    // Scale down toward the header slot; clamp so it doesn't get too tiny
+    const scaleToFit = Math.min(0.28, Math.max(0.18, m.target.w / m.start.w));
+    const s = 1 + (scaleToFit - 1) * dockProgress;
+    const tx = dx * dockProgress;
+    const ty = dy * dockProgress;
+
+    return `translate3d(${tx}px, ${ty}px, 0) scale(${s})`;
+  })();
+
   return (
     <div className="min-h-dvh bg-white text-neutral-950 dark:bg-neutral-950 dark:text-white">
       <div className="pointer-events-none fixed inset-0 -z-10">
@@ -739,7 +828,19 @@ export default function LandingPage() {
 
       <header className="fixed inset-x-0 top-0 z-50">
         <div className="bg-gradient-to-b from-black/60 via-black/25 to-transparent">
-          <div className="mx-auto flex max-w-6xl items-center justify-end gap-2 px-5 py-6 sm:gap-3">
+          <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-5 py-6 sm:gap-3">
+            <div
+              ref={headerWordmarkTargetRef}
+              className={cn(
+                "select-none font-[var(--font-display)] uppercase tracking-tight text-white",
+                "text-[clamp(1.0rem,2.2vw,1.35rem)]",
+                reducedMotion ? (isDocked ? "opacity-100" : "opacity-0") : "opacity-100",
+              )}
+              aria-hidden={!reducedMotion ? true : !isDocked}
+            >
+              BYE BYE BERLIN
+            </div>
+            <div className="flex items-center gap-2 sm:gap-3">
             <HeaderIconButton
               label="Warenkorb öffnen"
               onClick={() => setCartOpen(true)}
@@ -772,6 +873,7 @@ export default function LandingPage() {
                 Menu
               </span>
             </button>
+            </div>
           </div>
         </div>
       </header>
@@ -788,17 +890,44 @@ export default function LandingPage() {
           <div className="absolute inset-0 opacity-[0.08] bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,.18),transparent_45%),radial-gradient(circle_at_80%_20%,rgba(212,175,55,.20),transparent_45%)]" />
 
           <div className="relative mx-auto min-h-dvh max-w-6xl px-5 pt-28">
-            <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-              <h1
-                className={cn(
-                  "whitespace-nowrap text-center font-[var(--font-display)] uppercase text-white",
-                  "tracking-[-0.02em]",
-                  "text-[clamp(2.9rem,10.5vw,10.5rem)] leading-[0.78]",
-                )}
-              >
-                BYE BYE BERLIN
-              </h1>
-            </div>
+            {/* Docking wordmark (Gucci-like behavior): fixed overlay that shrinks and docks into header on scroll */}
+            {!reducedMotion && (
+              <div className="pointer-events-none fixed inset-0 z-[55]">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <h1
+                    ref={dockWordmarkRef}
+                    className={cn(
+                      "whitespace-nowrap text-center font-[var(--font-display)] uppercase text-white",
+                      "tracking-[-0.02em]",
+                      "text-[clamp(2.9rem,10.5vw,10.5rem)] leading-[0.78]",
+                    )}
+                    style={{
+                      transformOrigin: "center",
+                      transform: dockTransform,
+                      willChange: "transform",
+                      opacity: 1 - dockProgress * 0.02,
+                    }}
+                  >
+                    BYE BYE BERLIN
+                  </h1>
+                </div>
+              </div>
+            )}
+
+            {/* Reduced motion: static hero wordmark */}
+            {reducedMotion && (
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                <h1
+                  className={cn(
+                    "whitespace-nowrap text-center font-[var(--font-display)] uppercase text-white",
+                    "tracking-[-0.02em]",
+                    "text-[clamp(2.9rem,10.5vw,10.5rem)] leading-[0.78]",
+                  )}
+                >
+                  BYE BYE BERLIN
+                </h1>
+              </div>
+            )}
 
             <div className="absolute inset-x-0 bottom-18 flex flex-col items-center px-5 pb-10 text-center sm:bottom-20">
               <div className="text-[clamp(1.05rem,2.5vw,1.6rem)] text-white/90">
