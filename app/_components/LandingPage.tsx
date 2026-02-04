@@ -288,7 +288,7 @@ function CartButton({
       type="button"
       onClick={onOpen}
       className={cn(
-        "relative inline-flex items-center gap-2 rounded-full px-4 py-2",
+        "relative inline-flex items-center gap-2 overflow-hidden rounded-full px-4 py-2",
         "bg-neutral-950 text-white",
         "shadow-[0_20px_60px_-35px_rgba(0,0,0,.85)]",
         "ring-1 ring-[rgba(212,175,55,.22)]",
@@ -298,6 +298,10 @@ function CartButton({
       )}
       aria-label="Warenkorb öffnen"
     >
+      <span className="pointer-events-none absolute inset-0 opacity-70">
+        <span className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,.20),transparent_48%)]" />
+        <span className="absolute inset-0 bg-[radial-gradient(circle_at_85%_20%,rgba(212,175,55,.22),transparent_45%)]" />
+      </span>
       <span className="pointer-events-none absolute inset-x-4 -top-1">
         <HeritageStripe className="opacity-80" />
       </span>
@@ -306,8 +310,8 @@ function CartButton({
       <span
         className={cn(
           "ml-1 inline-flex h-6 min-w-6 items-center justify-center rounded-full px-2 text-xs",
-          "bg-white/10 text-white",
-          "ring-1 ring-white/10",
+          "bg-[rgba(212,175,55,.14)] text-white",
+          "ring-1 ring-[rgba(212,175,55,.25)]",
         )}
         aria-label={`${count} Artikel`}
       >
@@ -608,11 +612,11 @@ export default function LandingPage() {
               <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-2 text-xs tracking-wide text-neutral-700 backdrop-blur dark:border-white/10 dark:bg-neutral-950/40 dark:text-white/70">
                 <IconSparkle className="h-4 w-4 text-[rgba(212,175,55,1)]" />
                 Neue Capsule · präzise. leise. luxuriös.
-                  <span className="hidden w-16 sm:block">
-                    <HeritageStripe className="opacity-80" />
-                  </span>
+                <span className="hidden w-16 sm:block">
+                  <HeritageStripe className="opacity-80" />
+                </span>
               </div>
-              <h1 className="mt-6 font-[var(--font-display)] text-4xl tracking-tight sm:text-5xl lg:text-6xl">
+              <h1 className="mt-6 text-balance font-[var(--font-display)] text-4xl leading-[0.98] tracking-tight sm:text-5xl sm:leading-[0.96] lg:text-6xl">
                 Eleganz, die nicht laut sein muss.
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-neutral-700 dark:text-white/70">
@@ -625,13 +629,17 @@ export default function LandingPage() {
                 <a
                   href="#kollektion"
                   className={cn(
-                    "inline-flex items-center justify-center rounded-2xl px-5 py-4 text-sm tracking-wide",
+                    "group relative isolate inline-flex items-center justify-center overflow-hidden rounded-2xl px-5 py-4 text-sm tracking-wide",
                     "bg-neutral-950 text-white",
                     "shadow-[0_24px_80px_-55px_rgba(0,0,0,.9)]",
                     "ring-1 ring-[rgba(212,175,55,.22)]",
                     "transition hover:translate-y-[-1px]",
                   )}
                 >
+                  <span className="pointer-events-none absolute inset-x-6 top-2 opacity-70">
+                    <HeritageStripe />
+                  </span>
+                  <span className="pointer-events-none absolute -left-24 top-0 h-full w-24 rotate-12 bg-white/10 blur-sm transition-transform duration-700 group-hover:translate-x-[38rem]" />
                   Kollektion entdecken
                 </a>
                 <a
