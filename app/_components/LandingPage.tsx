@@ -390,7 +390,7 @@ export default function LandingPage() {
     setCart({});
   }
 
-  const marqueeText = "BYE BYE BERLIN —";
+  const marqueeText = "BYE BYE BERLIN";
 
   const headerTextColor = isScrolled ? "text-neutral-950" : "text-white";
   const headerBg = isScrolled
