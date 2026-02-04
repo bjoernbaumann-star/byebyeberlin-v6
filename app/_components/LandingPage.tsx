@@ -897,7 +897,7 @@ export default function LandingPage() {
                   <h1
                     ref={dockWordmarkRef}
                     className={cn(
-                      "whitespace-nowrap text-center font-[var(--font-display)] uppercase text-white",
+                      "whitespace-nowrap text-center font-[var(--font-display)] font-bold uppercase text-white",
                       "tracking-[-0.02em]",
                       "text-[clamp(2.9rem,10.5vw,10.5rem)] leading-[0.78]",
                     )}
@@ -919,7 +919,7 @@ export default function LandingPage() {
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                 <h1
                   className={cn(
-                    "whitespace-nowrap text-center font-[var(--font-display)] uppercase text-white",
+                    "whitespace-nowrap text-center font-[var(--font-display)] font-bold uppercase text-white",
                     "tracking-[-0.02em]",
                     "text-[clamp(2.9rem,10.5vw,10.5rem)] leading-[0.78]",
                   )}
