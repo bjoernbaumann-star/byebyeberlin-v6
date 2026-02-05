@@ -459,21 +459,24 @@ export default function LandingPage() {
       </header>
 
       <main>
-        {/* Hero: full screen image + overlay; marquee is transparent over image */}
+        {/* Hero: full screen VIDEO + overlay; marquee is transparent over video */}
         <section className="relative h-screen w-full overflow-hidden bg-black text-white">
-          <div
-            className={cn(
-              "absolute inset-0 bg-cover bg-center",
-              "bg-[url('/hero.jpg')]",
-            )}
+          <video
+            className="absolute inset-0 h-full w-full object-cover"
+            src="/hero-video.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
           />
-          <div className="absolute inset-0 bg-black/35" />
+          <div className="absolute inset-0 bg-black/30" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,.10),transparent_45%),radial-gradient(circle_at_75%_25%,rgba(255,255,255,.06),transparent_45%)]" />
 
           <HeroMarquee text={marqueeText} scrollY={scrollY} reducedMotion={!!reducedMotion} />
 
           {/* Bottom CTAs */}
-          <div className="absolute inset-x-0 bottom-10 flex flex-col items-center px-5">
+          <div className="absolute inset-x-0 bottom-10 z-10 flex flex-col items-center px-5">
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
               <a
                 href="#kollektion"
