@@ -171,7 +171,7 @@ function HeroMarquee({
           reducedMotion
             ? undefined
             : {
-                duration: 20,
+                duration: 34,
                 ease: "linear",
                 repeat: Infinity,
               }
@@ -530,8 +530,8 @@ export default function LandingPage() {
               text={marqueeText}
               scrollY={scrollY}
               reducedMotion={!!reducedMotion}
-              phase={0.02}
-              className="opacity-90"
+              phase={0.01}
+              className="opacity-20"
               blendClassName="mix-blend-multiply"
             />
           </div>
