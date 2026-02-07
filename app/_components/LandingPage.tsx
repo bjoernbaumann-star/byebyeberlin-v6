@@ -490,8 +490,8 @@ export default function LandingPage() {
           <div
             className={cn(
               "relative z-10 overflow-hidden bg-black",
-              "h-[624px] w-[624px]",
-              "max-h-[min(624px,calc(100vh-280px))] max-w-[min(624px,calc(100vw-2.5rem))]",
+              "h-[750px] w-[624px]",
+              "max-h-[min(750px,calc(100vh-280px))] max-w-[min(624px,calc(100vw-2.5rem))]",
               "shadow-[0_60px_140px_-90px_rgba(0,0,0,.95)]",
             )}
           >
@@ -514,7 +514,7 @@ export default function LandingPage() {
               scrollY={scrollY}
               reducedMotion={!!reducedMotion}
               phase={0.02}
-              className="opacity-60"
+              className="opacity-90"
               blendClassName="mix-blend-multiply"
             />
           </div>
