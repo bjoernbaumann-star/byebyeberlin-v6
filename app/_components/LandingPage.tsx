@@ -148,7 +148,15 @@ function HeroMarquee({
         "pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2",
         className,
       )}
-      style={{ y, scale, opacity, transformOrigin: "center" }}
+      style={{
+        y,
+        scale,
+        opacity,
+        transformOrigin: "center",
+        // subtle luxe glow for the moving headline
+        filter:
+          "drop-shadow(0 10px 40px rgba(0,0,0,.55)) drop-shadow(0 0 24px rgba(255,255,255,.10))",
+      }}
     >
       <motion.div
         className="flex w-max items-center gap-[5vw] pl-[5vw]"
@@ -495,6 +503,15 @@ export default function LandingPage() {
               "shadow-[0_60px_140px_-90px_rgba(0,0,0,.95)]",
             )}
           >
+            {/* glow halo */}
+            <div
+              aria-hidden="true"
+              className={cn(
+                "pointer-events-none absolute -inset-10 -z-10",
+                "rounded-[48px] blur-3xl opacity-70",
+                "bg-[radial-gradient(circle_at_30%_25%,rgba(255,255,255,.14),transparent_55%),radial-gradient(circle_at_70%_35%,rgba(212,175,55,.18),transparent_55%),radial-gradient(circle_at_50%_80%,rgba(255,255,255,.08),transparent_60%)]",
+              )}
+            />
             <video
               className="h-full w-full object-cover"
               src="/hero-v2.mp4"
