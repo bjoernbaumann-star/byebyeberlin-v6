@@ -514,7 +514,7 @@ export default function LandingPage() {
               scrollY={scrollY}
               reducedMotion={!!reducedMotion}
               phase={0.02}
-              className="opacity-90"
+              className="opacity-60"
               blendClassName="mix-blend-multiply"
             />
           </div>
