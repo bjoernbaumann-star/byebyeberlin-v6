@@ -459,24 +459,42 @@ export default function LandingPage() {
       </header>
 
       <main>
-        {/* Hero: full screen VIDEO + overlay; marquee is transparent over video */}
-        <section className="relative h-screen w-full overflow-hidden bg-black text-white">
-          <video
-            className="absolute inset-0 h-full w-full object-cover"
-            src="/hero-video.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          />
-          <div className="absolute inset-0 bg-black/30" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,.10),transparent_45%),radial-gradient(circle_at_75%_25%,rgba(255,255,255,.06),transparent_45%)]" />
+        {/* Hero: centered 624×624 video on deep black; marquee runs behind it */}
+        <section className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-neutral-950 text-white">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,.06),transparent_50%),radial-gradient(circle_at_80%_25%,rgba(255,255,255,.04),transparent_55%)]" />
 
-          <HeroMarquee text={marqueeText} scrollY={scrollY} reducedMotion={!!reducedMotion} />
+          {/* Marquee behind the video */}
+          <div className="absolute inset-0 z-0">
+            <HeroMarquee
+              text={marqueeText}
+              scrollY={scrollY}
+              reducedMotion={!!reducedMotion}
+            />
+          </div>
+
+          {/* Center video square */}
+          <div
+            className={cn(
+              "relative z-10 overflow-hidden bg-black",
+              "h-[624px] w-[624px]",
+              "max-h-[min(624px,calc(100vh-220px))] max-w-[min(624px,calc(100vw-2.5rem))]",
+              "shadow-[0_60px_140px_-90px_rgba(0,0,0,.95)]",
+            )}
+          >
+            <video
+              className="h-full w-full object-cover"
+              src="/hero-video.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-black/25" />
+          </div>
 
           {/* Bottom CTAs */}
-          <div className="absolute inset-x-0 bottom-10 z-10 flex flex-col items-center px-5">
+          <div className="absolute inset-x-0 bottom-10 z-20 flex flex-col items-center px-5">
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
               <a
                 href="#kollektion"
