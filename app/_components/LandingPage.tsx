@@ -513,7 +513,7 @@ export default function LandingPage() {
               text={marqueeText}
               scrollY={scrollY}
               reducedMotion={!!reducedMotion}
-              phase={0.08}
+              phase={0.02}
               className="opacity-90"
               blendClassName="mix-blend-multiply"
             />
