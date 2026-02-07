@@ -483,7 +483,7 @@ export default function LandingPage() {
           >
             <video
               className="h-full w-full object-cover"
-              src="/hero-video.mp4"
+              src="/hero-v2.mp4"
               autoPlay
               muted
               loop
