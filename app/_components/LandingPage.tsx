@@ -602,12 +602,22 @@ export default function LandingPage() {
       </header>
 
       <main>
-        {/* Hero: centered 624×624 video on deep black; marquee runs behind it */}
-        <section className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-neutral-950 text-white">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,.06),transparent_50%),radial-gradient(circle_at_80%_25%,rgba(255,255,255,.04),transparent_55%)]" />
+        {/* Hero: fullscreen background video; marquee runs over it */}
+        <section className="relative h-screen w-full overflow-hidden bg-neutral-950 text-white">
+          <video
+            className="absolute inset-0 h-full w-full object-cover"
+            src="/hero-v2.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          />
+          <div className="absolute inset-0 bg-black/30" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,.08),transparent_45%),radial-gradient(circle_at_80%_25%,rgba(255,255,255,.05),transparent_55%)]" />
 
-          {/* Marquee behind the video */}
-          <div className="absolute inset-0 z-0">
+          {/* Marquee base layer */}
+          <div className="absolute inset-0 z-10">
             <HeroMarquee
               text={marqueeText}
               scrollY={scrollY}
@@ -616,37 +626,7 @@ export default function LandingPage() {
             />
           </div>
 
-          {/* Center video square */}
-          <div
-            className={cn(
-              "relative z-10 overflow-hidden bg-black",
-              "h-[750px] w-[624px]",
-              "max-h-[min(750px,calc(100vh-280px))] max-w-[min(624px,calc(100vw-2.5rem))]",
-              "shadow-[0_60px_140px_-90px_rgba(0,0,0,.95)]",
-            )}
-          >
-            {/* glow halo */}
-            <div
-              aria-hidden="true"
-              className={cn(
-                "pointer-events-none absolute -inset-10 -z-10",
-                "rounded-[48px] blur-3xl opacity-70",
-                "bg-[radial-gradient(circle_at_30%_25%,rgba(255,255,255,.14),transparent_55%),radial-gradient(circle_at_70%_35%,rgba(212,175,55,.18),transparent_55%),radial-gradient(circle_at_50%_80%,rgba(255,255,255,.08),transparent_60%)]",
-              )}
-            />
-            <video
-              className="h-full w-full object-cover"
-              src="/hero-v2.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-            />
-            <div className="pointer-events-none absolute inset-0 bg-black/25" />
-          </div>
-
-          {/* Marquee above the video (slightly delayed) */}
+          {/* Marquee front layer (very transparent + tiny phase offset) */}
           <div className="absolute inset-0 z-[15]">
             <HeroMarquee
               text={marqueeText}
