@@ -207,13 +207,14 @@ function MenuDrawer({
             <div className="h-full overflow-y-auto px-10 pb-14 pt-20">
               <nav className="space-y-5 text-[22px] leading-tight">
                 {[
-                  { label: "Clothes", href: "#kollektion" },
-                  { label: "Bags", href: "#kollektion" },
-                  { label: "New In", href: "#kollektion" },
-                  { label: "Story", href: "#story" },
-                  { label: "Travel", href: "#story" },
-                  { label: "Jewellery & Watches", href: "#story" },
-                  { label: "Décor & Lifestyle", href: "#story" },
+                  { label: "Home", href: "/" },
+                  { label: "Clothes", href: "/clothes" },
+                  { label: "Bags", href: "/bags" },
+                  { label: "New In", href: "/new-in" },
+                  { label: "Story", href: "/story" },
+                  { label: "Travel", href: "/travel" },
+                  { label: "Jewellery & Watches", href: "/jewellery-watches" },
+                  { label: "Décor & Lifestyle", href: "/decor-lifestyle" },
                 ].map((x) => (
                   <a
                     key={x.label}
@@ -231,7 +232,13 @@ function MenuDrawer({
               </nav>
 
               <div className="mt-12 border-t border-black/10 pt-8">
-                <div className="text-sm text-neutral-500">Bye Bye Berlin Services</div>
+                <a
+                  href="/services"
+                  onClick={onClose}
+                  className="text-sm text-neutral-600 hover:text-neutral-950"
+                >
+                  Bye Bye Berlin Services
+                </a>
               </div>
             </div>
           </motion.aside>
@@ -633,7 +640,7 @@ export default function LandingPage() {
               scrollY={scrollY}
               reducedMotion={!!reducedMotion}
               phase={0.01}
-              className="opacity-20"
+              className="opacity-100"
               blendClassName="mix-blend-multiply"
             />
           </div>
@@ -642,7 +649,7 @@ export default function LandingPage() {
           <div className="absolute inset-x-0 bottom-6 z-20 flex flex-col items-center px-5">
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
               <a
-                href="#kollektion"
+                href="/clothes"
                 className={cn(
                   "inline-flex h-12 min-w-44 items-center justify-center px-10",
                   "bg-white text-black hover:bg-white/90",
@@ -653,7 +660,7 @@ export default function LandingPage() {
                 Clothes
               </a>
               <a
-                href="#kollektion"
+                href="/bags"
                 className={cn(
                   "inline-flex h-12 min-w-44 items-center justify-center px-10",
                   "bg-white text-black hover:bg-white/90",
