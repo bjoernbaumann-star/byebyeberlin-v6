@@ -3,6 +3,7 @@
 import React, { useMemo, useState } from "react";
 import {
   motion,
+  AnimatePresence,
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
@@ -96,6 +97,19 @@ function IconMenu(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
+function IconX(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M6 6l12 12M18 6 6 18"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 function HeaderIconButton({
   label,
   onClick,
@@ -118,6 +132,112 @@ function HeaderIconButton({
     >
       {children}
     </button>
+  );
+}
+
+function MenuDrawer({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
+  React.useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open, onClose]);
+
+  React.useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          className="fixed inset-0 z-[90]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+        >
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/25 backdrop-blur-md"
+            onClick={onClose}
+          />
+
+          {/* Panel */}
+          <motion.aside
+            role="dialog"
+            aria-label="Menu"
+            className={cn(
+              "absolute right-0 top-0 h-full w-full max-w-[520px]",
+              "bg-white text-neutral-950",
+              "shadow-[0_60px_140px_-80px_rgba(0,0,0,.75)]",
+            )}
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.45, ease: [0.2, 0.8, 0.2, 1] }}
+          >
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close menu"
+              className={cn(
+                "absolute right-6 top-6 grid h-12 w-12 place-items-center rounded-full",
+                "bg-neutral-950 text-white",
+                "transition-opacity hover:opacity-80",
+                "focus:outline-none focus:ring-2 focus:ring-black/20 focus:ring-offset-2",
+              )}
+            >
+              <IconX className="h-5 w-5" />
+            </button>
+
+            <div className="h-full overflow-y-auto px-10 pb-14 pt-20">
+              <nav className="space-y-5 text-[22px] leading-tight">
+                {[
+                  { label: "Clothes", href: "#kollektion" },
+                  { label: "Bags", href: "#kollektion" },
+                  { label: "New In", href: "#kollektion" },
+                  { label: "Story", href: "#story" },
+                  { label: "Travel", href: "#story" },
+                  { label: "Jewellery & Watches", href: "#story" },
+                  { label: "Décor & Lifestyle", href: "#story" },
+                ].map((x) => (
+                  <a
+                    key={x.label}
+                    href={x.href}
+                    onClick={onClose}
+                    className={cn(
+                      "block w-fit",
+                      "text-neutral-950/90 hover:text-neutral-950",
+                      "transition-colors",
+                    )}
+                  >
+                    {x.label}
+                  </a>
+                ))}
+              </nav>
+
+              <div className="mt-12 border-t border-black/10 pt-8">
+                <div className="text-sm text-neutral-500">Bye Bye Berlin Services</div>
+              </div>
+            </div>
+          </motion.aside>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -386,6 +506,7 @@ export default function LandingPage() {
 
   const [cartOpen, setCartOpen] = useState(false);
   const [cart, setCart] = useState<Record<string, number>>({});
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const cartItems = products
     .filter((p) => cart[p.id])
@@ -464,6 +585,7 @@ export default function LandingPage() {
 
             <button
               type="button"
+              onClick={() => setMenuOpen(true)}
               className={cn(
                 "ml-1 inline-flex items-center gap-2 px-2 py-2",
                 "text-xs font-medium uppercase tracking-[0.35em]",
@@ -638,6 +760,8 @@ export default function LandingPage() {
         onRemoveOne={removeOne}
         onClear={clear}
       />
+
+      <MenuDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
     </div>
   );
 }
