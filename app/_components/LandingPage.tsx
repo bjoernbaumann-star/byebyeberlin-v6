@@ -302,7 +302,7 @@ function HeroMarquee({
             <span
               key={`a-${i}`}
               className={cn(
-                "font-sangbleu text-[15vw] font-bold leading-none text-white",
+                "font-sangbleu text-[21vw] font-bold leading-none text-white",
                 blendClassName,
               )}
               style={{ letterSpacing: "-0.02em" }}
@@ -316,7 +316,7 @@ function HeroMarquee({
             <span
               key={`b-${i}`}
               className={cn(
-                "font-sangbleu text-[15vw] font-bold leading-none text-white",
+                "font-sangbleu text-[21vw] font-bold leading-none text-white",
                 blendClassName,
               )}
               style={{ letterSpacing: "-0.02em" }}
@@ -605,7 +605,7 @@ export default function LandingPage() {
         {/* Hero: fullscreen background video; marquee runs over it */}
         <section className="relative h-screen w-full overflow-hidden bg-neutral-950 text-white">
           <video
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover object-[center_70%]"
             src="/hero-v2.mp4"
             autoPlay
             muted
