@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import Link from "next/link";
 import {
   motion,
   AnimatePresence,
@@ -205,40 +206,72 @@ function MenuDrawer({
             </button>
 
             <div className="h-full overflow-y-auto px-10 pb-14 pt-20">
-              <nav className="space-y-5 text-[22px] leading-tight">
+              <nav className="space-y-10">
                 {[
-                  { label: "Home", href: "/" },
-                  { label: "Clothes", href: "/clothes" },
-                  { label: "Bags", href: "/bags" },
-                  { label: "New In", href: "/new-in" },
-                  { label: "Story", href: "/story" },
-                  { label: "Travel", href: "/travel" },
-                  { label: "Jewellery & Watches", href: "/jewellery-watches" },
-                  { label: "Décor & Lifestyle", href: "/decor-lifestyle" },
-                ].map((x) => (
-                  <a
-                    key={x.label}
-                    href={x.href}
-                    onClick={onClose}
-                    className={cn(
-                      "block w-fit",
-                      "text-neutral-950/90 hover:text-neutral-950",
-                      "transition-colors",
-                    )}
-                  >
-                    {x.label}
-                  </a>
+                  {
+                    title: "Shop",
+                    href: "/shop",
+                    links: [
+                      { label: "Clothes", href: "/clothes" },
+                      { label: "Bags", href: "/bags" },
+                      { label: "New In", href: "/new-in" },
+                    ],
+                  },
+                  {
+                    title: "Collections",
+                    href: "/collections",
+                    links: [
+                      { label: "Travel", href: "/travel" },
+                      { label: "Jewellery & Watches", href: "/jewellery-watches" },
+                      { label: "Décor & Lifestyle", href: "/decor-lifestyle" },
+                    ],
+                  },
+                  {
+                    title: "Info",
+                    href: "/info",
+                    links: [{ label: "Story", href: "/story" }],
+                  },
+                ].map((section) => (
+                  <div key={section.title}>
+                    <Link
+                      href={section.href}
+                      onClick={onClose}
+                      className={cn(
+                        "block w-fit",
+                        "text-[22px] leading-tight text-neutral-950",
+                        "hover:opacity-80 transition-opacity",
+                      )}
+                    >
+                      {section.title}
+                    </Link>
+                    <div className="mt-5 space-y-5 text-[22px] leading-tight">
+                      {section.links.map((x) => (
+                        <Link
+                          key={x.label}
+                          href={x.href}
+                          onClick={onClose}
+                          className={cn(
+                            "block w-fit",
+                            "text-neutral-950/90 hover:text-neutral-950",
+                            "transition-colors",
+                          )}
+                        >
+                          {x.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </nav>
 
               <div className="mt-12 border-t border-black/10 pt-8">
-                <a
+                <Link
                   href="/services"
                   onClick={onClose}
-                  className="text-sm text-neutral-600 hover:text-neutral-950"
+                  className="text-sm text-neutral-500 hover:text-neutral-800 transition-colors"
                 >
                   Bye Bye Berlin Services
-                </a>
+                </Link>
               </div>
             </div>
           </motion.aside>
@@ -649,7 +682,7 @@ export default function LandingPage() {
           <div className="absolute inset-x-0 bottom-6 z-20 flex flex-col items-center px-5">
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
               <a
-                href="/clothes"
+                href="#kollektion"
                 className={cn(
                   "inline-flex h-12 min-w-44 items-center justify-center px-10",
                   "bg-white text-black hover:bg-white/90",
@@ -660,7 +693,7 @@ export default function LandingPage() {
                 Clothes
               </a>
               <a
-                href="/bags"
+                href="#kollektion"
                 className={cn(
                   "inline-flex h-12 min-w-44 items-center justify-center px-10",
                   "bg-white text-black hover:bg-white/90",
