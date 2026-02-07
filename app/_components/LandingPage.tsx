@@ -125,10 +125,16 @@ function HeroMarquee({
   text,
   scrollY,
   reducedMotion,
+  phase = 0,
+  className,
+  blendClassName,
 }: {
   text: string;
   scrollY: ReturnType<typeof useScroll>["scrollY"];
   reducedMotion: boolean;
+  phase?: number;
+  className?: string;
+  blendClassName?: string;
 }) {
   const progress = useTransform(scrollY, [0, 320], [0, 1]);
   const y = useTransform(progress, [0, 1], [0, -120]);
@@ -140,6 +146,7 @@ function HeroMarquee({
       aria-hidden="true"
       className={cn(
         "pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2",
+        className,
       )}
       style={{ y, scale, opacity, transformOrigin: "center" }}
     >
@@ -149,7 +156,7 @@ function HeroMarquee({
           reducedMotion
             ? undefined
             : {
-                x: ["0%", "-50%"],
+                x: [`${phase * -50}%`, `${phase * -50 - 50}%`],
               }
         }
         transition={
@@ -166,7 +173,10 @@ function HeroMarquee({
           {Array.from({ length: 8 }).map((_, i) => (
             <span
               key={`a-${i}`}
-              className="font-sangbleu text-[15vw] font-bold leading-none text-white"
+              className={cn(
+                "font-sangbleu text-[15vw] font-bold leading-none text-white",
+                blendClassName,
+              )}
               style={{ letterSpacing: "-0.02em" }}
             >
               {text}
@@ -177,7 +187,10 @@ function HeroMarquee({
           {Array.from({ length: 8 }).map((_, i) => (
             <span
               key={`b-${i}`}
-              className="font-sangbleu text-[15vw] font-bold leading-none text-white"
+              className={cn(
+                "font-sangbleu text-[15vw] font-bold leading-none text-white",
+                blendClassName,
+              )}
               style={{ letterSpacing: "-0.02em" }}
             >
               {text}
@@ -469,6 +482,7 @@ export default function LandingPage() {
               text={marqueeText}
               scrollY={scrollY}
               reducedMotion={!!reducedMotion}
+              phase={0}
             />
           </div>
 
@@ -491,6 +505,18 @@ export default function LandingPage() {
               preload="metadata"
             />
             <div className="pointer-events-none absolute inset-0 bg-black/25" />
+          </div>
+
+          {/* Marquee above the video (slightly delayed) */}
+          <div className="absolute inset-0 z-[15]">
+            <HeroMarquee
+              text={marqueeText}
+              scrollY={scrollY}
+              reducedMotion={!!reducedMotion}
+              phase={0.08}
+              className="opacity-90"
+              blendClassName="mix-blend-multiply"
+            />
           </div>
 
           {/* Bottom CTAs */}
