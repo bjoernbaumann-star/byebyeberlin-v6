@@ -171,7 +171,7 @@ function HeroMarquee({
           reducedMotion
             ? undefined
             : {
-                duration: 34,
+                duration: 51,
                 ease: "linear",
                 repeat: Infinity,
               }
