@@ -222,7 +222,6 @@ function MenuDrawer({
                     href: "/collections",
                     links: [
                       { label: "Travel", href: "/travel" },
-                      { label: "Jewellery & Watches", href: "/jewellery-watches" },
                       { label: "Décor & Lifestyle", href: "/decor-lifestyle" },
                     ],
                   },
@@ -663,18 +662,6 @@ export default function LandingPage() {
               scrollY={scrollY}
               reducedMotion={!!reducedMotion}
               phase={0}
-            />
-          </div>
-
-          {/* Marquee front layer (very transparent + tiny phase offset) */}
-          <div className="absolute inset-0 z-[15]">
-            <HeroMarquee
-              text={marqueeText}
-              scrollY={scrollY}
-              reducedMotion={!!reducedMotion}
-              phase={0.01}
-              className="opacity-100"
-              blendClassName="mix-blend-multiply"
             />
           </div>
 
