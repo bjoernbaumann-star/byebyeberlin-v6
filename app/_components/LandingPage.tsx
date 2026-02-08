@@ -299,9 +299,8 @@ function HeroMarquee({
     <motion.div
       aria-hidden="true"
       className={cn(
-        // Use flex centering instead of CSS transforms so Framer Motion's transform
-        // (y/scale) doesn't override Tailwind translate classes.
-        "pointer-events-none absolute inset-0 flex items-center whitespace-nowrap",
+        // Keep the headline at a fixed vertical position while scrolling.
+        "pointer-events-none fixed inset-x-0 top-1/2 -translate-y-1/2 whitespace-nowrap",
         className,
       )}
       style={{
@@ -649,15 +648,13 @@ export default function LandingPage() {
           <div className="absolute inset-0 bg-black/30" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,.08),transparent_45%),radial-gradient(circle_at_80%_25%,rgba(255,255,255,.05),transparent_55%)]" />
 
-          {/* Marquee (fixed overlay so the docking effect is visible while scrolling) */}
-          <div className="pointer-events-none fixed inset-0 z-10">
-            <HeroMarquee
-              text={marqueeText}
-              scrollY={scrollY}
-              reducedMotion={!!reducedMotion}
-              phase={0}
-            />
-          </div>
+          <HeroMarquee
+            text={marqueeText}
+            scrollY={scrollY}
+            reducedMotion={!!reducedMotion}
+            phase={0}
+            className="z-10"
+          />
 
           {/* Bottom CTAs */}
           <div className="absolute inset-x-0 bottom-6 z-20 flex flex-col items-center px-5">
