@@ -8,7 +8,6 @@ import {
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
-  useTransform,
 } from "framer-motion";
 
 type Product = {
@@ -282,21 +281,19 @@ function MenuDrawer({
 
 function HeroMarquee({
   text,
-  scrollY,
   reducedMotion,
   phase = 0,
   className,
   blendClassName,
 }: {
   text: string;
-  scrollY: ReturnType<typeof useScroll>["scrollY"];
   reducedMotion: boolean;
   phase?: number;
   className?: string;
   blendClassName?: string;
 }) {
   return (
-    <motion.div
+    <div
       aria-hidden="true"
       className={cn(
         // Keep the headline at a fixed vertical position while scrolling.
@@ -319,8 +316,8 @@ function HeroMarquee({
           reducedMotion
             ? undefined
             : {
-                // right -> left
-                x: [`${phase * -50}%`, `${phase * -50 - 50}%`],
+                // left -> right
+                x: [`${phase * -50 - 50}%`, `${phase * -50}%`],
               }
         }
         transition={
@@ -364,7 +361,7 @@ function HeroMarquee({
           ))}
         </div>
       </motion.div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -650,7 +647,6 @@ export default function LandingPage() {
 
           <HeroMarquee
             text={marqueeText}
-            scrollY={scrollY}
             reducedMotion={!!reducedMotion}
             phase={0}
             className="z-10"
