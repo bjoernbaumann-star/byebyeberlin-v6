@@ -304,7 +304,9 @@ function HeroMarquee({
     <motion.div
       aria-hidden="true"
       className={cn(
-        "pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2",
+        // Use flex centering instead of CSS transforms so Framer Motion's transform
+        // (y/scale) doesn't override Tailwind translate classes.
+        "pointer-events-none absolute inset-0 flex items-center",
         className,
       )}
       style={{
@@ -539,10 +541,6 @@ export default function LandingPage() {
     setIsScrolled(latest >= 80);
   });
 
-  const dockProgress = useTransform(scrollY, [0, 320], [0, 1]);
-  const headerLogoOpacity = useTransform(dockProgress, [0.6, 1], [0, 1]);
-  const headerLogoY = useTransform(dockProgress, [0.6, 1], [8, 0]);
-
   const [cartOpen, setCartOpen] = useState(false);
   const [cart, setCart] = useState<Record<string, number>>({});
   const [menuOpen, setMenuOpen] = useState(false);
@@ -589,16 +587,14 @@ export default function LandingPage() {
         )}
       >
         <div className="relative mx-auto flex h-[76px] max-w-6xl items-center justify-end px-5">
-          <motion.div
-            style={{ opacity: headerLogoOpacity, y: headerLogoY }}
+          <div
             className={cn(
               "pointer-events-none absolute inset-x-0 flex justify-center",
               "font-sangbleu text-[18px] font-bold tracking-tight",
             )}
-            aria-hidden={!isScrolled}
           >
             BYE BYE BERLIN
-          </motion.div>
+          </div>
 
           <div className="flex items-center gap-1">
             <HeaderIconButton label="Warenkorb" onClick={() => setCartOpen(true)}>
