@@ -320,12 +320,13 @@ function HeroMarquee({
       }}
     >
       <motion.div
-        className="flex w-max items-center gap-[5vw] pl-[5vw]"
+        className="flex w-max items-center gap-[5vw] whitespace-nowrap pl-[5vw]"
         animate={
           reducedMotion
             ? undefined
             : {
-                x: [`${phase * -50}%`, `${phase * -50 - 50}%`],
+                // left -> right
+                x: [`${phase * -50 - 50}%`, `${phase * -50}%`],
               }
         }
         transition={
@@ -343,7 +344,7 @@ function HeroMarquee({
             <span
               key={`a-${i}`}
               className={cn(
-                "font-sangbleu text-[21vw] font-bold leading-none text-white",
+                "font-sangbleu text-[21vw] font-bold leading-none text-white whitespace-nowrap",
                 blendClassName,
               )}
               style={{ letterSpacing: "-0.02em" }}
@@ -357,7 +358,7 @@ function HeroMarquee({
             <span
               key={`b-${i}`}
               className={cn(
-                "font-sangbleu text-[21vw] font-bold leading-none text-white",
+                "font-sangbleu text-[21vw] font-bold leading-none text-white whitespace-nowrap",
                 blendClassName,
               )}
               style={{ letterSpacing: "-0.02em" }}
