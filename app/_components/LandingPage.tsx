@@ -8,7 +8,6 @@ import {
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
-  useTransform,
 } from "framer-motion";
 
 type Product = {
@@ -286,14 +285,12 @@ function HeroMarquee({
   phase = 0,
   className,
   blendClassName,
-  opacity,
 }: {
   text: string;
   reducedMotion: boolean;
   phase?: number;
   className?: string;
   blendClassName?: string;
-  opacity?: number | ReturnType<typeof useTransform>;
 }) {
   return (
     <motion.div
@@ -307,7 +304,6 @@ function HeroMarquee({
         transformOrigin: "center",
         whiteSpace: "nowrap",
           willChange: "transform",
-        opacity,
         // subtle luxe glow for the moving headline
         filter:
           "drop-shadow(0 10px 40px rgba(0,0,0,.55)) drop-shadow(0 0 24px rgba(255,255,255,.10))",
@@ -567,7 +563,6 @@ export default function LandingPage() {
   }
 
   const marqueeText = "BYE BYE BERLIN";
-  const marqueeOpacity = useTransform(scrollY, [0, 520], [1, 0]);
 
   const headerTextColor = isScrolled ? "text-neutral-950" : "text-white";
   const headerBg = isScrolled
@@ -655,7 +650,6 @@ export default function LandingPage() {
             reducedMotion={!!reducedMotion}
             phase={0}
             className="z-10"
-            opacity={marqueeOpacity}
           />
 
           {/* Bottom CTAs */}
