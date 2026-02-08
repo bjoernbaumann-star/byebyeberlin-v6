@@ -572,10 +572,10 @@ export default function LandingPage() {
   // Explicit cast avoids MotionValue<unknown> vs MotionValue<number> TS conflicts.
   const marqueeOpacity = useTransform(scrollY, [0, 520], [1, 0]) as MotionValue<number>;
 
-  const headerTextColor = isScrolled ? "text-neutral-950" : "text-white";
-  const headerBg = isScrolled
-    ? "bg-white/95 backdrop-blur border-b border-black/10"
-    : "bg-transparent";
+  const headerTextColor = "text-white";
+  const headerLogoColor = isScrolled
+    ? "text-[rgba(212,175,55,1)]"
+    : "text-white";
 
   return (
     <div className="min-h-dvh bg-white text-neutral-950">
@@ -583,16 +583,53 @@ export default function LandingPage() {
       <header
         className={cn(
           "fixed inset-x-0 top-0 z-[60]",
-          "transition-[background-color,border-color,color] duration-500",
-          headerBg,
+          "transition-opacity duration-500",
           headerTextColor,
         )}
       >
+        {/* Animated leopard print background (only when scrolled) */}
+        <AnimatePresence>
+          {isScrolled && (
+            <motion.div
+              key="leo"
+              className="absolute inset-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
+            >
+              <motion.div
+                className="absolute inset-0"
+                // CSS-based leopard texture: layered radial-gradients + grainy contrast.
+                style={{
+                  backgroundImage:
+                    "radial-gradient(circle at 12% 28%, rgba(0,0,0,.55) 0 18px, rgba(0,0,0,0) 19px), radial-gradient(circle at 14% 30%, rgba(184,132,60,.95) 0 12px, rgba(0,0,0,0) 13px), radial-gradient(circle at 36% 48%, rgba(0,0,0,.52) 0 20px, rgba(0,0,0,0) 21px), radial-gradient(circle at 38% 50%, rgba(214,167,74,.95) 0 13px, rgba(0,0,0,0) 14px), radial-gradient(circle at 68% 36%, rgba(0,0,0,.55) 0 18px, rgba(0,0,0,0) 19px), radial-gradient(circle at 70% 38%, rgba(176,116,48,.92) 0 12px, rgba(0,0,0,0) 13px), radial-gradient(circle at 82% 64%, rgba(0,0,0,.50) 0 22px, rgba(0,0,0,0) 23px), radial-gradient(circle at 84% 66%, rgba(232,190,92,.92) 0 14px, rgba(0,0,0,0) 15px), radial-gradient(circle at 52% 18%, rgba(0,0,0,.48) 0 16px, rgba(0,0,0,0) 17px), radial-gradient(circle at 54% 20%, rgba(212,175,55,.9) 0 11px, rgba(0,0,0,0) 12px)",
+                  backgroundSize: "240px 160px",
+                  backgroundRepeat: "repeat",
+                  transform: "rotate(-2deg) scale(1.02)",
+                  filter: "saturate(1.1) contrast(1.05)",
+                }}
+                animate={{ x: [0, -240] }}
+                transition={{
+                  duration: 80,
+                  ease: "linear",
+                  repeat: Infinity,
+                }}
+              />
+              {/* dark overlay for readable white/gold nav */}
+              <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
+              {/* subtle gold bottom rule */}
+              <div className="absolute inset-x-0 bottom-0 h-px bg-[rgba(212,175,55,.35)]" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <div className="relative flex h-[76px] w-full items-center px-2 sm:px-4 lg:px-6">
           <div
             className={cn(
               "pointer-events-none absolute inset-x-0 flex justify-center",
-            "font-sangbleu text-[18px] font-bold tracking-tight whitespace-nowrap leading-none",
+              "font-sangbleu text-[18px] font-bold tracking-tight whitespace-nowrap leading-none",
+              headerLogoColor,
             )}
           >
             BYE BYE BERLIN
