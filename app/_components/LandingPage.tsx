@@ -306,7 +306,7 @@ function HeroMarquee({
       className={cn(
         // Use flex centering instead of CSS transforms so Framer Motion's transform
         // (y/scale) doesn't override Tailwind translate classes.
-        "pointer-events-none absolute inset-0 flex items-center",
+        "pointer-events-none absolute inset-0 flex items-center whitespace-nowrap",
         className,
       )}
       style={{
@@ -314,6 +314,7 @@ function HeroMarquee({
         scale,
         opacity,
         transformOrigin: "center",
+        whiteSpace: "nowrap",
         // subtle luxe glow for the moving headline
         filter:
           "drop-shadow(0 10px 40px rgba(0,0,0,.55)) drop-shadow(0 0 24px rgba(255,255,255,.10))",
@@ -591,7 +592,7 @@ export default function LandingPage() {
           <div
             className={cn(
               "pointer-events-none absolute inset-x-0 flex justify-center",
-              "font-sangbleu text-[18px] font-bold tracking-tight",
+            "font-sangbleu text-[18px] font-bold tracking-tight whitespace-nowrap leading-none",
             )}
           >
             BYE BYE BERLIN
