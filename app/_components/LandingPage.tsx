@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import {
   motion,
@@ -11,13 +11,7 @@ import {
   useTransform,
 } from "framer-motion";
 import type { MotionValue } from "framer-motion";
-
-type Product = {
-  id: string;
-  name: string;
-  subtitle: string;
-  price: number;
-};
+import { PRODUCTS, type Product } from "../_data/products";
 
 function formatEUR(amount: number) {
   return new Intl.NumberFormat("de-DE", {
@@ -207,60 +201,25 @@ function MenuDrawer({
             </button>
 
             <div className="h-full overflow-y-auto px-10 pb-14 pt-20">
-              <nav className="space-y-10">
+              <nav className="space-y-5 text-[22px] leading-tight">
                 {[
-                  {
-                    title: "Shop",
-                    href: "/shop",
-                    links: [
-                      { label: "Clothes", href: "/clothes" },
-                      { label: "Bags", href: "/bags" },
-                      { label: "New In", href: "/new-in" },
-                    ],
-                  },
-                  {
-                    title: "Collections",
-                    href: "/collections",
-                    links: [
-                      { label: "Travel", href: "/travel" },
-                      { label: "Décor & Lifestyle", href: "/decor-lifestyle" },
-                    ],
-                  },
-                  {
-                    title: "Info",
-                    href: "/info",
-                    links: [{ label: "Story", href: "/story" }],
-                  },
-                ].map((section) => (
-                  <div key={section.title}>
-                    <Link
-                      href={section.href}
-                      onClick={onClose}
-                      className={cn(
-                        "block w-fit",
-                        "text-[22px] leading-tight text-neutral-950",
-                        "hover:opacity-80 transition-opacity",
-                      )}
-                    >
-                      {section.title}
-                    </Link>
-                    <div className="mt-5 space-y-5 text-[22px] leading-tight">
-                      {section.links.map((x) => (
-                        <Link
-                          key={x.label}
-                          href={x.href}
-                          onClick={onClose}
-                          className={cn(
-                            "block w-fit",
-                            "text-neutral-950/90 hover:text-neutral-950",
-                            "transition-colors",
-                          )}
-                        >
-                          {x.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
+                  { label: "Bags", href: "/bags" },
+                  { label: "Clothes", href: "/clothes" },
+                  { label: "Kollektion", href: "/kollektion" },
+                  { label: "Story", href: "/story" },
+                ].map((x) => (
+                  <Link
+                    key={x.label}
+                    href={x.href}
+                    onClick={onClose}
+                    className={cn(
+                      "block w-fit",
+                      "text-neutral-950/90 hover:text-neutral-950",
+                      "transition-colors",
+                    )}
+                  >
+                    {x.label}
+                  </Link>
                 ))}
               </nav>
 
@@ -492,47 +451,7 @@ export default function LandingPage() {
   const reducedMotion = useReducedMotion();
   const { scrollY } = useScroll();
 
-  const products = useMemo<Product[]>(
-    () => [
-      {
-        id: "bbb-01",
-        name: "Noir Signature Tee",
-        subtitle: "Schweres Cotton · präziser Fit",
-        price: 140,
-      },
-      {
-        id: "bbb-02",
-        name: "Emerald Leather Belt",
-        subtitle: "Italian leather · gold tone",
-        price: 290,
-      },
-      {
-        id: "bbb-03",
-        name: "Ivory Silk Scarf",
-        subtitle: "Seiden-Twill · weicher Fall",
-        price: 220,
-      },
-      {
-        id: "bbb-04",
-        name: "Nightfall Sunglasses",
-        subtitle: "Acetat · UV400 · minimaler Glanz",
-        price: 310,
-      },
-      {
-        id: "bbb-05",
-        name: "Emerald Mini Bag",
-        subtitle: "Kompakt · goldener Verschluss",
-        price: 640,
-      },
-      {
-        id: "bbb-06",
-        name: "Ivory Fragrance 50ml",
-        subtitle: "Amber · Bergamotte · cleanes Finish",
-        price: 180,
-      },
-    ],
-    [],
-  );
+  const products: Product[] = PRODUCTS;
 
   // requested: use existing isScrolled state (threshold ~80px)
   const [isScrolled, setIsScrolled] = useState(false);
@@ -570,7 +489,7 @@ export default function LandingPage() {
   const marqueeText = "BYE BYE BERLIN";
   // Scroll fade: transparent when scrolling down, returns when scrolling back up.
   // Explicit cast avoids MotionValue<unknown> vs MotionValue<number> TS conflicts.
-  const marqueeOpacity = useTransform(scrollY, [0, 520], [1, 0]) as MotionValue<number>;
+  const marqueeOpacity = useTransform(scrollY, [0, 520], [1, 0]) as any;
 
   const headerTextColor = isScrolled ? "text-neutral-950" : "text-white";
   const headerBg = isScrolled
@@ -664,8 +583,8 @@ export default function LandingPage() {
           {/* Bottom CTAs */}
           <div className="absolute inset-x-0 bottom-6 z-20 flex flex-col items-center px-5">
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
-              <a
-                href="#kollektion"
+              <Link
+                href="/clothes"
                 className={cn(
                   "inline-flex h-12 min-w-44 items-center justify-center px-10",
                   "bg-white text-black hover:bg-white/90",
@@ -674,9 +593,9 @@ export default function LandingPage() {
                 )}
               >
                 Clothes
-              </a>
-              <a
-                href="#kollektion"
+              </Link>
+              <Link
+                href="/bags"
                 className={cn(
                   "inline-flex h-12 min-w-44 items-center justify-center px-10",
                   "bg-white text-black hover:bg-white/90",
@@ -685,7 +604,7 @@ export default function LandingPage() {
                 )}
               >
                 Bags
-              </a>
+              </Link>
             </div>
           </div>
         </section>
