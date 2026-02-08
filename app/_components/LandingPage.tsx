@@ -307,6 +307,7 @@ function HeroMarquee({
       style={{
         transformOrigin: "center",
         whiteSpace: "nowrap",
+          willChange: "transform",
         // subtle luxe glow for the moving headline
         filter:
           "drop-shadow(0 10px 40px rgba(0,0,0,.55)) drop-shadow(0 0 24px rgba(255,255,255,.10))",
@@ -314,6 +315,7 @@ function HeroMarquee({
     >
       <motion.div
         className="flex w-max items-center gap-[5vw] whitespace-nowrap pl-[5vw]"
+        style={{ willChange: "transform", transform: "translate3d(0,0,0)" }}
         animate={
           reducedMotion
             ? undefined
@@ -329,6 +331,8 @@ function HeroMarquee({
                 duration: 51,
                 ease: "linear",
                 repeat: Infinity,
+                repeatDelay: 0,
+                repeatType: "loop",
               }
         }
       >
