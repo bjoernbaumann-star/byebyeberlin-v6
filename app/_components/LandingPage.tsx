@@ -585,7 +585,7 @@ export default function LandingPage() {
           headerTextColor,
         )}
       >
-        <div className="relative flex h-[76px] w-full items-center justify-end px-4 sm:px-6 lg:px-10">
+        <div className="relative flex h-[76px] w-full items-center px-2 sm:px-4 lg:px-6">
           <div
             className={cn(
               "pointer-events-none absolute inset-x-0 flex justify-center",
@@ -595,7 +595,7 @@ export default function LandingPage() {
             BYE BYE BERLIN
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="absolute right-2 flex items-center gap-1 sm:right-4 lg:right-6">
             <HeaderIconButton label="Warenkorb" onClick={() => setCartOpen(true)}>
               <span className="relative">
                 <IconBag className="h-5 w-5" />
