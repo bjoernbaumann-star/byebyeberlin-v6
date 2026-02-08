@@ -319,8 +319,8 @@ function HeroMarquee({
           reducedMotion
             ? undefined
             : {
-                // left -> right
-                x: [`${phase * -50 - 50}%`, `${phase * -50}%`],
+                // right -> left
+                x: [`${phase * -50}%`, `${phase * -50 - 50}%`],
               }
         }
         transition={
