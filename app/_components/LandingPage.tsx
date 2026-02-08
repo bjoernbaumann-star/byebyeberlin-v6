@@ -295,12 +295,6 @@ function HeroMarquee({
   className?: string;
   blendClassName?: string;
 }) {
-  // Docking motion: big -> small while moving upward as user scrolls
-  const progress = useTransform(scrollY, [0, 420], [0, 1]);
-  const y = useTransform(progress, [0, 1], [0, -260]);
-  const scale = useTransform(progress, [0, 1], [1, 0.14]);
-  const opacity = useTransform(progress, [0, 0.8, 1], [1, 0.18, 0]);
-
   return (
     <motion.div
       aria-hidden="true"
@@ -311,9 +305,6 @@ function HeroMarquee({
         className,
       )}
       style={{
-        y,
-        scale,
-        opacity,
         transformOrigin: "center",
         whiteSpace: "nowrap",
         // subtle luxe glow for the moving headline
@@ -327,8 +318,8 @@ function HeroMarquee({
           reducedMotion
             ? undefined
             : {
-                // right -> left
-                x: [`${phase * -50}%`, `${phase * -50 - 50}%`],
+                // left -> right
+                x: [`${phase * -50 - 50}%`, `${phase * -50}%`],
               }
         }
         transition={
