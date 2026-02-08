@@ -295,10 +295,11 @@ function HeroMarquee({
   className?: string;
   blendClassName?: string;
 }) {
-  const progress = useTransform(scrollY, [0, 320], [0, 1]);
-  const y = useTransform(progress, [0, 1], [0, -120]);
-  const scale = useTransform(progress, [0, 1], [1, 0.16]);
-  const opacity = useTransform(progress, [0, 0.85, 1], [1, 0.25, 0]);
+  // Docking motion: big -> small while moving upward as user scrolls
+  const progress = useTransform(scrollY, [0, 420], [0, 1]);
+  const y = useTransform(progress, [0, 1], [0, -260]);
+  const scale = useTransform(progress, [0, 1], [1, 0.14]);
+  const opacity = useTransform(progress, [0, 0.8, 1], [1, 0.18, 0]);
 
   return (
     <motion.div
@@ -653,8 +654,8 @@ export default function LandingPage() {
           <div className="absolute inset-0 bg-black/30" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,.08),transparent_45%),radial-gradient(circle_at_80%_25%,rgba(255,255,255,.05),transparent_55%)]" />
 
-          {/* Marquee base layer */}
-          <div className="absolute inset-0 z-10">
+          {/* Marquee (fixed overlay so the docking effect is visible while scrolling) */}
+          <div className="pointer-events-none fixed inset-0 z-10">
             <HeroMarquee
               text={marqueeText}
               scrollY={scrollY}
