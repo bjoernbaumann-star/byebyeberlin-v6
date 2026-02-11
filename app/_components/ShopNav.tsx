@@ -193,7 +193,7 @@ function MenuDrawer({
   );
 }
 
-export default function ShopNav() {
+export default function ShopNav({ transparentOnTop = false }: { transparentOnTop?: boolean }) {
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [cartOpen, setCartOpen] = React.useState(false);
@@ -205,7 +205,7 @@ export default function ShopNav() {
   const cart = useCart();
 
   React.useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY >= 80);
+    const onScroll = () => setIsScrolled(window.scrollY > 50);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -233,17 +233,18 @@ export default function ShopNav() {
     };
   }, []);
 
-  const headerTextColor = isScrolled ? "text-neutral-950" : "text-white";
-  const headerBg = isScrolled
-    ? "bg-white/95 backdrop-blur border-b border-black/10"
-    : "bg-transparent";
+  const useTransparent = transparentOnTop && !isScrolled;
+  const headerTextColor = useTransparent ? "text-white" : "text-neutral-950";
+  const headerBg = useTransparent
+    ? "bg-transparent"
+    : "bg-white/90 backdrop-blur-md border-b border-black/5";
 
   return (
     <>
       <header
         className={cn(
           "fixed inset-x-0 top-0 z-[60]",
-          "transition-[background-color,border-color,color] duration-500",
+          "transition-all duration-300 ease-out",
           headerBg,
           headerTextColor,
         )}
@@ -271,7 +272,7 @@ export default function ShopNav() {
                     aria-hidden="true"
                     className={cn(
                       "absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full",
-                      isScrolled ? "bg-neutral-950" : "bg-white",
+                      useTransparent ? "bg-white" : "bg-neutral-950",
                     )}
                   />
                 )}

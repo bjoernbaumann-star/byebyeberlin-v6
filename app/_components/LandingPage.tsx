@@ -120,7 +120,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-dvh bg-white text-neutral-950">
-      <ShopNav />
+      <ShopNav transparentOnTop />
 
       <main className="pt-[76px]">
         <section className="relative h-screen w-full overflow-hidden bg-neutral-950 text-white">
