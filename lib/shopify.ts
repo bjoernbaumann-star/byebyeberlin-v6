@@ -131,6 +131,7 @@ export async function getStorefrontProducts(first = 24): Promise<ShopifyProduct[
     query: PRODUCTS_QUERY,
     variables: { first },
     tags: ["shopify-products"],
+    cache: "no-store",
   });
 
   return data.products.edges.map(({ node }) => ({

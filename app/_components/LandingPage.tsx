@@ -99,7 +99,13 @@ export default function LandingPage() {
     let cancelled = false;
     async function load() {
       try {
-        const res = await fetch("/api/shopify/products", { cache: "no-store" });
+        const res = await fetch(
+          `/api/shopify/products?t=${Date.now()}`,
+          {
+            cache: "no-store",
+            headers: { "Cache-Control": "no-cache, no-store, must-revalidate" },
+          },
+        );
         const json = (await res.json()) as { products?: ShopifyProduct[] };
         if (!cancelled && Array.isArray(json?.products)) {
           setProducts(json.products);
@@ -175,15 +181,19 @@ export default function LandingPage() {
             Shop the edit
           </h2>
           <div className="mt-10">
-            {loading || products.length === 0 ? (
+            {loading ? (
               <div className="flex justify-center py-24">
                 <div
                   className="h-8 w-8 animate-spin rounded-full border-2 border-neutral-200 border-t-neutral-500"
                   aria-hidden="true"
                 />
               </div>
-            ) : (
+            ) : products.length > 0 ? (
               <ProductGrid products={products} />
+            ) : (
+              <p className="py-24 text-center text-sm text-neutral-500">
+                Produkte werden geladen oder sind aktuell nicht verfügbar.
+              </p>
             )}
           </div>
         </section>
