@@ -51,7 +51,7 @@ export default function CartDrawer({
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-[95]"
+          className="fixed inset-0 z-[110]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

@@ -120,7 +120,7 @@ function MenuDrawer({
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-[90]"
+          className="fixed inset-0 z-[110]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -202,7 +202,24 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
     loggedIn: boolean;
     firstName: string | null;
   }>({ loading: true, loggedIn: false, firstName: null });
+  const [shopifyLoginUrl, setShopifyLoginUrl] = React.useState<string | null>(null);
   const cart = useCart();
+
+  React.useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/auth/shopify-login-url", { cache: "force-cache" });
+        const json = (await res.json()) as { url?: string };
+        if (!cancelled && json?.url) setShopifyLoginUrl(json.url);
+      } catch {
+        if (!cancelled) setShopifyLoginUrl(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   React.useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 50);
@@ -237,13 +254,13 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
   const headerTextColor = useTransparent ? "text-white" : "text-neutral-950";
   const headerBg = useTransparent
     ? "bg-transparent"
-    : "bg-white/90 backdrop-blur-md border-b border-black/5";
+    : "bg-white/80 backdrop-blur-md border-b border-black/5";
 
   return (
     <>
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-[60]",
+          "fixed inset-x-0 top-0 z-[100]",
           "transition-all duration-300 ease-out",
           headerBg,
           headerTextColor,
@@ -279,7 +296,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
               </span>
             </button>
             <Link
-              href={me.loggedIn ? "/account" : "/login"}
+              href={me.loggedIn ? "/account" : (shopifyLoginUrl ?? "/login")}
               className="inline-flex items-center gap-2 p-2 hover:opacity-70"
               aria-label={me.loggedIn ? "Mein Konto" : "Login"}
             >

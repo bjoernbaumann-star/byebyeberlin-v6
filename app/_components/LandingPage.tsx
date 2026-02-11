@@ -3,7 +3,6 @@
 import Link from "next/link";
 import React from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { SHOPIFY_MOCK_PRODUCTS } from "../../lib/shopify-mock";
 import type { ShopifyProduct } from "../../lib/shopify-types";
 import ShopFooter from "./ShopFooter";
 import ShopNav from "./ShopNav";
@@ -93,23 +92,20 @@ export default function LandingPage() {
   // Fade out on scroll down, returns when scrolling up.
   const marqueeOpacity = useTransform(scrollY, [0, 520], [1, 0]) as any;
 
-  const [products, setProducts] = React.useState<ShopifyProduct[]>(
-    SHOPIFY_MOCK_PRODUCTS,
-  );
-  const [liveError, setLiveError] = React.useState<string | null>(null);
+  const [products, setProducts] = React.useState<ShopifyProduct[]>([]);
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     let cancelled = false;
     async function load() {
       try {
         const res = await fetch("/api/shopify/products", { cache: "no-store" });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = (await res.json()) as { products: ShopifyProduct[] };
-        if (!cancelled && json?.products?.length) setProducts(json.products);
-      } catch (e) {
-        if (!cancelled) {
-          setLiveError(e instanceof Error ? e.message : "Failed to load products");
+        const json = (await res.json()) as { products?: ShopifyProduct[] };
+        if (!cancelled && Array.isArray(json?.products)) {
+          setProducts(json.products);
         }
+      } finally {
+        if (!cancelled) setLoading(false);
       }
     }
     load();
@@ -122,8 +118,8 @@ export default function LandingPage() {
     <div className="min-h-dvh bg-white text-neutral-950">
       <ShopNav transparentOnTop />
 
-      <main className="pt-[76px]">
-        <section className="relative h-screen w-full overflow-hidden bg-neutral-950 text-white">
+      <main>
+        <section className="relative min-h-screen w-full overflow-hidden bg-neutral-950 text-white">
           <video
             className="absolute inset-0 h-full w-full object-cover object-[center_70%]"
             src="/hero-v2.mp4"
@@ -178,13 +174,17 @@ export default function LandingPage() {
           <h2 className="mt-3 font-sangbleu text-4xl font-bold tracking-tight">
             Shop the edit
           </h2>
-          {liveError && (
-            <p className="mt-3 text-xs text-neutral-500">
-              Live Shopify preview unavailable ({liveError}). Showing mock data.
-            </p>
-          )}
           <div className="mt-10">
-            <ProductGrid products={products} />
+            {loading || products.length === 0 ? (
+              <div className="flex justify-center py-24">
+                <div
+                  className="h-8 w-8 animate-spin rounded-full border-2 border-neutral-200 border-t-neutral-500"
+                  aria-hidden="true"
+                />
+              </div>
+            ) : (
+              <ProductGrid products={products} />
+            )}
           </div>
         </section>
       </main>
