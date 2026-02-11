@@ -3,13 +3,12 @@
 import Link from "next/link";
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { PRODUCTS } from "../_data/products";
+import { useCart } from "./cart/CartContext";
+import CartDrawer from "./cart/CartDrawer";
 
 function cn(...parts: Array<string | false | undefined | null>) {
   return parts.filter(Boolean).join(" ");
 }
-
-const CART_STORAGE_KEY = "bbb_cart_v1";
 
 function IconBag(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -194,158 +193,11 @@ function MenuDrawer({
   );
 }
 
-function MiniCart({
-  open,
-  items,
-  onClose,
-  onRemoveOne,
-  onClear,
-}: {
-  open: boolean;
-  items: Array<{ product: (typeof PRODUCTS)[number]; qty: number }>;
-  onClose: () => void;
-  onRemoveOne: (id: string) => void;
-  onClear: () => void;
-}) {
-  const total = items.reduce((sum, it) => sum + it.product.price * it.qty, 0);
-
-  return (
-    <div
-      className={cn(
-        "fixed inset-0 z-[80]",
-        open ? "pointer-events-auto" : "pointer-events-none",
-      )}
-      aria-hidden={!open}
-    >
-      <div
-        className={cn(
-          "absolute inset-0 bg-black/45 backdrop-blur-sm transition-opacity",
-          open ? "opacity-100" : "opacity-0",
-        )}
-        onClick={onClose}
-      />
-      <aside
-        className={cn(
-          "absolute right-0 top-0 h-full w-full max-w-md",
-          "border-l border-black/10 bg-white/95 text-neutral-950 backdrop-blur",
-          "shadow-[0_40px_120px_-70px_rgba(0,0,0,.8)]",
-          "transition-transform",
-          open ? "translate-x-0" : "translate-x-full",
-        )}
-        role="dialog"
-        aria-label="Warenkorb"
-      >
-        <div className="flex items-center justify-between p-5">
-          <div>
-            <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-600">
-              Bye Bye Berlin
-            </div>
-            <div className="mt-1 font-sangbleu text-xl font-bold">Warenkorb</div>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-full border border-black/10 bg-white px-4 py-2 text-sm hover:bg-neutral-50"
-          >
-            Schließen
-          </button>
-        </div>
-
-        <div className="px-5 pb-6">
-          {items.length === 0 ? (
-            <div className="rounded-2xl border border-black/10 bg-white p-5 text-sm text-neutral-700">
-              Dein Warenkorb ist noch leer.
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {items.map((it) => (
-                <div
-                  key={it.product.id}
-                  className="rounded-2xl border border-black/10 bg-white p-4"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <div className="font-medium">{it.product.name}</div>
-                      <div className="mt-1 text-sm text-neutral-600">
-                        {it.qty} ×{" "}
-                        {new Intl.NumberFormat("de-DE", {
-                          style: "currency",
-                          currency: "EUR",
-                          maximumFractionDigits: 0,
-                        }).format(it.product.price)}
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => onRemoveOne(it.product.id)}
-                      className="rounded-full border border-black/10 bg-white px-3 py-1 text-xs hover:bg-neutral-50"
-                    >
-                      − 1
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div className="mt-5 rounded-2xl border border-black/10 bg-white p-5">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-neutral-600">Zwischensumme</span>
-              <span className="font-medium">
-                {new Intl.NumberFormat("de-DE", {
-                  style: "currency",
-                  currency: "EUR",
-                  maximumFractionDigits: 0,
-                }).format(total)}
-              </span>
-            </div>
-            <div className="mt-4 flex gap-2">
-              <button
-                type="button"
-                onClick={onClear}
-                disabled={items.length === 0}
-                className="flex-1 rounded-xl border border-black/10 bg-white px-4 py-3 text-sm disabled:opacity-50"
-              >
-                Leeren
-              </button>
-              <button
-                type="button"
-                disabled={items.length === 0}
-                className="flex-1 rounded-xl bg-neutral-950 px-4 py-3 text-sm text-white disabled:opacity-50"
-              >
-                Checkout
-              </button>
-            </div>
-          </div>
-        </div>
-      </aside>
-    </div>
-  );
-}
-
 export default function ShopNav() {
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [cartOpen, setCartOpen] = React.useState(false);
-  const [cart, setCart] = React.useState<Record<string, number>>({});
-
-  // Persist cart so nav matches home across pages
-  React.useEffect(() => {
-    try {
-      const raw = localStorage.getItem(CART_STORAGE_KEY);
-      if (raw) setCart(JSON.parse(raw));
-    } catch {
-      // ignore
-    }
-  }, []);
-
-  React.useEffect(() => {
-    try {
-      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
-    } catch {
-      // ignore
-    }
-  }, [cart]);
+  const cart = useCart();
 
   React.useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY >= 80);
@@ -353,26 +205,6 @@ export default function ShopNav() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  const cartItems = PRODUCTS.filter((p) => cart[p.id]).map((p) => ({
-    product: p,
-    qty: cart[p.id] ?? 0,
-  }));
-  const cartCount = Object.values(cart).reduce((a, b) => a + b, 0);
-
-  function removeOne(id: string) {
-    setCart((prev) => {
-      const next = { ...prev };
-      const qty = next[id] ?? 0;
-      if (qty <= 1) delete next[id];
-      else next[id] = qty - 1;
-      return next;
-    });
-  }
-
-  function clear() {
-    setCart({});
-  }
 
   const headerTextColor = isScrolled ? "text-neutral-950" : "text-white";
   const headerBg = isScrolled
@@ -407,7 +239,7 @@ export default function ShopNav() {
             >
               <span className="relative block">
                 <IconBag className="h-5 w-5" />
-                {cartCount > 0 && (
+                {cart.count > 0 && (
                   <span
                     aria-hidden="true"
                     className={cn(
@@ -436,13 +268,7 @@ export default function ShopNav() {
         </div>
       </header>
 
-      <MiniCart
-        open={cartOpen}
-        items={cartItems}
-        onClose={() => setCartOpen(false)}
-        onRemoveOne={removeOne}
-        onClear={clear}
-      />
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
 
       <MenuDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
     </>

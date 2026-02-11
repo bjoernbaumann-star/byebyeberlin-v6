@@ -1,10 +1,11 @@
 import CenteredVideoHero from "../_components/CenteredVideoHero";
 import ShopFooter from "../_components/ShopFooter";
 import ShopNav from "../_components/ShopNav";
-import { PRODUCTS } from "../_data/products";
+import { SHOPIFY_MOCK_PRODUCTS } from "../../lib/shopify-mock";
+import ProductGrid from "../_components/shopify/ProductGrid";
 
 export default function ClothesPage() {
-  const products = PRODUCTS.filter((p) => p.category === "clothes");
+  const products = SHOPIFY_MOCK_PRODUCTS.filter((p) => p.category === "clothes");
 
   return (
     <div className="min-h-dvh bg-white text-neutral-950">
@@ -27,23 +28,8 @@ export default function ClothesPage() {
             luxury finish.
           </p>
 
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {products.map((p) => (
-              <article
-                key={p.id}
-                className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_80px_-60px_rgba(0,0,0,.65)]"
-              >
-                <div className="font-sangbleu text-xl font-bold">{p.name}</div>
-                <div className="mt-2 text-sm text-neutral-600">{p.subtitle}</div>
-                <div className="mt-6 text-sm text-neutral-800">
-                  {new Intl.NumberFormat("de-DE", {
-                    style: "currency",
-                    currency: "EUR",
-                    maximumFractionDigits: 0,
-                  }).format(p.price)}
-                </div>
-              </article>
-            ))}
+          <div className="mt-10">
+            <ProductGrid products={products} />
           </div>
         </section>
       </main>
