@@ -188,12 +188,8 @@ export default function LandingPage() {
                   aria-hidden="true"
                 />
               </div>
-            ) : products.length > 0 ? (
-              <ProductGrid products={products} />
             ) : (
-              <p className="py-24 text-center text-sm text-neutral-500">
-                Produkte werden geladen oder sind aktuell nicht verfügbar.
-              </p>
+              <ProductGrid products={products} />
             )}
           </div>
         </section>

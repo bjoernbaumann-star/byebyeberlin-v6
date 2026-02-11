@@ -254,7 +254,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
   const headerTextColor = useTransparent ? "text-white" : "text-neutral-950";
   const headerBg = useTransparent
     ? "bg-transparent"
-    : "bg-white/80 backdrop-blur-md border-b border-black/5";
+    : "bg-white/90 backdrop-blur-md border-b border-black/5";
 
   return (
     <>
