@@ -23,17 +23,20 @@ export default function ProductGrid({ products }: { products: ShopifyProduct[] }
           key={p.id}
           className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_80px_-60px_rgba(0,0,0,.65)]"
         >
-          {p.images?.[0]?.url && (
-            <div className="mb-4 overflow-hidden rounded-2xl border border-black/10 bg-neutral-50">
-              {/* Use <img> to avoid Next remotePatterns config for Shopify CDN */}
+          <div className="mb-4 overflow-hidden rounded-2xl border border-black/10 bg-neutral-50">
+            {p.images?.[0]?.url ? (
               <img
                 src={p.images[0].url}
                 alt={p.images[0].altText ?? p.title}
                 className="h-56 w-full object-cover"
                 loading="lazy"
               />
-            </div>
-          )}
+            ) : (
+              <div className="flex h-56 w-full items-center justify-center bg-neutral-100 text-sm text-neutral-400">
+                Kein Bild
+              </div>
+            )}
+          </div>
           <div className="font-sangbleu text-xl font-bold">{p.title}</div>
           <div className="mt-2 text-sm text-neutral-600">{p.handle}</div>
           <div className="mt-6 flex items-center justify-between gap-3">
