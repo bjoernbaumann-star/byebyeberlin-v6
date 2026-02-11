@@ -269,7 +269,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
         <div className="relative flex h-[76px] w-full items-center px-2 sm:px-4 lg:px-6">
           <Link
             href="/"
-            className="pointer-events-none absolute inset-x-0 flex justify-center font-sangbleu text-[18px] font-bold tracking-tight whitespace-nowrap leading-none"
+            className="absolute inset-x-0 flex justify-center font-sangbleu text-[18px] font-bold tracking-tight whitespace-nowrap leading-none transition-opacity hover:opacity-80"
             aria-label="Home"
           >
             BYE BYE BERLIN
