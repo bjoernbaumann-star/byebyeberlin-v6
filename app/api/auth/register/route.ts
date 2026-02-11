@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { CUSTOMER_TOKEN_COOKIE } from "../_constants";
 import { customerAccessTokenCreate, customerCreate } from "../../../../lib/shopify";
+import { isShopifyConfigErrorMessage, toErrorMessage } from "../../_utils/shopify-errors";
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -47,8 +48,9 @@ export async function POST(req: Request) {
     });
     return res;
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    const message = toErrorMessage(err);
+    const status = isShopifyConfigErrorMessage(message) ? 500 : 400;
+    return NextResponse.json({ error: message }, { status });
   }
 }
 

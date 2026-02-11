@@ -7,6 +7,7 @@ import {
   customerDefaultAddressUpdate,
   getCustomerByAccessToken,
 } from "../../../../lib/shopify";
+import { isShopifyConfigErrorMessage, toErrorMessage } from "../../_utils/shopify-errors";
 
 type Action =
   | { action: "add"; address: Record<string, unknown> }
@@ -14,7 +15,8 @@ type Action =
   | { action: "setDefault"; addressId: string };
 
 export async function POST(req: Request) {
-  const token = cookies().get(CUSTOMER_TOKEN_COOKIE)?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get(CUSTOMER_TOKEN_COOKIE)?.value;
   if (!token) return NextResponse.json({ error: "Not logged in" }, { status: 401 });
 
   try {
@@ -33,8 +35,9 @@ export async function POST(req: Request) {
     const customer = await getCustomerByAccessToken(token, { ordersFirst: 10, addressesFirst: 20 });
     return NextResponse.json({ customer }, { status: 200 });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    const message = toErrorMessage(err);
+    const status = isShopifyConfigErrorMessage(message) ? 500 : 400;
+    return NextResponse.json({ error: message }, { status });
   }
 }
 

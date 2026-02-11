@@ -16,6 +16,25 @@ export default function LoginPage() {
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
+  const [shopifyLoginUrl, setShopifyLoginUrl] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/auth/shopify-login-url", { cache: "force-cache" });
+        const json = (await res.json()) as { url?: string };
+        if (cancelled) return;
+        setShopifyLoginUrl(json.url ?? null);
+      } catch {
+        if (cancelled) return;
+        setShopifyLoginUrl(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -120,6 +139,20 @@ export default function LoginPage() {
               Registrieren
             </Link>
           </div>
+
+          {shopifyLoginUrl && (
+            <div className="mt-5 text-xs text-neutral-500">
+              New Customer Accounts (6‑stelliger Code) testen:{" "}
+              <a
+                href={shopifyLoginUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="underline underline-offset-4 hover:opacity-80"
+              >
+                Shopify Login öffnen
+              </a>
+            </div>
+          )}
         </div>
       </main>
 

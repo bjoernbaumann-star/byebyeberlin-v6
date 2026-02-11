@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { CUSTOMER_TOKEN_COOKIE } from "../_constants";
 import { customerAccessTokenCreate } from "../../../../lib/shopify";
+import { isShopifyConfigErrorMessage, toErrorMessage } from "../../_utils/shopify-errors";
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -34,9 +35,10 @@ export async function POST(req: Request) {
     });
     return res;
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
+    const message = toErrorMessage(err);
+    const status = isShopifyConfigErrorMessage(message) ? 500 : 401;
     // Surface Shopify auth errors clearly (especially when New Customer Accounts blocks classic tokens)
-    return NextResponse.json({ error: message }, { status: 401 });
+    return NextResponse.json({ error: message }, { status });
   }
 }
 
