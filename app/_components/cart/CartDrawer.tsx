@@ -75,21 +75,8 @@ export default function CartDrawer({
             exit={{ x: "100%" }}
             transition={{ duration: 0.45, ease: [0.2, 0.8, 0.2, 1] }}
           >
-            {/* Header with subtle animated leo pattern */}
-            <div className="relative overflow-hidden border-b border-black/10">
-              <motion.div
-                className="absolute inset-0 opacity-60"
-                style={{
-                  backgroundImage:
-                    "radial-gradient(circle at 12% 28%, rgba(0,0,0,.55) 0 18px, rgba(0,0,0,0) 19px), radial-gradient(circle at 14% 30%, rgba(184,132,60,.95) 0 12px, rgba(0,0,0,0) 13px), radial-gradient(circle at 36% 48%, rgba(0,0,0,.52) 0 20px, rgba(0,0,0,0) 21px), radial-gradient(circle at 38% 50%, rgba(214,167,74,.95) 0 13px, rgba(0,0,0,0) 14px), radial-gradient(circle at 68% 36%, rgba(0,0,0,.55) 0 18px, rgba(0,0,0,0) 19px), radial-gradient(circle at 70% 38%, rgba(176,116,48,.92) 0 12px, rgba(0,0,0,0) 13px), radial-gradient(circle at 82% 64%, rgba(0,0,0,.50) 0 22px, rgba(0,0,0,0) 23px), radial-gradient(circle at 84% 66%, rgba(232,190,92,.92) 0 14px, rgba(0,0,0,0) 15px)",
-                  backgroundSize: "240px 160px",
-                  backgroundRepeat: "repeat",
-                  filter: "saturate(1.05) contrast(1.05)",
-                }}
-                animate={{ x: [0, -240] }}
-                transition={{ duration: 120, ease: "linear", repeat: Infinity }}
-              />
-              <div className="relative flex items-center justify-between px-5 py-5">
+            <div className="border-b border-black/10">
+              <div className="flex items-center justify-between px-5 py-5">
                 <div>
                   <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-700">
                     Bye Bye Berlin
