@@ -5,7 +5,8 @@ export function toErrorMessage(err: unknown) {
 export function isShopifyConfigErrorMessage(message: string) {
   return (
     message.includes("Missing environment variable") ||
-    message.includes("Missing SHOPIFY_STORE_DOMAIN")
+    message.includes("Missing SHOPIFY_STORE_DOMAIN") ||
+    message.includes("SHOPIFY_CONFIG_MISSING")
   );
 }
 

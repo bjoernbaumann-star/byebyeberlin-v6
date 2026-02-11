@@ -5,28 +5,21 @@ type StorefrontResponse<T> = {
   errors?: Array<{ message: string }>;
 };
 
-function getRequiredEnv(name: string) {
-  const v = process.env[name];
-  if (!v) {
-    throw new Error(`Missing environment variable ${name}`);
-  }
-  return v;
-}
-
-function getShopifyEndpoint() {
-  // Prefer custom domain or myshopify domain without protocol, e.g. "byebyberlin.store" or "byebyberlin.myshopify.com"
+function getShopifyConfig(): { endpoint: string; token: string } | null {
   const domain =
     process.env.SHOPIFY_STORE_DOMAIN ||
     process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN ||
     "";
-  if (!domain) {
-    throw new Error(
-      "Missing SHOPIFY_STORE_DOMAIN (e.g. byebyberlin.myshopify.com or your custom domain).",
-    );
-  }
+  const token =
+    process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN ||
+    process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN ||
+    "";
+  if (!domain || !token) return null;
   const clean = domain.replace(/^https?:\/\//, "").replace(/\/$/, "");
-  // Shopify Storefront API endpoint (version can be adjusted later)
-  return `https://${clean}/api/2025-01/graphql.json`;
+  return {
+    endpoint: `https://${clean}/api/2025-01/graphql.json`,
+    token,
+  };
 }
 
 export async function shopifyFetch<TData>({
@@ -40,8 +33,13 @@ export async function shopifyFetch<TData>({
   tags?: string[];
   cache?: RequestCache;
 }): Promise<TData> {
-  const endpoint = getShopifyEndpoint();
-  const token = getRequiredEnv("SHOPIFY_STOREFRONT_ACCESS_TOKEN");
+  const config = getShopifyConfig();
+  if (!config) {
+    throw new Error(
+      "SHOPIFY_CONFIG_MISSING: NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN and NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN (or server equivalents) are required.",
+    );
+  }
+  const { endpoint, token } = config;
 
   const isNoStore = cache === "no-store";
   const res = await fetch(endpoint, {
@@ -254,10 +252,15 @@ const CUSTOMER_CREATE = /* GraphQL */ `
 
 export async function customerCreate(input: {
   email: string;
-  password: string;
+  password?: string;
   firstName?: string;
   lastName?: string;
 }): Promise<{ id: string; firstName?: string | null }> {
+  // Storefront API requires password; for New Customer Accounts we use a generated one
+  const inputWithPassword = {
+    ...input,
+    password: input.password ?? crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().slice(0, 8),
+  };
   const data = await shopifyFetch<{
     customerCreate: {
       customer: { id: string; firstName?: string | null } | null;
@@ -265,7 +268,7 @@ export async function customerCreate(input: {
     };
   }>({
     query: CUSTOMER_CREATE,
-    variables: { input },
+    variables: { input: inputWithPassword },
     cache: "no-store",
   });
 

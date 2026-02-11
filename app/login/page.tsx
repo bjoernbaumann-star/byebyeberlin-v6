@@ -13,7 +13,6 @@ function cn(...parts: Array<string | false | undefined | null>) {
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [shopifyLoginUrl, setShopifyLoginUrl] = React.useState<string | null>(null);
@@ -44,14 +43,18 @@ export default function LoginPage() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email }),
       });
-      const json = (await res.json()) as { error?: string };
+      const json = (await res.json()) as { error?: string; ok?: boolean; redirectTo?: string };
       if (!res.ok) {
         setError(
           json.error ||
-            "Login fehlgeschlagen. Hinweis: Wenn dein Shop nur „New Customer Accounts“ erlaubt, kann der klassische Login blockiert sein.",
+            "Login fehlgeschlagen. Bitte versuche es erneut.",
         );
+        return;
+      }
+      if (json.ok && json.redirectTo) {
+        window.location.href = json.redirectTo;
         return;
       }
       router.push("/account");
@@ -95,24 +98,6 @@ export default function LoginPage() {
                 )}
               />
             </div>
-            <div className="space-y-2">
-              <label className="text-xs font-medium uppercase tracking-[0.28em] text-neutral-700">
-                Passwort
-              </label>
-              <input
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                type="password"
-                autoComplete="current-password"
-                required
-                className={cn(
-                  "h-12 w-full rounded-full px-5 text-sm",
-                  "border border-black/10 bg-white",
-                  "outline-none focus:ring-2 focus:ring-black/10",
-                )}
-              />
-            </div>
-
             {error && (
               <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                 {error}
