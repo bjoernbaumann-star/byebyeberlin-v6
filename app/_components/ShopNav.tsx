@@ -197,6 +197,11 @@ export default function ShopNav() {
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [cartOpen, setCartOpen] = React.useState(false);
+  const [me, setMe] = React.useState<{
+    loading: boolean;
+    loggedIn: boolean;
+    firstName: string | null;
+  }>({ loading: true, loggedIn: false, firstName: null });
   const cart = useCart();
 
   React.useEffect(() => {
@@ -204,6 +209,28 @@ export default function ShopNav() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/auth/me", { cache: "no-store" });
+        const json = (await res.json()) as { loggedIn?: boolean; firstName?: string | null };
+        if (cancelled) return;
+        setMe({
+          loading: false,
+          loggedIn: !!json.loggedIn,
+          firstName: json.firstName ?? null,
+        });
+      } catch {
+        if (cancelled) return;
+        setMe({ loading: false, loggedIn: false, firstName: null });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const headerTextColor = isScrolled ? "text-neutral-950" : "text-white";
@@ -250,9 +277,16 @@ export default function ShopNav() {
                 )}
               </span>
             </button>
-            <button className="p-2 hover:opacity-70" aria-label="User">
+            <Link
+              href={me.loggedIn ? "/account" : "/login"}
+              className="inline-flex items-center gap-2 p-2 hover:opacity-70"
+              aria-label={me.loggedIn ? "Mein Konto" : "Login"}
+            >
               <IconUser className="h-5 w-5" />
-            </button>
+              <span className="hidden sm:inline text-xs font-medium uppercase tracking-[0.35em]">
+                {me.loading ? "…" : me.loggedIn ? me.firstName || "Mein Konto" : "Login"}
+              </span>
+            </Link>
             <button className="p-2 hover:opacity-70" aria-label="Search">
               <IconSearch className="h-5 w-5" />
             </button>
