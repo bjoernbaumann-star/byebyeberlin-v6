@@ -4,7 +4,6 @@ import React from "react";
 import type { ShopifyProduct } from "../../../lib/shopify-types";
 import type { CartContextValue } from "../cart/CartContext";
 import { useCart } from "../cart/CartContext";
-import ShopifyBuyButton from "./ShopifyBuyButton";
 
 function AddToBagButton({
   product,
@@ -26,7 +25,7 @@ function AddToBagButton({
       type="button"
       onClick={handleAdd}
       disabled={!product.firstVariantId}
-      className="rounded-full border border-black/10 bg-white px-4 py-2 font-sangbleu text-xs font-bold uppercase tracking-[0.25em] text-neutral-950 hover:bg-neutral-50 disabled:opacity-50 transition-colors"
+      className="rounded-full bg-neutral-950 px-4 py-2 font-sangbleu text-xs font-bold uppercase tracking-[0.25em] text-white hover:bg-neutral-800 disabled:opacity-50 transition-colors"
     >
       {justAdded ? "ADDED TO BAG" : "Add to Bag"}
     </button>
@@ -84,7 +83,6 @@ export default function ProductGrid({ products }: { products: ShopifyProduct[] }
             </div>
             <div className="flex items-center gap-2">
               <AddToBagButton product={p} cart={cart} />
-              <ShopifyBuyButton product={p} />
             </div>
           </div>
         </article>
