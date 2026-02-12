@@ -22,6 +22,8 @@ function getShopifyConfig(): { endpoint: string; token: string } | null {
   };
 }
 
+const SHOPIFY_FETCH_TIMEOUT_MS = 15_000;
+
 export async function shopifyFetch<TData>({
   query,
   variables,
@@ -42,30 +44,52 @@ export async function shopifyFetch<TData>({
   const { endpoint, token } = config;
 
   const isNoStore = cache === "no-store";
-  const res = await fetch(endpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Shopify-Storefront-Access-Token": token,
-    },
-    body: JSON.stringify({ query, variables }),
-    cache: cache ?? "force-cache",
-    // Next.js caching hints (safe defaults) — avoid caching user-specific requests.
-    ...(isNoStore ? {} : { next: { revalidate: 60, tags } }),
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), SHOPIFY_FETCH_TIMEOUT_MS);
 
-  if (!res.ok) {
-    throw new Error(`Shopify request failed: ${res.status} ${res.statusText}`);
-  }
+  try {
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Storefront-Access-Token": token,
+      },
+      body: JSON.stringify({ query, variables }),
+      cache: cache ?? "force-cache",
+      signal: controller.signal,
+      ...(isNoStore ? {} : { next: { revalidate: 60, tags } }),
+    });
 
-  const json = (await res.json()) as StorefrontResponse<TData>;
-  if (json.errors?.length) {
-    throw new Error(json.errors.map((e) => e.message).join("; "));
+    if (!res.ok) {
+      throw new Error(`Shopify request failed: ${res.status} ${res.statusText}`);
+    }
+
+    const json = (await res.json()) as StorefrontResponse<TData>;
+    if (json.errors?.length) {
+      throw new Error(json.errors.map((e) => e.message).join("; "));
+    }
+    if (!json.data) {
+      throw new Error("Shopify response missing data");
+    }
+    return json.data;
+  } finally {
+    clearTimeout(timeoutId);
   }
-  if (!json.data) {
-    throw new Error("Shopify response missing data");
+}
+
+/** Safe variant: returns null on missing config, timeout, or API error. Never throws. */
+export async function shopifyFetchSafe<TData>(opts: {
+  query: string;
+  variables?: Record<string, unknown>;
+  tags?: string[];
+  cache?: RequestCache;
+}): Promise<TData | null> {
+  if (!getShopifyConfig()) return null;
+  try {
+    return await shopifyFetch<TData>(opts);
+  } catch {
+    return null;
   }
-  return json.data;
 }
 
 type ProductsQueryData = {
@@ -157,6 +181,18 @@ export async function getStorefrontProducts(first = 24): Promise<ShopifyProduct[
   return data.products.edges.map(({ node }) => mapProductNode(node));
 }
 
+/** Safe variant: returns [] on missing config, timeout, or API error. Never throws. */
+export async function getStorefrontProductsSafe(first = 24): Promise<ShopifyProduct[]> {
+  const data = await shopifyFetchSafe<ProductsQueryData>({
+    query: PRODUCTS_QUERY,
+    variables: { first },
+    tags: ["shopify-products"],
+    cache: "no-store",
+  });
+  if (!data?.products?.edges?.length) return [];
+  return data.products.edges.map(({ node }) => mapProductNode(node));
+}
+
 type CollectionProductsData = {
   collection: {
     products: ProductsQueryData["products"];
@@ -207,6 +243,23 @@ export async function getProductsByCollection(
     return [];
   }
 
+  return data.collection.products.edges.map(({ node }) =>
+    mapProductNode(node as CollectionProductNode),
+  );
+}
+
+/** Safe variant: returns [] on missing config, timeout, or API error. Never throws. */
+export async function getProductsByCollectionSafe(
+  collectionHandle: string,
+  first = 50,
+): Promise<ShopifyProduct[]> {
+  const data = await shopifyFetchSafe<CollectionProductsData>({
+    query: COLLECTION_PRODUCTS_QUERY,
+    variables: { handle: collectionHandle, first },
+    tags: [`shopify-collection-${collectionHandle}`],
+    cache: "no-store",
+  });
+  if (!data?.collection?.products?.edges?.length) return [];
   return data.collection.products.edges.map(({ node }) =>
     mapProductNode(node as CollectionProductNode),
   );

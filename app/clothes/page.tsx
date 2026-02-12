@@ -2,7 +2,7 @@ import CenteredVideoHero from "../_components/CenteredVideoHero";
 import ShopFooter from "../_components/ShopFooter";
 import ShopNav from "../_components/ShopNav";
 import ProductGrid from "../_components/shopify/ProductGrid";
-import { getProductsByCollection, getStorefrontProducts } from "../../lib/shopify";
+import { getProductsByCollectionSafe, getStorefrontProductsSafe } from "../../lib/shopify";
 
 function isClothes(handle: string, title: string): boolean {
   const h = handle.toLowerCase();
@@ -11,9 +11,9 @@ function isClothes(handle: string, title: string): boolean {
 }
 
 export default async function ClothesPage() {
-  let products = await getProductsByCollection("clothes", 50);
+  let products = await getProductsByCollectionSafe("clothes", 50);
   if (products.length === 0) {
-    const all = await getStorefrontProducts(50);
+    const all = await getStorefrontProductsSafe(50);
     products = all.filter((p) => isClothes(p.handle, p.title));
   }
 

@@ -1,10 +1,10 @@
 import ShopFooter from "../_components/ShopFooter";
 import ShopNav from "../_components/ShopNav";
 import ProductGrid from "../_components/shopify/ProductGrid";
-import { getStorefrontProducts } from "../../lib/shopify";
+import { getStorefrontProductsSafe } from "../../lib/shopify";
 
 export default async function KollektionPage() {
-  const products = await getStorefrontProducts(50);
+  const products = await getStorefrontProductsSafe(50);
 
   return (
     <div className="min-h-dvh bg-white text-neutral-950">

@@ -72,6 +72,17 @@ function formatPrice(amount: number, currencyCode: string) {
 export default function ProductGrid({ products }: { products: ShopifyProduct[] }) {
   const cart = useCart();
 
+  if (!products.length) {
+    return (
+      <div className="rounded-2xl border border-black/10 bg-white p-12 text-center">
+        <p className="text-neutral-600">No Products Found</p>
+        <p className="mt-2 text-sm text-neutral-500">
+          Shop ist vorübergehend nicht erreichbar. Bitte versuche es später erneut.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {products.map((p) => (

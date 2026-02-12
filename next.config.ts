@@ -2,8 +2,8 @@ import type { NextConfig } from "next";
 import { readFileSync, existsSync } from "fs";
 import { resolve } from "path";
 
-function loadAppEnv(): Record<string, string> {
-  const p = resolve(process.cwd(), "app/.env.local");
+function loadEnvFromFile(relPath: string): Record<string, string> {
+  const p = resolve(process.cwd(), relPath);
   if (!existsSync(p)) return {};
   try {
     const content = readFileSync(p, "utf8");
@@ -16,6 +16,10 @@ function loadAppEnv(): Record<string, string> {
   } catch {
     return {};
   }
+}
+
+function loadAppEnv(): Record<string, string> {
+  return { ...loadEnvFromFile(".env.local"), ...loadEnvFromFile("app/.env.local") };
 }
 
 const nextConfig: NextConfig = {
