@@ -34,7 +34,7 @@ function LoginVerifyContent() {
               Invalid link. Please start the login again.
             </p>
             <Link href="/login" className="mt-6 inline-block text-sm font-medium underline">
-              Zum Login
+              Go to login
             </Link>
           </div>
         </main>
@@ -52,7 +52,7 @@ function LoginVerifyContent() {
           <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-600">
             Bye Bye Berlin
           </div>
-          <h1 className="mt-3 font-sangbleu text-5xl font-bold tracking-tight">Code eingeben</h1>
+          <h1 className="mt-3 font-sangbleu text-5xl font-bold tracking-tight">Enter code</h1>
           <p className="mt-4 text-sm leading-relaxed text-neutral-700">
             {email ? (
               <>

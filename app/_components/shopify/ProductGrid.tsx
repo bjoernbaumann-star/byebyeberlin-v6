@@ -61,16 +61,16 @@ export default function ProductGrid({ products }: { products: ShopifyProduct[] }
           key={p.id}
           className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_80px_-60px_rgba(0,0,0,.65)]"
         >
-          <div className="mb-4 overflow-hidden rounded-2xl border border-black/10 bg-neutral-50">
+          <div className="polaroid-frame mb-4">
             {p.images?.[0]?.url ? (
               <img
                 src={p.images[0].url}
                 alt={p.images[0].altText ?? p.title}
-                className="h-56 w-full object-cover"
+                className="polaroid-image"
                 loading="lazy"
               />
             ) : (
-              <div className="flex h-56 w-full items-center justify-center bg-neutral-100 text-sm text-neutral-400">
+              <div className="polaroid-image flex items-center justify-center bg-neutral-200 text-sm text-neutral-500">
                 No image
               </div>
             )}

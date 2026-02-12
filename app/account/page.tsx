@@ -170,12 +170,12 @@ export default function AccountPage() {
 
         {loading ? (
           <div className="mt-10 rounded-[2.5rem] border border-black/10 bg-neutral-50 p-10 text-sm text-neutral-600">
-            Lädt …
+            Loading …
           </div>
         ) : (
           <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
             <section className="rounded-[2.5rem] border border-black/10 bg-neutral-50 p-10">
-              <h2 className="font-sangbleu text-2xl font-bold tracking-tight">Letzte Bestellungen</h2>
+              <h2 className="font-sangbleu text-2xl font-bold tracking-tight">Recent orders</h2>
               <div className="mt-6 space-y-4">
                 {customer?.orders?.length ? (
                   customer.orders.map((o) => (
@@ -194,13 +194,13 @@ export default function AccountPage() {
                     </div>
                   ))
                 ) : (
-                  <div className="text-sm text-neutral-600">Noch keine Bestellungen.</div>
+                  <div className="text-sm text-neutral-600">No orders yet.</div>
                 )}
               </div>
             </section>
 
             <section className="rounded-[2.5rem] border border-black/10 bg-neutral-50 p-10">
-              <h2 className="font-sangbleu text-2xl font-bold tracking-tight">Lieferadressen</h2>
+              <h2 className="font-sangbleu text-2xl font-bold tracking-tight">Delivery addresses</h2>
               <div className="mt-6 space-y-4">
                 {customer?.addresses?.length ? (
                   customer.addresses.map((a) => {
