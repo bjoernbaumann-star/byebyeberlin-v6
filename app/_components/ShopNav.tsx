@@ -158,7 +158,7 @@ function MenuDrawer({
             </button>
 
             <div className="h-full overflow-y-auto px-10 pb-14 pt-20">
-              <nav className="space-y-5 text-[22px] leading-tight">
+              <nav className="space-y-5 font-sangbleu-medium text-[22px] leading-tight">
                 {[
                   { label: "Bags", href: "/bags" },
                   { label: "Clothes", href: "/clothes" },
@@ -259,16 +259,16 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
           headerTextColor,
         )}
       >
-        <div className="relative flex h-[76px] w-full items-center px-2 sm:px-4 lg:px-6">
-          <Link
-            href="/"
-            className="absolute inset-x-0 flex justify-center font-sangbleu text-[18px] font-bold tracking-tight whitespace-nowrap leading-none transition-opacity hover:opacity-80"
-            aria-label="Home"
-          >
-            BYE BYE BERLIN
-          </Link>
-
-          <div className="absolute right-2 flex items-center gap-1 sm:right-4 lg:right-6">
+        <div className="flex h-[76px] w-full items-center justify-center px-4 sm:px-6">
+          <div className="flex flex-1 items-center justify-center gap-6 sm:gap-8 lg:gap-12">
+            <Link
+              href="/"
+              className="font-sangbleu-medium text-[18px] tracking-tight whitespace-nowrap leading-none transition-opacity hover:opacity-80"
+              aria-label="Home"
+            >
+              BYE BYE BERLIN
+            </Link>
+            <div className="flex items-center justify-center gap-2 sm:gap-4">
             <button
               type="button"
               onClick={() => setCartOpen(true)}
@@ -283,7 +283,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
                 className="flex items-center gap-1.5"
               >
                 <IconBag className="h-5 w-5" />
-                <span className="hidden sm:inline font-sangbleu text-xs font-bold uppercase tracking-[0.2em]">
+                <span className="hidden sm:inline font-sangbleu-medium text-xs uppercase tracking-[0.2em]">
                   BAG
                 </span>
                 <motion.span
@@ -312,7 +312,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
                     aria-haspopup="true"
                   >
                     <IconUser className="h-5 w-5" />
-                    <span className="hidden sm:inline text-xs font-medium uppercase tracking-[0.35em]">
+                    <span className="hidden sm:inline font-sangbleu-medium text-xs uppercase tracking-[0.2em]">
                       {me.firstName || "Mein Konto"}
                     </span>
                   </button>
@@ -362,7 +362,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
                   aria-label="Login"
                 >
                   <IconUser className="h-5 w-5" />
-                  <span className="hidden sm:inline text-xs font-medium uppercase tracking-[0.35em]">
+                  <span className="hidden sm:inline font-sangbleu-medium text-xs uppercase tracking-[0.2em]">
                     {me.loading ? "…" : "Login"}
                   </span>
                 </Link>
@@ -374,11 +374,12 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
-              className="ml-1 inline-flex items-center gap-2 px-2 py-2 text-xs font-medium uppercase tracking-[0.35em] hover:opacity-70"
+              className="inline-flex items-center gap-2 px-2 py-2 font-sangbleu-medium text-xs uppercase tracking-[0.2em] hover:opacity-70"
             >
               <IconMenu className="h-5 w-5" />
               <span className="hidden sm:inline">Menu</span>
             </button>
+            </div>
           </div>
         </div>
       </header>

@@ -16,9 +16,25 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "SangBleuSunrise";
+  src: url("/fonts/SangBleuSunrise-Medium-WebXL.eot");
+  src: url("/fonts/SangBleuSunrise-Medium-WebXL.eot") format("embedded-opentype"),
+       url("/fonts/SangBleuSunrise-Regular-WebXL.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 .font-sangbleu {
   font-family: "SangBleuSunrise", ui-serif, Georgia, Cambria, "Times New Roman",
     Times, serif;
+}
+
+.font-sangbleu-medium {
+  font-family: "SangBleuSunrise", ui-serif, Georgia, Cambria, "Times New Roman",
+    Times, serif;
+  font-weight: 500;
 }
 
 :root {
