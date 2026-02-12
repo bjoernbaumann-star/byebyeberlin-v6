@@ -174,12 +174,17 @@ export default function LandingPage() {
         </section>
 
         <section className="mx-auto max-w-6xl px-5 pb-16 pt-16">
-          <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-600">
-            Featured
+          <div className="flex flex-col items-center justify-center text-center">
+            <motion.h2
+              className="font-sangbleu text-3xl font-bold uppercase tracking-[0.2em] text-neutral-950"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
+            >
+              THE SELECTION
+            </motion.h2>
           </div>
-          <h2 className="mt-3 font-sangbleu text-4xl font-bold tracking-tight">
-            Shop the edit
-          </h2>
           <div className="mt-10">
             {loading ? (
               <div className="flex justify-center py-24">
