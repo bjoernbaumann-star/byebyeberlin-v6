@@ -14,37 +14,60 @@ export default function ShopifyBuyButton({
   product: ShopifyProduct;
   className?: string;
 }) {
-  const [showSoon, setShowSoon] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  const handleBuyNow = async () => {
+    const variantId = product.firstVariantId;
+    if (!variantId) {
+      setError("Produkt nicht verfügbar");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/shopify/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ merchandiseId: variantId, quantity: 1 }),
+      });
+      const json = (await res.json()) as { checkoutUrl?: string; error?: string };
+      if (!res.ok) {
+        throw new Error(json.error ?? "Checkout fehlgeschlagen");
+      }
+      if (json.checkoutUrl) {
+        window.location.href = json.checkoutUrl;
+      } else {
+        throw new Error("Keine Checkout-URL erhalten");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Fehler");
+      setLoading(false);
+    }
+  };
 
   return (
     <div className={cn("inline-flex flex-col items-center", className)}>
       <button
         type="button"
-        onClick={() => {
-          if (product.onlineStoreUrl) {
-            window.open(product.onlineStoreUrl, "_blank", "noopener,noreferrer");
-            return;
-          }
-          setShowSoon(true);
-          window.setTimeout(() => setShowSoon(false), 1600);
-        }}
+        onClick={handleBuyNow}
+        disabled={!product.firstVariantId || loading}
         className={cn(
           "inline-flex h-12 items-center justify-center px-8",
-          "bg-neutral-950 text-white hover:bg-neutral-900",
+          "bg-neutral-950 text-white hover:bg-neutral-900 disabled:opacity-50 disabled:cursor-not-allowed",
           "font-sangbleu text-xs font-bold uppercase tracking-[0.28em]",
         )}
       >
-        Buy
+        {loading ? "…" : "Buy"}
       </button>
-      <div
-        className={cn(
-          "mt-2 text-xs tracking-wide text-neutral-600 transition-opacity",
-          showSoon ? "opacity-100" : "opacity-0",
-        )}
-        aria-live="polite"
-      >
-        Coming soon
-      </div>
+      {error && (
+        <div
+          className="mt-2 text-xs text-red-600"
+          aria-live="polite"
+        >
+          {error}
+        </div>
+      )}
     </div>
   );
 }

@@ -88,6 +88,9 @@ type ProductsQueryData = {
             height: number | null;
           }>;
         };
+        variants: {
+          nodes: Array<{ id: string }>;
+        };
       };
     }>;
   };
@@ -120,6 +123,11 @@ const PRODUCTS_QUERY = /* GraphQL */ `
               height
             }
           }
+          variants(first: 1) {
+            nodes {
+              id
+            }
+          }
         }
       }
     }
@@ -141,7 +149,69 @@ export async function getStorefrontProducts(first = 24): Promise<ShopifyProduct[
     onlineStoreUrl: node.onlineStoreUrl,
     priceRange: node.priceRange,
     images: node.images.nodes,
+    firstVariantId: node.variants?.nodes?.[0]?.id ?? null,
   }));
+}
+
+// -----------------------------
+// Checkout (Cart + Checkout URL)
+// -----------------------------
+
+type CartCreateData = {
+  cartCreate: {
+    cart: { checkoutUrl: string } | null;
+    userErrors: Array<{ field?: string[]; message: string }>;
+  };
+};
+
+const CART_CREATE_MUTATION = /* GraphQL */ `
+  mutation CartCreate($lines: [CartLineInput!]!) {
+    cartCreate(input: { lines: $lines }) {
+      cart {
+        checkoutUrl
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+export async function createCartAndGetCheckoutUrl(
+  merchandiseId: string,
+  quantity = 1,
+): Promise<string> {
+  return createCartWithLinesAndGetCheckoutUrl([{ merchandiseId, quantity }]);
+}
+
+export async function createCartWithLinesAndGetCheckoutUrl(
+  lines: Array<{ merchandiseId: string; quantity: number }>,
+): Promise<string> {
+  const validLines = lines
+    .filter((l) => l.merchandiseId?.startsWith("gid://shopify/ProductVariant/"))
+    .map((l) => ({
+      merchandiseId: l.merchandiseId,
+      quantity: Math.max(1, Math.min(99, Math.floor(l.quantity ?? 1))),
+    }));
+
+  if (validLines.length === 0) {
+    throw new Error("Keine gültigen Produktvarianten.");
+  }
+
+  const data = await shopifyFetch<CartCreateData>({
+    query: CART_CREATE_MUTATION,
+    variables: { lines: validLines },
+    cache: "no-store",
+  });
+
+  const errs = data.cartCreate.userErrors;
+  if (errs?.length) {
+    throw new Error(errs.map((e) => e.message).join("; "));
+  }
+  const url = data.cartCreate.cart?.checkoutUrl;
+  if (!url) throw new Error("Checkout URL konnte nicht erstellt werden.");
+  return url;
 }
 
 // -----------------------------

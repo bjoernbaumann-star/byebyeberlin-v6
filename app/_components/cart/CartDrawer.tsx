@@ -8,10 +8,10 @@ function cn(...parts: Array<string | false | undefined | null>) {
   return parts.filter(Boolean).join(" ");
 }
 
-function formatEUR(amount: number) {
+function formatPrice(amount: number, currencyCode: string) {
   return new Intl.NumberFormat("de-DE", {
     style: "currency",
-    currency: "EUR",
+    currency: currencyCode || "EUR",
     maximumFractionDigits: 0,
   }).format(amount);
 }
@@ -37,6 +37,7 @@ export default function CartDrawer({
   onClose: () => void;
 }) {
   const cart = useCart();
+  const [checkoutLoading, setCheckoutLoading] = React.useState(false);
 
   React.useEffect(() => {
     if (!open) return;
@@ -117,8 +118,9 @@ export default function CartDrawer({
                           <div className="font-medium">{l.product.title}</div>
                           <div className="mt-1 text-sm text-neutral-600">
                             {l.qty} ×{" "}
-                            {formatEUR(
+                            {formatPrice(
                               Number(l.product.priceRange.minVariantPrice.amount),
+                              l.product.priceRange.minVariantPrice.currencyCode,
                             )}
                           </div>
                         </div>
@@ -148,7 +150,7 @@ export default function CartDrawer({
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-neutral-600">Zwischensumme</span>
                   <span className="font-medium">
-                    {formatEUR(cart.subtotal.amount)}
+                    {formatPrice(cart.subtotal.amount, cart.subtotal.currencyCode)}
                   </span>
                 </div>
 
@@ -163,11 +165,41 @@ export default function CartDrawer({
                   </button>
                   <button
                     type="button"
-                    disabled
-                    className="flex-1 rounded-xl bg-neutral-950 px-4 py-3 text-sm text-white opacity-70"
-                    title="Shopify Checkout kommt bald"
+                    disabled={
+                      cart.lines.length === 0 ||
+                      checkoutLoading ||
+                      cart.lines.some((l) => !l.product.firstVariantId)
+                    }
+                    onClick={async () => {
+                      const lines = cart.lines
+                        .filter((l) => l.product.firstVariantId)
+                        .map((l) => ({
+                          merchandiseId: l.product.firstVariantId!,
+                          quantity: l.qty,
+                        }));
+                      if (lines.length === 0) return;
+                      setCheckoutLoading(true);
+                      try {
+                        const res = await fetch("/api/shopify/checkout", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ lines }),
+                        });
+                        const json = (await res.json()) as { checkoutUrl?: string; error?: string };
+                        if (json.checkoutUrl) {
+                          cart.clear();
+                          window.location.href = json.checkoutUrl;
+                        } else {
+                          throw new Error(json.error ?? "Checkout fehlgeschlagen");
+                        }
+                      } catch (err) {
+                        console.error(err);
+                        setCheckoutLoading(false);
+                      }
+                    }}
+                    className="flex-1 rounded-xl bg-neutral-950 px-4 py-3 text-sm text-white disabled:opacity-50"
                   >
-                    Coming soon
+                    {checkoutLoading ? "…" : "Checkout"}
                   </button>
                 </div>
               </div>

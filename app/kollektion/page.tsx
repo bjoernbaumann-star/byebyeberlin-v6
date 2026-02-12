@@ -1,9 +1,11 @@
 import ShopFooter from "../_components/ShopFooter";
 import ShopNav from "../_components/ShopNav";
-import { SHOPIFY_MOCK_PRODUCTS } from "../../lib/shopify-mock";
 import ProductGrid from "../_components/shopify/ProductGrid";
+import { getStorefrontProducts } from "../../lib/shopify";
 
-export default function KollektionPage() {
+export default async function KollektionPage() {
+  const products = await getStorefrontProducts(50);
+
   return (
     <div className="min-h-dvh bg-white text-neutral-950">
       <ShopNav />
@@ -20,7 +22,7 @@ export default function KollektionPage() {
           </p>
 
           <div className="mt-10">
-            <ProductGrid products={SHOPIFY_MOCK_PRODUCTS} />
+            <ProductGrid products={products} />
           </div>
         </section>
       </main>

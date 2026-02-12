@@ -1,11 +1,18 @@
 import CenteredVideoHero from "../_components/CenteredVideoHero";
 import ShopFooter from "../_components/ShopFooter";
 import ShopNav from "../_components/ShopNav";
-import { SHOPIFY_MOCK_PRODUCTS } from "../../lib/shopify-mock";
 import ProductGrid from "../_components/shopify/ProductGrid";
+import { getStorefrontProducts } from "../../lib/shopify";
 
-export default function ClothesPage() {
-  const products = SHOPIFY_MOCK_PRODUCTS.filter((p) => p.category === "clothes");
+function isClothes(handle: string, title: string): boolean {
+  const h = handle.toLowerCase();
+  const t = title.toLowerCase();
+  return h.includes("tee") || h.includes("sleeve") || h.includes("shirt") || h.includes("scarf") || h.includes("belt") || t.includes("tee") || t.includes("shirt") || t.includes("scarf") || t.includes("belt");
+}
+
+export default async function ClothesPage() {
+  const all = await getStorefrontProducts(50);
+  const products = all.filter((p) => isClothes(p.handle, p.title));
 
   return (
     <div className="min-h-dvh bg-white text-neutral-950">

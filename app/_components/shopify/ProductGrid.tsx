@@ -5,10 +5,10 @@ import type { ShopifyProduct } from "../../../lib/shopify-types";
 import { useCart } from "../cart/CartContext";
 import ShopifyBuyButton from "./ShopifyBuyButton";
 
-function formatEUR(amount: number) {
+function formatPrice(amount: number, currencyCode: string) {
   return new Intl.NumberFormat("de-DE", {
     style: "currency",
-    currency: "EUR",
+    currency: currencyCode || "EUR",
     maximumFractionDigits: 0,
   }).format(amount);
 }
@@ -41,7 +41,7 @@ export default function ProductGrid({ products }: { products: ShopifyProduct[] }
           <div className="mt-2 text-sm text-neutral-600">{p.handle}</div>
           <div className="mt-6 flex items-center justify-between gap-3">
             <div className="text-sm text-neutral-800">
-              {formatEUR(Number(p.priceRange.minVariantPrice.amount))}
+              {formatPrice(Number(p.priceRange.minVariantPrice.amount), p.priceRange.minVariantPrice.currencyCode)}
             </div>
             <div className="flex items-center gap-2">
               <button

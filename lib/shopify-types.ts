@@ -23,6 +23,9 @@ export type ShopifyProduct = {
   images: ShopifyImage[];
   onlineStoreUrl?: string | null;
 
+  /** GID für Variant (z.B. gid://shopify/ProductVariant/...) – für Checkout/Cart */
+  firstVariantId?: string | null;
+
   // optional UI helpers (not from Shopify by default)
   category?: "bags" | "clothes" | "other";
 };

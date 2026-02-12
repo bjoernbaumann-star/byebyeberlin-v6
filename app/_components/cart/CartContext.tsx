@@ -17,7 +17,7 @@ type CartState = {
 type CartContextValue = {
   lines: CartLine[];
   count: number;
-  subtotal: { amount: number; currencyCode: "EUR" };
+  subtotal: { amount: number; currencyCode: string };
   add: (product: ShopifyProduct, qty?: number) => void;
   remove: (productId: string) => void;
   setQty: (productId: string, qty: number) => void;
@@ -36,10 +36,12 @@ function moneyToNumber(amount: string) {
 }
 
 function computeSubtotal(lines: CartLine[]) {
-  return lines.reduce((sum, line) => {
+  const amount = lines.reduce((sum, line) => {
     const price = moneyToNumber(line.product.priceRange.minVariantPrice.amount);
     return sum + price * line.qty;
   }, 0);
+  const currencyCode = lines[0]?.product.priceRange.minVariantPrice.currencyCode ?? "EUR";
+  return { amount, currencyCode };
 }
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
@@ -67,12 +69,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const value = React.useMemo<CartContextValue>(() => {
     const count = state.lines.reduce((sum, l) => sum + l.qty, 0);
-    const subtotalAmount = computeSubtotal(state.lines);
+    const subtotal = computeSubtotal(state.lines);
 
     return {
       lines: state.lines,
       count,
-      subtotal: { amount: subtotalAmount, currencyCode: "EUR" },
+      subtotal,
       add: (product, qty = 1) => {
         const addQty = clampQty(qty);
         if (addQty <= 0) return;
