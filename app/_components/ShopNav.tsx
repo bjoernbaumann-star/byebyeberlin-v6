@@ -94,9 +94,11 @@ function IconMenu(props: React.SVGProps<SVGSVGElement>) {
 function MenuDrawer({
   open,
   onClose,
+  me,
 }: {
   open: boolean;
   onClose: () => void;
+  me: { loading: boolean; loggedIn: boolean; firstName: string | null };
 }) {
   React.useEffect(() => {
     if (!open) return;
@@ -176,7 +178,61 @@ function MenuDrawer({
                 ))}
               </nav>
 
-              <div className="mt-12 border-t border-black/10 pt-8">
+              <div className="mt-12 space-y-4 border-t border-black/10 pt-8">
+                {me.loggedIn ? (
+                  <>
+                    <Link
+                      href="/account"
+                      onClick={onClose}
+                      className="flex items-center gap-2 text-neutral-950 transition-colors hover:text-neutral-700"
+                    >
+                      <IconUser className="h-5 w-5" />
+                      <span className="font-sangbleu-medium text-sm uppercase tracking-[0.2em]">
+                        {me.firstName || "Mein Konto"}
+                      </span>
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onClose();
+                        fetch("/api/auth/logout", { method: "POST" }).then(() => {
+                          window.location.href = "/login";
+                        });
+                      }}
+                      className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:text-neutral-700"
+                    >
+                      <IconUser className="h-5 w-5" />
+                      <span className="font-sangbleu-medium text-sm uppercase tracking-[0.2em]">
+                        Logout
+                      </span>
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    href="/login"
+                    onClick={onClose}
+                    className="flex items-center gap-2 text-neutral-950 transition-colors hover:text-neutral-700"
+                  >
+                    <IconUser className="h-5 w-5" />
+                    <span className="font-sangbleu-medium text-sm uppercase tracking-[0.2em]">
+                      {me.loading ? "…" : "Login"}
+                    </span>
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:text-neutral-700"
+                  aria-label="Search"
+                >
+                  <IconSearch className="h-5 w-5" />
+                  <span className="font-sangbleu-medium text-sm uppercase tracking-[0.2em]">
+                    Search
+                  </span>
+                </button>
+              </div>
+
+              <div className="mt-6 border-t border-black/10 pt-6">
                 <Link
                   href="/services"
                   onClick={onClose}
@@ -202,17 +258,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
     loggedIn: boolean;
     firstName: string | null;
   }>({ loading: true, loggedIn: false, firstName: null });
-  const [userMenuOpen, setUserMenuOpen] = React.useState(false);
   const cart = useCart();
-
-  React.useEffect(() => {
-    if (!userMenuOpen) return;
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setUserMenuOpen(false);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [userMenuOpen]);
 
   React.useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 50);
@@ -269,7 +315,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
           </Link>
 
           <div className="absolute right-2 flex items-center gap-1 sm:right-4 sm:gap-2 lg:right-6 lg:gap-4">
-            <button
+<button
               type="button"
               onClick={() => setCartOpen(true)}
               className="inline-flex items-center gap-1.5 p-2 hover:opacity-70"
@@ -300,77 +346,6 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
                 </motion.span>
               </motion.span>
             </button>
-            <div className="relative">
-              {me.loggedIn ? (
-                <>
-                  <button
-                    type="button"
-                    onClick={() => setUserMenuOpen((o) => !o)}
-                    className="inline-flex items-center gap-2 p-2 hover:opacity-70"
-                    aria-label="Mein Konto"
-                    aria-expanded={userMenuOpen}
-                    aria-haspopup="true"
-                  >
-                    <IconUser className="h-5 w-5" />
-                    <span className="hidden sm:inline font-sangbleu-medium text-xs uppercase tracking-[0.2em]">
-                      {me.firstName || "Mein Konto"}
-                    </span>
-                  </button>
-                  <AnimatePresence>
-                    {userMenuOpen && (
-                      <>
-                        <div
-                          className="fixed inset-0 z-[105]"
-                          aria-hidden="true"
-                          onClick={() => setUserMenuOpen(false)}
-                        />
-                        <motion.div
-                          initial={{ opacity: 0, y: -8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -8 }}
-                          transition={{ duration: 0.15 }}
-                          className="absolute right-0 top-full z-[106] mt-1 min-w-[180px] rounded-2xl border border-black/10 bg-white py-2 shadow-lg text-neutral-950"
-                        >
-                          <Link
-                            href="/account"
-                            onClick={() => setUserMenuOpen(false)}
-                            className="block px-4 py-2.5 text-sm text-neutral-950 hover:bg-neutral-50"
-                          >
-                            Mein Konto
-                          </Link>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setUserMenuOpen(false);
-                              fetch("/api/auth/logout", { method: "POST" }).then(() => {
-                                window.location.href = "/login";
-                              });
-                            }}
-                            className="block w-full px-4 py-2.5 text-left text-sm text-neutral-950 hover:bg-neutral-50"
-                          >
-                            Logout
-                          </button>
-                        </motion.div>
-                      </>
-                    )}
-                  </AnimatePresence>
-                </>
-              ) : (
-                <Link
-                  href="/login"
-                  className="inline-flex items-center gap-2 p-2 hover:opacity-70"
-                  aria-label="Login"
-                >
-                  <IconUser className="h-5 w-5" />
-                  <span className="hidden sm:inline font-sangbleu-medium text-xs uppercase tracking-[0.2em]">
-                    {me.loading ? "…" : "Login"}
-                  </span>
-                </Link>
-              )}
-            </div>
-            <button className="p-2 hover:opacity-70" aria-label="Search">
-              <IconSearch className="h-5 w-5" />
-            </button>
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
@@ -385,7 +360,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
 
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
 
-      <MenuDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <MenuDrawer open={menuOpen} onClose={() => setMenuOpen(false)} me={me} />
     </>
   );
 }
