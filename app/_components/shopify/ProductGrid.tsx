@@ -28,7 +28,7 @@ function AddToBagButton({
       disabled={!product.firstVariantId}
       className="rounded-full border border-black/10 bg-white px-4 py-2 font-sangbleu text-xs font-bold uppercase tracking-[0.25em] text-neutral-950 hover:bg-neutral-50 disabled:opacity-50 transition-colors"
     >
-      {justAdded ? "Added to Bag" : "Add to Bag"}
+      {justAdded ? "ADDED TO BAG" : "Add to Bag"}
     </button>
   );
 }
