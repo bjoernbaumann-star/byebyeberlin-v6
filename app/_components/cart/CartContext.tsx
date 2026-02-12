@@ -14,7 +14,7 @@ type CartState = {
   lines: CartLine[];
 };
 
-type CartContextValue = {
+export type CartContextValue = {
   lines: CartLine[];
   count: number;
   subtotal: { amount: number; currencyCode: string };

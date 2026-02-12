@@ -2,8 +2,64 @@
 
 import React from "react";
 import type { ShopifyProduct } from "../../../lib/shopify-types";
+import type { CartContextValue } from "../cart/CartContext";
 import { useCart } from "../cart/CartContext";
 import ShopifyBuyButton from "./ShopifyBuyButton";
+
+function AddToCartButton({
+  product,
+  cart,
+}: {
+  product: ShopifyProduct;
+  cart: CartContextValue;
+}) {
+  const [loading, setLoading] = React.useState(false);
+  const handleAddAndCheckout = async () => {
+    if (!product.firstVariantId) return;
+    const updatedLines = cart.lines.some((l) => l.product.id === product.id)
+      ? cart.lines.map((l) =>
+          l.product.id === product.id ? { ...l, qty: l.qty + 1 } : l,
+        )
+      : [...cart.lines, { product, qty: 1 }];
+    const linesWithNew: Array<{ merchandiseId: string; quantity: number }> =
+      updatedLines
+        .filter((l) => l.product.firstVariantId)
+        .map((l) => ({
+          merchandiseId: l.product.firstVariantId!,
+          quantity: l.qty,
+        }));
+    cart.add(product, 1);
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/shopify/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lines: linesWithNew }),
+      });
+      const json = (await res.json()) as { checkoutUrl?: string; error?: string };
+      if (json.checkoutUrl) {
+        cart.clear();
+        window.location.href = json.checkoutUrl;
+      } else {
+        throw new Error(json.error ?? "Checkout fehlgeschlagen");
+      }
+    } catch {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleAddAndCheckout}
+      disabled={!product.firstVariantId || loading}
+      className="rounded-full border border-black/10 bg-white px-4 py-2 font-sangbleu text-xs font-bold uppercase tracking-[0.25em] text-neutral-950 hover:bg-neutral-50 disabled:opacity-50"
+    >
+      {loading ? "…" : "Add to Cart"}
+    </button>
+  );
+}
 
 function formatPrice(amount: number, currencyCode: string) {
   return new Intl.NumberFormat("de-DE", {
@@ -44,13 +100,7 @@ export default function ProductGrid({ products }: { products: ShopifyProduct[] }
               {formatPrice(Number(p.priceRange.minVariantPrice.amount), p.priceRange.minVariantPrice.currencyCode)}
             </div>
             <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => cart.add(p, 1)}
-                className="rounded-full border border-black/10 bg-white px-4 py-2 font-sangbleu text-xs font-bold uppercase tracking-[0.25em] text-neutral-950 hover:bg-neutral-50"
-              >
-                Add
-              </button>
+              <AddToCartButton product={p} cart={cart} />
               <ShopifyBuyButton product={p} />
             </div>
           </div>

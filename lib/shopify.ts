@@ -134,6 +134,18 @@ const PRODUCTS_QUERY = /* GraphQL */ `
   }
 `;
 
+function mapProductNode(node: ProductsQueryData["products"]["edges"][0]["node"]): ShopifyProduct {
+  return {
+    id: node.id,
+    title: node.title,
+    handle: node.handle,
+    onlineStoreUrl: node.onlineStoreUrl,
+    priceRange: node.priceRange,
+    images: node.images.nodes,
+    firstVariantId: node.variants?.nodes?.[0]?.id ?? null,
+  };
+}
+
 export async function getStorefrontProducts(first = 24): Promise<ShopifyProduct[]> {
   const data = await shopifyFetch<ProductsQueryData>({
     query: PRODUCTS_QUERY,
@@ -142,15 +154,62 @@ export async function getStorefrontProducts(first = 24): Promise<ShopifyProduct[
     cache: "no-store",
   });
 
-  return data.products.edges.map(({ node }) => ({
-    id: node.id,
-    title: node.title,
-    handle: node.handle,
-    onlineStoreUrl: node.onlineStoreUrl,
-    priceRange: node.priceRange,
-    images: node.images.nodes,
-    firstVariantId: node.variants?.nodes?.[0]?.id ?? null,
-  }));
+  return data.products.edges.map(({ node }) => mapProductNode(node));
+}
+
+type CollectionProductsData = {
+  collection: {
+    products: ProductsQueryData["products"];
+  } | null;
+};
+
+type CollectionProductNode = ProductsQueryData["products"]["edges"][0]["node"];
+
+const COLLECTION_PRODUCTS_QUERY = /* GraphQL */ `
+  query CollectionProducts($handle: String!, $first: Int!) {
+    collection(handle: $handle) {
+      products(first: $first) {
+        edges {
+          node {
+            id
+            title
+            handle
+            onlineStoreUrl
+            priceRange {
+              minVariantPrice { amount currencyCode }
+              maxVariantPrice { amount currencyCode }
+            }
+            images(first: 10) {
+              nodes { url altText width height }
+            }
+            variants(first: 1) {
+              nodes { id }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export async function getProductsByCollection(
+  collectionHandle: string,
+  first = 50,
+): Promise<ShopifyProduct[]> {
+  const data = await shopifyFetch<CollectionProductsData>({
+    query: COLLECTION_PRODUCTS_QUERY,
+    variables: { handle: collectionHandle, first },
+    tags: [`shopify-collection-${collectionHandle}`],
+    cache: "no-store",
+  });
+
+  if (!data.collection?.products?.edges?.length) {
+    return [];
+  }
+
+  return data.collection.products.edges.map(({ node }) =>
+    mapProductNode(node as CollectionProductNode),
+  );
 }
 
 // -----------------------------
