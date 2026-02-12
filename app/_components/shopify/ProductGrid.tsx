@@ -25,7 +25,7 @@ function AddToBagButton({
       type="button"
       onClick={handleAdd}
       disabled={!product.firstVariantId}
-      className="rounded-full bg-neutral-950 px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-white hover:bg-neutral-800 disabled:opacity-50 transition-colors"
+      className="rounded-full bg-neutral-950 px-5 py-2.5 font-sangbleu text-xs font-bold uppercase tracking-widest text-white hover:bg-neutral-800 disabled:opacity-50 transition-colors"
     >
       {justAdded ? "ADDED TO BAG" : "ADD TO BAG"}
     </button>
