@@ -25,7 +25,7 @@ function AddToBagButton({
       type="button"
       onClick={handleAdd}
       disabled={!product.firstVariantId}
-      className="rounded-full bg-neutral-950 px-5 py-2.5 font-sangbleu text-xs font-bold uppercase tracking-widest text-white hover:bg-neutral-800 disabled:opacity-50 transition-colors"
+      className="rounded-full bg-neutral-950 px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-white hover:bg-neutral-800 disabled:opacity-50 transition-colors"
     >
       {justAdded ? "ADDED TO BAG" : "ADD TO BAG"}
     </button>
@@ -62,20 +62,22 @@ export default function ProductGrid({ products }: { products: ShopifyProduct[] }
           className="rounded-3xl bg-white p-5 shadow-sm"
         >
           <div className="polaroid-frame mb-5">
-            {p.images?.[0]?.url ? (
-              <img
-                src={p.images[0].url}
-                alt={p.images[0].altText ?? p.title}
-                className="polaroid-image"
-                loading="lazy"
-              />
-            ) : (
-              <div className="polaroid-image flex items-center justify-center bg-neutral-200 text-sm text-neutral-500">
-                No image
-              </div>
-            )}
+            <div className="polaroid-inner">
+              {p.images?.[0]?.url ? (
+                <img
+                  src={p.images[0].url}
+                  alt={p.images[0].altText ?? p.title}
+                  className="polaroid-image"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="polaroid-image flex items-center justify-center bg-neutral-200 text-sm text-neutral-500">
+                  No image
+                </div>
+              )}
+            </div>
           </div>
-          <div className="font-sangbleu text-xl font-bold lowercase">{p.title}</div>
+          <div className="font-sangbleu text-xl font-bold capitalize">{p.title}</div>
           <div className="mt-1.5 text-sm text-neutral-500">{p.handle}</div>
           <div className="mt-6 flex items-end justify-between gap-3">
             <div className="text-sm font-medium text-neutral-950">
