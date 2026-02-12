@@ -25,9 +25,9 @@ function AddToBagButton({
       type="button"
       onClick={handleAdd}
       disabled={!product.firstVariantId}
-      className="rounded-full bg-neutral-950 px-4 py-2 font-sangbleu text-xs font-bold uppercase tracking-[0.25em] text-white hover:bg-neutral-800 disabled:opacity-50 transition-colors"
+      className="rounded-full bg-neutral-950 px-5 py-2.5 font-sangbleu text-xs font-bold uppercase tracking-widest text-white hover:bg-neutral-800 disabled:opacity-50 transition-colors"
     >
-      {justAdded ? "ADDED TO BAG" : "Add to Bag"}
+      {justAdded ? "ADDED TO BAG" : "ADD TO BAG"}
     </button>
   );
 }
@@ -55,13 +55,13 @@ export default function ProductGrid({ products }: { products: ShopifyProduct[] }
   }
 
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
       {products.map((p) => (
         <article
           key={p.id}
-          className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_80px_-60px_rgba(0,0,0,.65)]"
+          className="rounded-3xl bg-white p-5 shadow-sm"
         >
-          <div className="polaroid-frame mb-4">
+          <div className="polaroid-frame mb-5">
             {p.images?.[0]?.url ? (
               <img
                 src={p.images[0].url}
@@ -75,15 +75,13 @@ export default function ProductGrid({ products }: { products: ShopifyProduct[] }
               </div>
             )}
           </div>
-          <div className="font-sangbleu text-xl font-bold">{p.title}</div>
-          <div className="mt-2 text-sm text-neutral-600">{p.handle}</div>
-          <div className="mt-6 flex items-center justify-between gap-3">
-            <div className="text-sm text-neutral-800">
+          <div className="font-sangbleu text-xl font-bold lowercase">{p.title}</div>
+          <div className="mt-1.5 text-sm text-neutral-500">{p.handle}</div>
+          <div className="mt-6 flex items-end justify-between gap-3">
+            <div className="text-sm font-medium text-neutral-950">
               {formatPrice(Number(p.priceRange.minVariantPrice.amount), p.priceRange.minVariantPrice.currencyCode)}
             </div>
-            <div className="flex items-center gap-2">
-              <AddToBagButton product={p} cart={cart} />
-            </div>
+            <AddToBagButton product={p} cart={cart} />
           </div>
         </article>
       ))}
