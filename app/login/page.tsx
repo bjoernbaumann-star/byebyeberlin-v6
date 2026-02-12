@@ -13,27 +13,9 @@ function cn(...parts: Array<string | false | undefined | null>) {
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
-  const [shopifyLoginUrl, setShopifyLoginUrl] = React.useState<string | null>(null);
-
-  React.useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const res = await fetch("/api/auth/shopify-login-url", { cache: "force-cache" });
-        const json = (await res.json()) as { url?: string };
-        if (cancelled) return;
-        setShopifyLoginUrl(json.url ?? null);
-      } catch {
-        if (cancelled) return;
-        setShopifyLoginUrl(null);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -43,18 +25,11 @@ export default function LoginPage() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, password }),
       });
-      const json = (await res.json()) as { error?: string; ok?: boolean; redirectTo?: string };
+      const json = (await res.json()) as { error?: string };
       if (!res.ok) {
-        setError(
-          json.error ||
-            "Login fehlgeschlagen. Bitte versuche es erneut.",
-        );
-        return;
-      }
-      if (json.ok && json.redirectTo) {
-        window.location.href = json.redirectTo;
+        setError(json.error || "Login fehlgeschlagen. Bitte versuche es erneut.");
         return;
       }
       router.push("/account");
@@ -98,6 +73,25 @@ export default function LoginPage() {
                 )}
               />
             </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-medium uppercase tracking-[0.28em] text-neutral-700">
+                Passwort
+              </label>
+              <input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                autoComplete="current-password"
+                required
+                className={cn(
+                  "h-12 w-full rounded-full px-5 text-sm",
+                  "border border-black/10 bg-white",
+                  "outline-none focus:ring-2 focus:ring-black/10",
+                )}
+              />
+            </div>
+
             {error && (
               <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                 {error}
@@ -114,7 +108,7 @@ export default function LoginPage() {
                 "disabled:opacity-60 disabled:hover:bg-neutral-950",
               )}
             >
-              {loading ? "…" : "Weiter"}
+              {loading ? "…" : "Anmelden"}
             </button>
           </form>
 
@@ -124,20 +118,6 @@ export default function LoginPage() {
               Registrieren
             </Link>
           </div>
-
-          {shopifyLoginUrl && (
-            <div className="mt-5 text-xs text-neutral-500">
-              New Customer Accounts (6‑stelliger Code) testen:{" "}
-              <a
-                href={shopifyLoginUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="underline underline-offset-4 hover:opacity-80"
-              >
-                Shopify Login öffnen
-              </a>
-            </div>
-          )}
         </div>
       </main>
 

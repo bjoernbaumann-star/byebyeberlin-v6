@@ -202,24 +202,17 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
     loggedIn: boolean;
     firstName: string | null;
   }>({ loading: true, loggedIn: false, firstName: null });
-  const [shopifyLoginUrl, setShopifyLoginUrl] = React.useState<string | null>(null);
+  const [userMenuOpen, setUserMenuOpen] = React.useState(false);
   const cart = useCart();
 
   React.useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const res = await fetch("/api/auth/shopify-login-url", { cache: "force-cache" });
-        const json = (await res.json()) as { url?: string };
-        if (!cancelled && json?.url) setShopifyLoginUrl(json.url);
-      } catch {
-        if (!cancelled) setShopifyLoginUrl(null);
-      }
-    })();
-    return () => {
-      cancelled = true;
+    if (!userMenuOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setUserMenuOpen(false);
     };
-  }, []);
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [userMenuOpen]);
 
   React.useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 50);
@@ -295,16 +288,74 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
                 )}
               </span>
             </button>
-            <Link
-              href={me.loggedIn ? "/account" : (shopifyLoginUrl ?? "/login")}
-              className="inline-flex items-center gap-2 p-2 hover:opacity-70"
-              aria-label={me.loggedIn ? "Mein Konto" : "Login"}
-            >
-              <IconUser className="h-5 w-5" />
-              <span className="hidden sm:inline text-xs font-medium uppercase tracking-[0.35em]">
-                {me.loading ? "…" : me.loggedIn ? me.firstName || "Mein Konto" : "Login"}
-              </span>
-            </Link>
+            <div className="relative">
+              {me.loggedIn ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setUserMenuOpen((o) => !o)}
+                    className="inline-flex items-center gap-2 p-2 hover:opacity-70"
+                    aria-label="Mein Konto"
+                    aria-expanded={userMenuOpen}
+                    aria-haspopup="true"
+                  >
+                    <IconUser className="h-5 w-5" />
+                    <span className="hidden sm:inline text-xs font-medium uppercase tracking-[0.35em]">
+                      {me.firstName || "Mein Konto"}
+                    </span>
+                  </button>
+                  <AnimatePresence>
+                    {userMenuOpen && (
+                      <>
+                        <div
+                          className="fixed inset-0 z-[105]"
+                          aria-hidden="true"
+                          onClick={() => setUserMenuOpen(false)}
+                        />
+                        <motion.div
+                          initial={{ opacity: 0, y: -8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -8 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute right-0 top-full z-[106] mt-1 min-w-[180px] rounded-2xl border border-black/10 bg-white py-2 shadow-lg text-neutral-950"
+                        >
+                          <Link
+                            href="/account"
+                            onClick={() => setUserMenuOpen(false)}
+                            className="block px-4 py-2.5 text-sm text-neutral-950 hover:bg-neutral-50"
+                          >
+                            Mein Konto
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setUserMenuOpen(false);
+                              fetch("/api/auth/logout", { method: "POST" }).then(() => {
+                                window.location.href = "/login";
+                              });
+                            }}
+                            className="block w-full px-4 py-2.5 text-left text-sm text-neutral-950 hover:bg-neutral-50"
+                          >
+                            Logout
+                          </button>
+                        </motion.div>
+                      </>
+                    )}
+                  </AnimatePresence>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  className="inline-flex items-center gap-2 p-2 hover:opacity-70"
+                  aria-label="Login"
+                >
+                  <IconUser className="h-5 w-5" />
+                  <span className="hidden sm:inline text-xs font-medium uppercase tracking-[0.35em]">
+                    {me.loading ? "…" : "Login"}
+                  </span>
+                </Link>
+              )}
+            </div>
             <button className="p-2 hover:opacity-70" aria-label="Search">
               <IconSearch className="h-5 w-5" />
             </button>

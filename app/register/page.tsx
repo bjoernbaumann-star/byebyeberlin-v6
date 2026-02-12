@@ -15,6 +15,7 @@ export default function RegisterPage() {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
 
@@ -26,32 +27,14 @@ export default function RegisterPage() {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstName, lastName, email }),
+        body: JSON.stringify({ firstName, lastName, email, password }),
       });
-      const json = (await res.json()) as {
-        error?: string;
-        ok?: boolean;
-        shopifyLoginUrl?: string | null;
-        email?: string;
-      };
+      const json = (await res.json()) as { error?: string };
       if (!res.ok) {
-        setError(
-          json.error ||
-            "Registrierung fehlgeschlagen. Hinweis: Wenn dein Shop nur „New Customer Accounts“ erlaubt, kann dieser klassische Flow blockiert sein.",
-        );
+        setError(json.error || "Registrierung fehlgeschlagen. Bitte versuche es erneut.");
         return;
       }
-      if (json.ok && json.shopifyLoginUrl) {
-        const params = new URLSearchParams({
-          email: json.email ?? "",
-          next: json.shopifyLoginUrl,
-        });
-        router.push(`/login/verify?${params.toString()}`);
-      } else if (json.ok) {
-        router.push("/login");
-      } else {
-        router.push("/account");
-      }
+      router.push("/account");
       router.refresh();
     } catch {
       setError("Verbindung fehlgeschlagen. Bitte versuche es erneut.");
@@ -126,6 +109,26 @@ export default function RegisterPage() {
                   "outline-none focus:ring-2 focus:ring-black/10",
                 )}
               />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-medium uppercase tracking-[0.28em] text-neutral-700">
+                Passwort
+              </label>
+              <input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                autoComplete="new-password"
+                required
+                minLength={8}
+                className={cn(
+                  "h-12 w-full rounded-full px-5 text-sm",
+                  "border border-black/10 bg-white",
+                  "outline-none focus:ring-2 focus:ring-black/10",
+                )}
+              />
+              <div className="text-xs text-neutral-500">Mindestens 8 Zeichen.</div>
             </div>
 
             {error && (

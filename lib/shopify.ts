@@ -253,15 +253,10 @@ const CUSTOMER_CREATE = /* GraphQL */ `
 
 export async function customerCreate(input: {
   email: string;
-  password?: string;
+  password: string;
   firstName?: string;
   lastName?: string;
 }): Promise<{ id: string; firstName?: string | null }> {
-  // Storefront API requires password; for New Customer Accounts we use a generated one
-  const inputWithPassword = {
-    ...input,
-    password: input.password ?? crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().slice(0, 8),
-  };
   const data = await shopifyFetch<{
     customerCreate: {
       customer: { id: string; firstName?: string | null } | null;
@@ -269,7 +264,7 @@ export async function customerCreate(input: {
     };
   }>({
     query: CUSTOMER_CREATE,
-    variables: { input: inputWithPassword },
+    variables: { input },
     cache: "no-store",
   });
 
