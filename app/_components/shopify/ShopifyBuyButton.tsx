@@ -20,7 +20,7 @@ export default function ShopifyBuyButton({
   const handleBuyNow = async () => {
     const variantId = product.firstVariantId;
     if (!variantId) {
-      setError("Produkt nicht verfügbar");
+      setError("Product not available");
       return;
     }
     setLoading(true);
@@ -33,15 +33,15 @@ export default function ShopifyBuyButton({
       });
       const json = (await res.json()) as { checkoutUrl?: string; error?: string };
       if (!res.ok) {
-        throw new Error(json.error ?? "Checkout fehlgeschlagen");
+        throw new Error(json.error ?? "Checkout failed");
       }
       if (json.checkoutUrl) {
         window.location.href = json.checkoutUrl;
       } else {
-        throw new Error("Keine Checkout-URL erhalten");
+        throw new Error("No checkout URL received");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Fehler");
+      setError(err instanceof Error ? err.message : "Error");
       setLoading(false);
     }
   };

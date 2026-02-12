@@ -31,7 +31,7 @@ function LoginVerifyContent() {
         <main className="mx-auto max-w-lg px-5 pt-[110px] pb-20">
           <div className="rounded-[2.5rem] border border-black/10 bg-neutral-50 p-10">
             <p className="text-sm text-neutral-700">
-              Ungültiger Link. Bitte starte die Anmeldung erneut.
+              Invalid link. Please start the login again.
             </p>
             <Link href="/login" className="mt-6 inline-block text-sm font-medium underline">
               Zum Login
@@ -56,13 +56,12 @@ function LoginVerifyContent() {
           <p className="mt-4 text-sm leading-relaxed text-neutral-700">
             {email ? (
               <>
-                Dein Konto wurde erstellt. Du erhältst einen 6-stelligen Code per E-Mail an{" "}
-                <strong>{email}</strong>. Gib deine E-Mail auf der Login-Seite ein, um den Code zu
-                erhalten und einzugeben.
+                Your account was created. You will receive a 6-digit code by email at{" "}
+                <strong>{email}</strong>. Enter your email on the login page to receive and enter the code.
               </>
             ) : (
               <>
-                Du erhältst einen 6-stelligen Code per E-Mail. Gib ihn auf der Login-Seite ein.
+                You will receive a 6-digit code by email. Enter it on the login page.
               </>
             )}
           </p>
@@ -76,17 +75,17 @@ function LoginVerifyContent() {
               "font-sangbleu text-xs font-bold uppercase tracking-[0.28em]",
             )}
           >
-            Zum Login – Code eingeben
+            Go to login – Enter code
           </button>
 
           <div className="mt-7 text-sm text-neutral-700">
-            Zurück?{" "}
+            Back?{" "}
             <Link href="/login" className="underline underline-offset-4 hover:opacity-80">
               Login
             </Link>{" "}
             ·{" "}
             <Link href="/register" className="underline underline-offset-4 hover:opacity-80">
-              Registrieren
+              Register
             </Link>
           </div>
         </div>
@@ -105,7 +104,7 @@ export default function LoginVerifyPage() {
           <ShopNav />
           <main className="mx-auto max-w-lg px-5 pt-[110px] pb-20">
             <div className="rounded-[2.5rem] border border-black/10 bg-neutral-50 p-10 text-sm text-neutral-600">
-              Lädt …
+              Loading …
             </div>
           </main>
           <ShopFooter />

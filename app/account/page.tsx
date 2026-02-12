@@ -81,7 +81,7 @@ export default function AccountPage() {
       }
       setCustomer(json.customer ?? null);
     } catch {
-      setError("Konnte Kontodaten nicht laden.");
+      setError("Could not load account data.");
     } finally {
       setLoading(false);
     }
@@ -107,12 +107,12 @@ export default function AccountPage() {
       });
       const json = (await res.json()) as { customer?: ShopifyCustomer; error?: string };
       if (!res.ok) {
-        setError(json.error || "Aktion fehlgeschlagen.");
+        setError(json.error || "Action failed.");
         return;
       }
       setCustomer(json.customer ?? null);
     } catch {
-      setError("Aktion fehlgeschlagen.");
+      setError("Action failed.");
     }
   }
 
@@ -144,7 +144,7 @@ export default function AccountPage() {
             <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-600">
               Bye Bye Berlin
             </div>
-            <h1 className="mt-3 font-sangbleu text-5xl font-bold tracking-tight">Mein Konto</h1>
+            <h1 className="mt-3 font-sangbleu text-5xl font-bold tracking-tight">My Account</h1>
             {customer?.firstName && (
               <p className="mt-2 text-sm text-neutral-700">Willkommen, {customer.firstName}.</p>
             )}
@@ -216,8 +216,8 @@ export default function AccountPage() {
                         <div className="flex items-start justify-between gap-4">
                           <div className="text-sm text-neutral-800">
                             <div className="font-medium">
-                              {[a.firstName, a.lastName].filter(Boolean).join(" ") || "Adresse"}
-                              {isDefault ? " · Standard" : ""}
+                              {[a.firstName, a.lastName].filter(Boolean).join(" ") || "Address"}
+                              {isDefault ? " · Default" : ""}
                             </div>
                             <div className="mt-1 text-neutral-600">
                               {[a.address1, a.city, a.zip, a.country].filter(Boolean).join(", ")}
@@ -230,7 +230,7 @@ export default function AccountPage() {
                                 onClick={() => addressAction({ action: "setDefault", addressId: a.id })}
                                 className="text-xs uppercase tracking-[0.28em] text-neutral-700 hover:opacity-70"
                               >
-                                Standard
+                                Set as default
                               </button>
                             )}
                             <button
@@ -238,7 +238,7 @@ export default function AccountPage() {
                               onClick={() => addressAction({ action: "delete", addressId: a.id })}
                               className="text-xs uppercase tracking-[0.28em] text-neutral-700 hover:opacity-70"
                             >
-                              Löschen
+                              Delete
                             </button>
                           </div>
                         </div>
@@ -246,33 +246,33 @@ export default function AccountPage() {
                     );
                   })
                 ) : (
-                  <div className="text-sm text-neutral-600">Noch keine Adresse gespeichert.</div>
+                  <div className="text-sm text-neutral-600">No address saved yet.</div>
                 )}
               </div>
 
               <div className="mt-10 border-t border-black/10 pt-8">
                 <div className="text-xs font-medium uppercase tracking-[0.28em] text-neutral-700">
-                  Neue Adresse
+                  New address
                 </div>
                 <form onSubmit={addAddress} className="mt-4 space-y-3">
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <input
                       value={addrFirstName}
                       onChange={(e) => setAddrFirstName(e.target.value)}
-                      placeholder="Vorname"
+                      placeholder="First name"
                       className="h-11 w-full rounded-full border border-black/10 bg-white px-5 text-sm outline-none focus:ring-2 focus:ring-black/10"
                     />
                     <input
                       value={addrLastName}
                       onChange={(e) => setAddrLastName(e.target.value)}
-                      placeholder="Nachname"
+                      placeholder="Last name"
                       className="h-11 w-full rounded-full border border-black/10 bg-white px-5 text-sm outline-none focus:ring-2 focus:ring-black/10"
                     />
                   </div>
                   <input
                     value={addrAddress1}
                     onChange={(e) => setAddrAddress1(e.target.value)}
-                    placeholder="Adresse"
+                    placeholder="Address"
                     required
                     className="h-11 w-full rounded-full border border-black/10 bg-white px-5 text-sm outline-none focus:ring-2 focus:ring-black/10"
                   />
@@ -280,20 +280,20 @@ export default function AccountPage() {
                     <input
                       value={addrCity}
                       onChange={(e) => setAddrCity(e.target.value)}
-                      placeholder="Stadt"
+                      placeholder="City"
                       required
                       className="h-11 w-full rounded-full border border-black/10 bg-white px-5 text-sm outline-none focus:ring-2 focus:ring-black/10"
                     />
                     <input
                       value={addrZip}
                       onChange={(e) => setAddrZip(e.target.value)}
-                      placeholder="PLZ"
+                      placeholder="ZIP"
                       className="h-11 w-full rounded-full border border-black/10 bg-white px-5 text-sm outline-none focus:ring-2 focus:ring-black/10"
                     />
                     <input
                       value={addrCountry}
                       onChange={(e) => setAddrCountry(e.target.value)}
-                      placeholder="Land"
+                      placeholder="Country"
                       className="h-11 w-full rounded-full border border-black/10 bg-white px-5 text-sm outline-none focus:ring-2 focus:ring-black/10"
                     />
                   </div>
@@ -305,7 +305,7 @@ export default function AccountPage() {
                       "font-sangbleu text-xs font-bold uppercase tracking-[0.28em]",
                     )}
                   >
-                    Speichern
+                    Save
                   </button>
                 </form>
               </div>

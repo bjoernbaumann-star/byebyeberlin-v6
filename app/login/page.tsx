@@ -29,13 +29,13 @@ export default function LoginPage() {
       });
       const json = (await res.json()) as { error?: string };
       if (!res.ok) {
-        setError(json.error || "Login fehlgeschlagen. Bitte versuche es erneut.");
+        setError(json.error || "Login failed. Please try again.");
         return;
       }
       router.push("/account");
       router.refresh();
     } catch {
-      setError("Verbindung fehlgeschlagen. Bitte versuche es erneut.");
+      setError("Connection failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -52,7 +52,7 @@ export default function LoginPage() {
           </div>
           <h1 className="mt-3 font-sangbleu text-5xl font-bold tracking-tight">Login</h1>
           <p className="mt-4 text-sm leading-relaxed text-neutral-700">
-            Melde dich an, um Bestellungen & Lieferadressen zu verwalten.
+            Sign in to manage orders & delivery addresses.
           </p>
 
           <form onSubmit={onSubmit} className="mt-8 space-y-4">
@@ -76,7 +76,7 @@ export default function LoginPage() {
 
             <div className="space-y-2">
               <label className="text-xs font-medium uppercase tracking-[0.28em] text-neutral-700">
-                Passwort
+                Password
               </label>
               <input
                 value={password}
@@ -108,14 +108,14 @@ export default function LoginPage() {
                 "disabled:opacity-60 disabled:hover:bg-neutral-950",
               )}
             >
-              {loading ? "…" : "Anmelden"}
+              {loading ? "…" : "Sign in"}
             </button>
           </form>
 
           <div className="mt-7 text-sm text-neutral-700">
-            Noch kein Konto?{" "}
+            Don't have an account?{" "}
             <Link href="/register" className="underline underline-offset-4 hover:opacity-80">
-              Registrieren
+              Register
             </Link>
           </div>
         </div>

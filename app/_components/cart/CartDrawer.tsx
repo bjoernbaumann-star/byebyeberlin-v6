@@ -104,7 +104,7 @@ export default function CartDrawer({
             <div className="px-5 py-6">
               {cart.lines.length === 0 ? (
                 <div className="rounded-2xl border border-black/10 bg-white p-5 text-sm text-neutral-700">
-                  Dein Warenkorb ist noch leer.
+                  Your bag is empty.
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -159,7 +159,7 @@ export default function CartDrawer({
 
               <div className="mt-5 rounded-2xl border border-black/10 bg-white p-5">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-neutral-600">Zwischensumme</span>
+                  <span className="text-neutral-600">Subtotal</span>
                   <span className="font-medium">
                     {formatPrice(cart.subtotal.amount, cart.subtotal.currencyCode)}
                   </span>
@@ -172,7 +172,7 @@ export default function CartDrawer({
                     disabled={cart.lines.length === 0}
                     className="flex-1 rounded-xl border border-black/10 bg-white px-4 py-3 text-sm disabled:opacity-50"
                   >
-                    Leeren
+                    Clear
                   </button>
                   <button
                     type="button"
@@ -201,7 +201,7 @@ export default function CartDrawer({
                           cart.clear();
                           window.location.href = json.checkoutUrl;
                         } else {
-                          throw new Error(json.error ?? "Checkout fehlgeschlagen");
+                          throw new Error(json.error ?? "Checkout failed");
                         }
                       } catch (err) {
                         console.error(err);

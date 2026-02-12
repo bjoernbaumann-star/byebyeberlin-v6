@@ -17,7 +17,7 @@ export async function GET() {
   } catch (err) {
     const message = toErrorMessage(err);
     const isConfig = isShopifyConfigErrorMessage(message);
-    const userMessage = isConfig ? "Shop ist noch nicht konfiguriert." : message;
+    const userMessage = isConfig ? "Shop is not configured yet." : message;
     const res = NextResponse.json({ error: userMessage }, { status: isConfig ? 503 : 401 });
     if (!isConfig) res.cookies.delete(CUSTOMER_TOKEN_COOKIE);
     return res;

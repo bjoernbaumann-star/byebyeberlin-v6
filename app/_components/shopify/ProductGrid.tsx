@@ -48,7 +48,7 @@ export default function ProductGrid({ products }: { products: ShopifyProduct[] }
       <div className="rounded-2xl border border-black/10 bg-white p-12 text-center">
         <p className="text-neutral-600">No Products Found</p>
         <p className="mt-2 text-sm text-neutral-500">
-          Shop ist vorübergehend nicht erreichbar. Bitte versuche es später erneut.
+          Shop is temporarily unavailable. Please try again later.
         </p>
       </div>
     );
@@ -71,7 +71,7 @@ export default function ProductGrid({ products }: { products: ShopifyProduct[] }
               />
             ) : (
               <div className="flex h-56 w-full items-center justify-center bg-neutral-100 text-sm text-neutral-400">
-                Kein Bild
+                No image
               </div>
             )}
           </div>

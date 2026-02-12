@@ -308,7 +308,7 @@ export async function createCartWithLinesAndGetCheckoutUrl(
     }));
 
   if (validLines.length === 0) {
-    throw new Error("Keine gültigen Produktvarianten.");
+    throw new Error("No valid product variants.");
   }
 
   const data = await shopifyFetch<CartCreateData>({
@@ -322,7 +322,7 @@ export async function createCartWithLinesAndGetCheckoutUrl(
     throw new Error(errs.map((e) => e.message).join("; "));
   }
   const url = data.cartCreate.cart?.checkoutUrl;
-  if (!url) throw new Error("Checkout URL konnte nicht erstellt werden.");
+  if (!url) throw new Error("Could not create checkout URL.");
   return url;
 }
 

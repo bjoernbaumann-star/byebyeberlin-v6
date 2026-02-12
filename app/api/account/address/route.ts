@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     const message = toErrorMessage(err);
     const status = isShopifyConfigErrorMessage(message) ? 503 : 400;
     const userMessage = isShopifyConfigErrorMessage(message)
-      ? "Shop ist noch nicht konfiguriert."
+      ? "Shop is not configured yet."
       : message;
     return NextResponse.json({ error: userMessage }, { status });
   }

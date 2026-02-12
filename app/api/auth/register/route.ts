@@ -22,11 +22,11 @@ export async function POST(req: Request) {
     const lastName = (body.lastName ?? "").trim();
 
     if (!isValidEmail(email)) {
-      return NextResponse.json({ error: "Bitte gib eine gültige E‑Mail ein." }, { status: 400 });
+      return NextResponse.json({ error: "Please enter a valid email." }, { status: 400 });
     }
     if (password.length < 8) {
       return NextResponse.json(
-        { error: "Bitte wähle ein Passwort mit mindestens 8 Zeichen." },
+        { error: "Please choose a password with at least 8 characters." },
         { status: 400 },
       );
     }
@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     const message = toErrorMessage(err);
     const status = isShopifyConfigErrorMessage(message) ? 503 : 400;
     const userMessage = isShopifyConfigErrorMessage(message)
-      ? "Shop ist noch nicht konfiguriert. Bitte versuche es später erneut."
+      ? "Shop is not configured yet. Please try again later."
       : message;
     return NextResponse.json({ error: userMessage }, { status });
   }

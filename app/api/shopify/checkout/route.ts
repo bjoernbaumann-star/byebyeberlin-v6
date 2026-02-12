@@ -27,17 +27,17 @@ export async function POST(req: Request) {
         },
       ];
     } else {
-      return NextResponse.json({ error: "merchandiseId oder lines erforderlich." }, { status: 400 });
+      return NextResponse.json({ error: "merchandiseId or lines required." }, { status: 400 });
     }
 
     if (lines.length === 0) {
-      return NextResponse.json({ error: "Keine gültigen Varianten." }, { status: 400 });
+      return NextResponse.json({ error: "No valid variants." }, { status: 400 });
     }
 
     const checkoutUrl = await createCartWithLinesAndGetCheckoutUrl(lines);
     return NextResponse.json({ checkoutUrl }, { status: 200 });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unbekannter Fehler";
+    const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

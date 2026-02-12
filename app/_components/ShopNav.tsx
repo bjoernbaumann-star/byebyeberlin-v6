@@ -164,7 +164,7 @@ function MenuDrawer({
                 {[
                   { label: "Bags", href: "/bags" },
                   { label: "Clothes", href: "/clothes" },
-                  { label: "Kollektion", href: "/kollektion" },
+                  { label: "Collection", href: "/kollektion" },
                   { label: "Story", href: "/story" },
                 ].map((x) => (
                   <Link
@@ -188,7 +188,7 @@ function MenuDrawer({
                     >
                       <IconUser className="h-5 w-5" />
                       <span className="font-sangbleu-medium text-sm uppercase tracking-[0.2em]">
-                        {me.firstName || "Mein Konto"}
+                        {me.firstName || "My Account"}
                       </span>
                     </Link>
                     <button
@@ -319,7 +319,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
               type="button"
               onClick={() => setCartOpen(true)}
               className="inline-flex items-center gap-1.5 p-2 hover:opacity-70"
-              aria-label="Warenkorb"
+              aria-label="Shopping bag"
             >
               <motion.span
                 key={cart.addTrigger}

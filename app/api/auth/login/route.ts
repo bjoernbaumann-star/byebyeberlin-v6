@@ -14,10 +14,10 @@ export async function POST(req: Request) {
     const password = body.password ?? "";
 
     if (!isValidEmail(email)) {
-      return NextResponse.json({ error: "Bitte gib eine gültige E‑Mail ein." }, { status: 400 });
+      return NextResponse.json({ error: "Please enter a valid email." }, { status: 400 });
     }
     if (!password) {
-      return NextResponse.json({ error: "Bitte gib dein Passwort ein." }, { status: 400 });
+      return NextResponse.json({ error: "Please enter your password." }, { status: 400 });
     }
 
     const token = await customerAccessTokenCreate({ email, password });
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     const message = toErrorMessage(err);
     const status = isShopifyConfigErrorMessage(message) ? 503 : 401;
     const userMessage = isShopifyConfigErrorMessage(message)
-      ? "Shop ist noch nicht konfiguriert. Bitte versuche es später erneut."
+      ? "Shop is not configured yet. Please try again later."
       : message;
     return NextResponse.json({ error: userMessage }, { status });
   }

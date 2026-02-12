@@ -15,10 +15,10 @@ export default async function KollektionPage() {
             Bye Bye Berlin
           </div>
           <h1 className="mt-3 font-sangbleu text-5xl font-bold tracking-tight">
-            Kollektion
+            Collection
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-neutral-700">
-            Der gesamte Edit — Clothes, Bags und Essentials.
+            The full edit — Clothes, Bags and Essentials.
           </p>
 
           <div className="mt-10">

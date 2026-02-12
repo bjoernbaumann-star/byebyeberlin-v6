@@ -22,7 +22,7 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "Bye Bye Berlin — Luxury Essentials",
   description:
-    "Luxuriöse Essentials & Statements von Bye Bye Berlin. Editorial, minimal, hochwertig.",
+    "Luxury Essentials & Statements by Bye Bye Berlin. Editorial, minimal, high-quality.",
 };
 
 export default function RootLayout({
@@ -31,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de">
+    <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased`}
       >

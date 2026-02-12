@@ -31,13 +31,13 @@ export default function RegisterPage() {
       });
       const json = (await res.json()) as { error?: string };
       if (!res.ok) {
-        setError(json.error || "Registrierung fehlgeschlagen. Bitte versuche es erneut.");
+        setError(json.error || "Registration failed. Please try again.");
         return;
       }
       router.push("/account");
       router.refresh();
     } catch {
-      setError("Verbindung fehlgeschlagen. Bitte versuche es erneut.");
+      setError("Connection failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -54,14 +54,14 @@ export default function RegisterPage() {
           </div>
           <h1 className="mt-3 font-sangbleu text-5xl font-bold tracking-tight">Register</h1>
           <p className="mt-4 text-sm leading-relaxed text-neutral-700">
-            Erstelle dein Konto, um später schneller zu bestellen.
+            Create your account to checkout faster.
           </p>
 
           <form onSubmit={onSubmit} className="mt-8 space-y-4">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <label className="text-xs font-medium uppercase tracking-[0.28em] text-neutral-700">
-                  Vorname
+                  First name
                 </label>
                 <input
                   value={firstName}
@@ -77,7 +77,7 @@ export default function RegisterPage() {
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-medium uppercase tracking-[0.28em] text-neutral-700">
-                  Nachname
+                  Last name
                 </label>
                 <input
                   value={lastName}
@@ -113,7 +113,7 @@ export default function RegisterPage() {
 
             <div className="space-y-2">
               <label className="text-xs font-medium uppercase tracking-[0.28em] text-neutral-700">
-                Passwort
+                Password
               </label>
               <input
                 value={password}
@@ -128,7 +128,7 @@ export default function RegisterPage() {
                   "outline-none focus:ring-2 focus:ring-black/10",
                 )}
               />
-              <div className="text-xs text-neutral-500">Mindestens 8 Zeichen.</div>
+              <div className="text-xs text-neutral-500">At least 8 characters.</div>
             </div>
 
             {error && (
@@ -147,12 +147,12 @@ export default function RegisterPage() {
                 "disabled:opacity-60 disabled:hover:bg-neutral-950",
               )}
             >
-              {loading ? "…" : "Konto erstellen"}
+              {loading ? "…" : "Create account"}
             </button>
           </form>
 
           <div className="mt-7 text-sm text-neutral-700">
-            Du hast schon ein Konto?{" "}
+            Already have an account?{" "}
             <Link href="/login" className="underline underline-offset-4 hover:opacity-80">
               Login
             </Link>

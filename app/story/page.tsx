@@ -14,7 +14,7 @@ export default function StoryPage() {
             Story
           </h1>
           <p className="mt-8 font-sangbleu text-2xl leading-relaxed text-neutral-900">
-            Bye Bye Berlin ist ein Abschied von Lärm — und ein Hallo zu Präzision.
+            Bye Bye Berlin is a farewell to noise — and a hello to precision.
             Eine Marke für klare Linien, schwere Materialien und Details, die man
             erst beim zweiten Blick erkennt.
           </p>
