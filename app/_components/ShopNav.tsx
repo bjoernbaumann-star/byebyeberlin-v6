@@ -259,16 +259,16 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
           headerTextColor,
         )}
       >
-        <div className="flex h-[76px] w-full items-center justify-center px-4 sm:px-6">
-          <div className="flex flex-1 items-center justify-center gap-6 sm:gap-8 lg:gap-12">
-            <Link
-              href="/"
-              className="font-sangbleu-medium text-[18px] tracking-tight whitespace-nowrap leading-none transition-opacity hover:opacity-80"
-              aria-label="Home"
-            >
-              BYE BYE BERLIN
-            </Link>
-            <div className="flex items-center justify-center gap-2 sm:gap-4">
+        <div className="relative flex h-[76px] w-full items-center px-2 sm:px-4 lg:px-6">
+          <Link
+            href="/"
+            className="absolute inset-x-0 flex justify-center font-sangbleu text-[18px] font-bold tracking-tight whitespace-nowrap leading-none transition-opacity hover:opacity-80"
+            aria-label="Home"
+          >
+            BYE BYE BERLIN
+          </Link>
+
+          <div className="absolute right-2 flex items-center gap-1 sm:right-4 sm:gap-2 lg:right-6 lg:gap-4">
             <button
               type="button"
               onClick={() => setCartOpen(true)}
@@ -379,7 +379,6 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
               <IconMenu className="h-5 w-5" />
               <span className="hidden sm:inline">Menu</span>
             </button>
-            </div>
           </div>
         </div>
       </header>
