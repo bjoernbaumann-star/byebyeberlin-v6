@@ -272,21 +272,33 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
             <button
               type="button"
               onClick={() => setCartOpen(true)}
-              className="p-2 hover:opacity-70"
+              className="inline-flex items-center gap-1.5 p-2 hover:opacity-70"
               aria-label="Warenkorb"
             >
-              <span className="relative block">
+              <motion.span
+                key={cart.addTrigger}
+                initial={{ scale: 1 }}
+                animate={{ scale: [1, 1.12, 1] }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="flex items-center gap-1.5"
+              >
                 <IconBag className="h-5 w-5" />
-                {cart.count > 0 && (
-                  <span
-                    aria-hidden="true"
-                    className={cn(
-                      "absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full",
-                      useTransparent ? "bg-white" : "bg-neutral-950",
-                    )}
-                  />
-                )}
-              </span>
+                <span className="hidden sm:inline font-sangbleu text-xs font-bold uppercase tracking-[0.2em]">
+                  BAG
+                </span>
+                <motion.span
+                  key={cart.count}
+                  initial={{ scale: 1.2 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  className={cn(
+                    "tabular-nums",
+                    useTransparent ? "text-white" : "text-neutral-950",
+                  )}
+                >
+                  ({cart.count})
+                </motion.span>
+              </motion.span>
             </button>
             <div className="relative">
               {me.loggedIn ? (

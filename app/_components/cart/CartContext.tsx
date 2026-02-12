@@ -18,6 +18,7 @@ export type CartContextValue = {
   lines: CartLine[];
   count: number;
   subtotal: { amount: number; currencyCode: string };
+  addTrigger: number;
   add: (product: ShopifyProduct, qty?: number) => void;
   remove: (productId: string) => void;
   setQty: (productId: string, qty: number) => void;
@@ -46,6 +47,7 @@ function computeSubtotal(lines: CartLine[]) {
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = React.useState<CartState>({ lines: [] });
+  const [addTrigger, setAddTrigger] = React.useState(0);
 
   // hydrate from localStorage
   React.useEffect(() => {
@@ -75,9 +77,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       lines: state.lines,
       count,
       subtotal,
+      addTrigger,
       add: (product, qty = 1) => {
         const addQty = clampQty(qty);
         if (addQty <= 0) return;
+        setAddTrigger((t) => t + 1);
         setState((prev) => {
           const idx = prev.lines.findIndex((l) => l.product.id === product.id);
           if (idx === -1) {
@@ -106,7 +110,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       },
       clear: () => setState({ lines: [] }),
     };
-  }, [state.lines]);
+  }, [state.lines, addTrigger]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

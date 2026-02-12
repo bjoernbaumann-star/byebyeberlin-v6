@@ -70,7 +70,7 @@ export default function CartDrawer({
               "shadow-[0_40px_120px_-70px_rgba(0,0,0,.8)]",
             )}
             role="dialog"
-            aria-label="Warenkorb"
+            aria-label="Your Selection"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -83,7 +83,7 @@ export default function CartDrawer({
                     Bye Bye Berlin
                   </div>
                   <div className="mt-1 font-sangbleu text-xl font-bold">
-                    Warenkorb
+                    YOUR SELECTION
                   </div>
                 </div>
                 <button
@@ -111,20 +111,31 @@ export default function CartDrawer({
                   {cart.lines.map((l) => (
                     <div
                       key={l.product.id}
-                      className="rounded-2xl border border-black/10 bg-white p-4"
+                      className="flex gap-4 rounded-2xl border border-black/10 bg-white p-4"
                     >
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <div className="font-medium">{l.product.title}</div>
-                          <div className="mt-1 text-sm text-neutral-600">
-                            {l.qty} ×{" "}
-                            {formatPrice(
-                              Number(l.product.priceRange.minVariantPrice.amount),
-                              l.product.priceRange.minVariantPrice.currencyCode,
-                            )}
+                      <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-black/10 bg-neutral-50">
+                        {l.product.images?.[0]?.url ? (
+                          <img
+                            src={l.product.images[0].url}
+                            alt={l.product.images[0].altText ?? l.product.title}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">
+                            —
                           </div>
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="font-medium">{l.product.title}</div>
+                        <div className="mt-1 text-sm text-neutral-600">
+                          {l.qty} ×{" "}
+                          {formatPrice(
+                            Number(l.product.priceRange.minVariantPrice.amount),
+                            l.product.priceRange.minVariantPrice.currencyCode,
+                          )}
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="mt-2 flex items-center gap-2">
                           <button
                             type="button"
                             onClick={() => cart.setQty(l.product.id, l.qty - 1)}
