@@ -326,33 +326,37 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
                 initial={{ scale: 1 }}
                 animate={{ scale: [1, 1.12, 1] }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
-                className="flex items-center gap-1.5"
+                className="flex items-center gap-2"
               >
-                <IconBag className="h-5 w-5" />
-                <span className="hidden sm:inline font-sangbleu-medium text-xs uppercase tracking-[0.2em]">
+                <IconBag className="h-6 w-6 shrink-0" />
+                <span className="hidden sm:inline font-sangbleu text-[14.4px] font-bold uppercase tracking-[0.2em] leading-none">
                   BAG
                 </span>
-                <motion.span
-                  key={cart.count}
-                  initial={{ scale: 1.2 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  className={cn(
-                    "tabular-nums",
-                    useTransparent ? "text-white" : "text-neutral-950",
-                  )}
-                >
-                  ({cart.count})
-                </motion.span>
+                {cart.count > 0 && (
+                  <motion.span
+                    key={cart.count}
+                    initial={{ scale: 1.2 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                    className={cn(
+                      "tabular-nums font-sangbleu text-[14.4px] font-bold leading-none",
+                      useTransparent ? "text-white" : "text-neutral-950",
+                    )}
+                  >
+                    ({cart.count})
+                  </motion.span>
+                )}
               </motion.span>
             </button>
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
-              className="inline-flex items-center gap-2 px-2 py-2 font-sangbleu-medium text-xs uppercase tracking-[0.2em] hover:opacity-70"
+              className="inline-flex items-center gap-2 px-2 py-2 hover:opacity-70"
             >
-              <IconMenu className="h-5 w-5" />
-              <span className="hidden sm:inline">Menu</span>
+              <IconMenu className="h-6 w-6 shrink-0" />
+              <span className="hidden sm:inline font-sangbleu text-[14.4px] font-bold uppercase tracking-[0.2em] leading-none">
+                Menu
+              </span>
             </button>
           </div>
         </div>
