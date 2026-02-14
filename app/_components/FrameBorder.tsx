@@ -24,17 +24,23 @@ function BIcon({ className }: { className?: string }) {
   );
 }
 
+const NAV_HEIGHT = 76;
+const STRIP_SIZE = 48;
+
 export default function FrameBorder() {
   const topBottomCount = 120;
   const leftRightCount = 80;
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-[200]"
+      className="pointer-events-none fixed inset-0 z-[90]"
       aria-hidden="true"
     >
-      {/* Top – transparent bg, black symbols, alternating X B */}
-      <div className="absolute left-0 right-0 top-0 flex h-12 items-center justify-center gap-1 overflow-hidden">
+      {/* Top – below navbar, X B X B */}
+      <div
+        className="absolute left-0 right-0 flex h-12 items-center justify-center gap-1 overflow-hidden"
+        style={{ top: NAV_HEIGHT }}
+      >
         {Array.from({ length: topBottomCount }, (_, i) =>
           i % 2 === 0 ? <XIcon key={i} /> : <BIcon key={i} />
         )}
@@ -47,15 +53,21 @@ export default function FrameBorder() {
         )}
       </div>
 
-      {/* Left – B X B X B (starts with B) */}
-      <div className="absolute left-0 top-12 bottom-12 flex w-12 flex-col items-center justify-center gap-1 overflow-hidden">
+      {/* Left – B X B X B */}
+      <div
+        className="absolute left-0 flex w-12 flex-col items-center justify-center gap-1 overflow-hidden"
+        style={{ top: NAV_HEIGHT + STRIP_SIZE, bottom: STRIP_SIZE }}
+      >
         {Array.from({ length: leftRightCount }, (_, i) =>
           i % 2 === 0 ? <BIcon key={i} /> : <XIcon key={i} />
         )}
       </div>
 
-      {/* Right – B X B X B (starts with B) */}
-      <div className="absolute right-0 top-12 bottom-12 flex w-12 flex-col items-center justify-center gap-1 overflow-hidden">
+      {/* Right – B X B X B */}
+      <div
+        className="absolute right-0 flex w-12 flex-col items-center justify-center gap-1 overflow-hidden"
+        style={{ top: NAV_HEIGHT + STRIP_SIZE, bottom: STRIP_SIZE }}
+      >
         {Array.from({ length: leftRightCount }, (_, i) =>
           i % 2 === 0 ? <BIcon key={i} /> : <XIcon key={i} />
         )}
