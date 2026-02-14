@@ -196,11 +196,11 @@ export default function LandingPage() {
             )}
           </div>
 
-          {/* Streifen unten – Text läuft von links nach rechts durch */}
+          {/* Streifen unten – B* Icons laufen von links nach rechts */}
           <div className="relative -mx-5 mt-16 overflow-hidden border-t border-neutral-200 bg-white py-[1.3rem]">
             <motion.div
               aria-hidden="true"
-              className="flex w-max gap-16 whitespace-nowrap"
+              className="flex w-max items-center gap-3 whitespace-nowrap"
               animate={
                 reducedMotion
                   ? undefined
@@ -209,7 +209,7 @@ export default function LandingPage() {
                     }
               }
               transition={{
-                duration: 25,
+                duration: 20,
                 ease: "linear",
                 repeat: Infinity,
                 repeatType: "loop",
@@ -218,9 +218,14 @@ export default function LandingPage() {
               {Array.from({ length: 2 }).map((_, i) => (
                 <span
                   key={i}
-                  className="font-sangbleu text-[1.46rem] font-bold uppercase tracking-[0.3em] text-neutral-950"
+                  className="flex items-center gap-3 font-sangbleu text-2xl font-bold tracking-widest text-neutral-950"
                 >
-                  BXBXBXBX · BXBXBXBX · BXBXBXBX · BXBXBXBX · BXBXBXBX · BXBXBXBX ·
+                  {Array.from({ length: 15 }).map((_, j) => (
+                    <React.Fragment key={j}>
+                      <span>B</span>
+                      <span className="text-neutral-400">*</span>
+                    </React.Fragment>
+                  ))}
                 </span>
               ))}
             </motion.div>
