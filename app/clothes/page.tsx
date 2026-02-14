@@ -28,10 +28,10 @@ export default async function ClothesPage() {
 
         <section className="mx-auto max-w-6xl px-5 pb-16 pt-14">
           <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-600">
-            Bye Bye Berlin
+            BYE BYE BERLIN
           </div>
           <h1 className="mt-3 font-sangbleu text-5xl font-bold tracking-tight">
-            Clothes
+            CLOTHES
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-neutral-700">
             Tailoring, essentials, and elevated silhouettes — curated for a quiet

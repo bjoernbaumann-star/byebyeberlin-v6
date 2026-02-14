@@ -154,7 +154,7 @@ export default function LandingPage() {
                   "ring-1 ring-white/40",
                 )}
               >
-                Clothes
+                CLOTHES
               </Link>
               <Link
                 href="/bags"
@@ -165,7 +165,7 @@ export default function LandingPage() {
                   "ring-1 ring-white/40",
                 )}
               >
-                Bags
+                BAGS
               </Link>
             </div>
           </div>

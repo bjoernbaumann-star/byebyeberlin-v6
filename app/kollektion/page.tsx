@@ -12,10 +12,10 @@ export default async function KollektionPage() {
       <main className="pt-[76px]">
         <section className="mx-auto max-w-6xl px-5 py-16">
           <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-600">
-            Bye Bye Berlin
+            BYE BYE BERLIN
           </div>
           <h1 className="mt-3 font-sangbleu text-5xl font-bold tracking-tight">
-            Collection
+            COLLECTION
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-neutral-700">
             The full edit — Clothes, Bags and Essentials.

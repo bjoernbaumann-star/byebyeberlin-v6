@@ -8,10 +8,10 @@ export default function StoryPage() {
       <main className="pt-[76px]">
         <section className="mx-auto max-w-4xl px-5 py-16">
           <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-600">
-            Editorial
+            EDITORIAL
           </div>
           <h1 className="mt-4 font-sangbleu text-6xl font-bold tracking-tight">
-            Story
+            STORY
           </h1>
           <p className="mt-8 font-sangbleu text-2xl leading-relaxed text-neutral-900">
             Bye Bye Berlin is a farewell to noise — and a hello to precision.

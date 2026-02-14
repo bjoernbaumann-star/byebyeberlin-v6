@@ -162,10 +162,10 @@ function MenuDrawer({
             <div className="h-full overflow-y-auto px-10 pb-14 pt-20">
               <nav className="space-y-5 font-sangbleu-medium text-[22px] leading-tight">
                 {[
-                  { label: "Bags", href: "/bags" },
-                  { label: "Clothes", href: "/clothes" },
-                  { label: "Collection", href: "/kollektion" },
-                  { label: "Story", href: "/story" },
+                  { label: "BAGS", href: "/bags" },
+                  { label: "CLOTHES", href: "/clothes" },
+                  { label: "COLLECTION", href: "/kollektion" },
+                  { label: "STORY", href: "/story" },
                 ].map((x) => (
                   <Link
                     key={x.label}
@@ -188,7 +188,7 @@ function MenuDrawer({
                     >
                       <IconUser className="h-5 w-5" />
                       <span className="font-sangbleu-medium text-sm uppercase tracking-[0.2em]">
-                        {me.firstName || "My Account"}
+                        {me.firstName || "MY ACCOUNT"}
                       </span>
                     </Link>
                     <button
@@ -238,7 +238,7 @@ function MenuDrawer({
                   onClick={onClose}
                   className="text-sm text-neutral-500 transition-colors hover:text-neutral-800"
                 >
-                  Bye Bye Berlin Services
+                  BYE BYE BERLIN SERVICES
                 </Link>
               </div>
             </div>
