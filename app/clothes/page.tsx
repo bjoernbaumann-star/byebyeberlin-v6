@@ -26,12 +26,16 @@ export default async function ClothesPage() {
           fallbackSrc="/hero-video.mp4"
         />
 
-        <section className="mx-auto max-w-6xl px-5 pb-20 pt-14">
-          <h1 className="text-2xl font-medium tracking-tight text-neutral-950">
+        <section className="mx-auto max-w-6xl px-5 pb-16 pt-14">
+          <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-600">
+            Bye Bye Berlin
+          </div>
+          <h1 className="mt-3 font-sangbleu text-5xl font-bold tracking-tight">
             Clothes
           </h1>
-          <p className="mt-2 text-sm text-neutral-600">
-            Tailoring, essentials, and elevated silhouettes.
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-neutral-700">
+            Tailoring, essentials, and elevated silhouettes — curated for a quiet
+            luxury finish.
           </p>
 
           <div className="mt-10">

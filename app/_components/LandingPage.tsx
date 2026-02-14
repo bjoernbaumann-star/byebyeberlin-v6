@@ -2,16 +2,93 @@
 
 import Link from "next/link";
 import React from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import type { ShopifyProduct } from "../../lib/shopify-types";
 import ShopFooter from "./ShopFooter";
 import ShopNav from "./ShopNav";
 import ProductGrid from "./shopify/ProductGrid";
 
+function cn(...parts: Array<string | false | undefined | null>) {
+  return parts.filter(Boolean).join(" ");
+}
+
+function HeroMarquee({
+  text,
+  reducedMotion,
+  phase = 0,
+  opacity,
+}: {
+  text: string;
+  reducedMotion: boolean;
+  phase?: number;
+  opacity?: any;
+}) {
+  return (
+    <motion.div
+      aria-hidden="true"
+      className="pointer-events-none fixed inset-x-0 top-1/2 -translate-y-1/2 whitespace-nowrap z-10"
+      style={{
+        opacity,
+        whiteSpace: "nowrap",
+        willChange: "transform",
+        filter:
+          "drop-shadow(0 10px 40px rgba(0,0,0,.55)) drop-shadow(0 0 24px rgba(255,255,255,.10))",
+      }}
+    >
+      <motion.div
+        className="flex w-max items-center gap-[5vw] whitespace-nowrap pl-[5vw]"
+        style={{ willChange: "transform", transform: "translate3d(0,0,0)" }}
+        animate={
+          reducedMotion
+            ? undefined
+            : {
+                x: [`${phase * -50 - 50}%`, `${phase * -50}%`],
+              }
+        }
+        transition={
+          reducedMotion
+            ? undefined
+            : {
+                duration: 51,
+                ease: "linear",
+                repeat: Infinity,
+                repeatDelay: 0,
+                repeatType: "loop",
+              }
+        }
+      >
+        <div className="flex items-center gap-[5vw]">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span
+              key={`a-${i}`}
+              className="font-sangbleu text-[21vw] font-bold leading-none text-white whitespace-nowrap"
+              style={{ letterSpacing: "-0.02em" }}
+            >
+              {text}
+            </span>
+          ))}
+        </div>
+        <div aria-hidden="true" className="flex items-center gap-[5vw]">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span
+              key={`b-${i}`}
+              className="font-sangbleu text-[21vw] font-bold leading-none text-white whitespace-nowrap"
+              style={{ letterSpacing: "-0.02em" }}
+            >
+              {text}
+            </span>
+          ))}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export default function LandingPage() {
   const reducedMotion = useReducedMotion();
   const { scrollY } = useScroll();
-  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]) as any;
+
+  const marqueeOpacity = useTransform(scrollY, [0, 520], [1, 0]) as any;
 
   const [products, setProducts] = React.useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -41,21 +118,14 @@ export default function LandingPage() {
     };
   }, []);
 
-  const categories = [
-    { label: "Clothes", href: "/clothes", description: "Tailoring & essentials" },
-    { label: "Bags", href: "/bags", description: "Structured shapes" },
-    { label: "Collection", href: "/kollektion", description: "Curated selection" },
-  ];
-
   return (
     <div className="min-h-dvh bg-white text-neutral-950">
       <ShopNav transparentOnTop />
 
       <main>
-        {/* Hero – full-width, minimal overlay */}
-        <section className="relative min-h-screen w-full overflow-hidden bg-neutral-950">
+        <section className="relative min-h-screen w-full overflow-hidden bg-neutral-950 text-white">
           <video
-            className="absolute inset-0 h-full w-full object-cover object-center"
+            className="absolute inset-0 h-full w-full object-cover object-[center_70%]"
             src="/bg_video_landingpage.mp4"
             autoPlay
             muted
@@ -63,62 +133,57 @@ export default function LandingPage() {
             playsInline
             preload="metadata"
           />
-          <div className="absolute inset-0 bg-black/20" />
-          <motion.div
-            className="absolute inset-0 flex flex-col items-center justify-center px-5 text-center"
-            style={{ opacity: heroOpacity }}
-          >
-            <h1 className="text-4xl font-medium tracking-tight text-white sm:text-5xl md:text-6xl">
-              BYE BYE BERLIN
-            </h1>
-            <p className="mt-4 max-w-md text-sm font-normal tracking-wide text-white/90 sm:text-base">
-              Bags and clothes made for everyday.
-            </p>
-            <Link
-              href="#products"
-              className="mt-10 inline-flex h-12 items-center justify-center px-8 text-xs font-medium uppercase tracking-[0.2em] text-white underline underline-offset-4 decoration-white/60 hover:decoration-white transition-all"
-            >
-              To the products
-            </Link>
-          </motion.div>
-        </section>
+          <div className="absolute inset-0 bg-black/30" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,.08),transparent_45%),radial-gradient(circle_at_80%_25%,rgba(255,255,255,.05),transparent_55%)]" />
 
-        {/* Category tiles – FREITAG-style grid */}
-        <section className="border-t border-black/10 bg-white">
-          <div className="mx-auto max-w-6xl px-5 py-16">
-            <div className="grid grid-cols-1 gap-px bg-black/10 sm:grid-cols-3">
-              {categories.map((cat) => (
-                <Link
-                  key={cat.href}
-                  href={cat.href}
-                  className="group flex flex-col bg-white p-8 transition-colors hover:bg-neutral-50"
-                >
-                  <span className="text-2xl font-medium tracking-tight text-neutral-950 group-hover:underline">
-                    {cat.label}
-                  </span>
-                  <span className="mt-1 text-xs uppercase tracking-widest text-neutral-500">
-                    {cat.description}
-                  </span>
-                  <span className="mt-4 text-xs font-medium uppercase tracking-[0.2em] text-neutral-700 group-hover:text-neutral-950">
-                    Discover →
-                  </span>
-                </Link>
-              ))}
+          <HeroMarquee
+            text="BYE BYE BERLIN"
+            reducedMotion={!!reducedMotion}
+            phase={0}
+            opacity={marqueeOpacity}
+          />
+
+          <div className="absolute inset-x-0 bottom-6 z-20 flex flex-col items-center px-5">
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
+              <Link
+                href="/clothes"
+                className={cn(
+                  "inline-flex h-12 min-w-44 items-center justify-center px-10",
+                  "bg-white text-black hover:bg-white/90",
+                  "font-sangbleu text-xs font-bold uppercase tracking-[0.28em]",
+                  "ring-1 ring-white/40",
+                )}
+              >
+                Clothes
+              </Link>
+              <Link
+                href="/bags"
+                className={cn(
+                  "inline-flex h-12 min-w-44 items-center justify-center px-10",
+                  "bg-white text-black hover:bg-white/90",
+                  "font-sangbleu text-xs font-bold uppercase tracking-[0.28em]",
+                  "ring-1 ring-white/40",
+                )}
+              >
+                Bags
+              </Link>
             </div>
           </div>
         </section>
 
-        {/* Products – FRESHLY UPLOADED style */}
-        <section id="products" className="border-t border-black/10 bg-white">
-          <div className="mx-auto max-w-6xl px-5 pb-20 pt-16">
-            <div className="mb-10">
-              <h2 className="text-2xl font-medium tracking-tight text-neutral-950">
-                Freshly uploaded
-              </h2>
-              <p className="mt-2 text-sm text-neutral-600">
-                New items are added regularly. Check in so you don&apos;t miss your favorite.
-              </p>
-            </div>
+        <section className="mx-auto max-w-6xl px-5 pb-16 pt-16">
+          <div className="flex flex-col items-center justify-center text-center">
+            <motion.h2
+              className="font-sangbleu text-3xl font-bold uppercase tracking-[0.2em] text-neutral-950"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
+            >
+              THE SELECTION
+            </motion.h2>
+          </div>
+          <div className="mt-10">
             {loading ? (
               <div className="flex justify-center py-24">
                 <div
@@ -126,18 +191,8 @@ export default function LandingPage() {
                   aria-hidden="true"
                 />
               </div>
-            ) : products.length > 0 ? (
-              <ProductGrid products={products} />
             ) : (
-              <div className="py-24 text-center">
-                <p className="text-neutral-600">No products yet.</p>
-                <Link
-                  href="/clothes"
-                  className="mt-4 inline-block text-sm font-medium uppercase tracking-widest text-neutral-950 underline underline-offset-4"
-                >
-                  See all products
-                </Link>
-              </div>
+              <ProductGrid products={products} />
             )}
           </div>
         </section>

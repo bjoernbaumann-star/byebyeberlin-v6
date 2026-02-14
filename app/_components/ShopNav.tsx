@@ -308,7 +308,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
         <div className="relative flex h-[76px] w-full items-center px-2 sm:px-4 lg:px-6">
           <Link
             href="/"
-            className="absolute inset-x-0 flex justify-center text-[16px] font-medium tracking-tight whitespace-nowrap leading-none transition-opacity hover:opacity-80"
+            className="absolute inset-x-0 flex justify-center font-sangbleu text-[18px] font-bold tracking-tight whitespace-nowrap leading-none transition-opacity hover:opacity-80"
             aria-label="Home"
           >
             BYE BYE BERLIN
@@ -329,7 +329,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
                 className="flex items-center gap-2"
               >
                 <IconBag className="h-6 w-6 shrink-0" />
-                <span className="hidden sm:inline text-[13px] font-medium uppercase tracking-[0.15em] leading-none">
+                <span className="hidden sm:inline font-sangbleu text-[14.4px] font-bold uppercase tracking-[0.2em] leading-none">
                   BAG
                 </span>
                 {cart.count > 0 && (
@@ -339,7 +339,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 400, damping: 25 }}
                     className={cn(
-                      "tabular-nums text-[13px] font-medium leading-none",
+                      "tabular-nums font-sangbleu text-[14.4px] font-bold leading-none",
                       useTransparent ? "text-white" : "text-neutral-950",
                     )}
                   >
@@ -354,7 +354,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
               className="inline-flex items-center gap-2 px-2 py-2 hover:opacity-70"
             >
               <IconMenu className="h-6 w-6 shrink-0" />
-              <span className="hidden sm:inline text-[13px] font-medium uppercase tracking-[0.15em] leading-none">
+              <span className="hidden sm:inline font-sangbleu text-[14.4px] font-bold uppercase tracking-[0.2em] leading-none">
                 Menu
               </span>
             </button>

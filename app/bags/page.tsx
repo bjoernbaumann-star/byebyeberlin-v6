@@ -23,12 +23,16 @@ export default async function BagsPage() {
       <main className="pt-[76px]">
         <CenteredVideoHero primarySrc="/bags-hero.mp4" fallbackSrc="/hero-video.mp4" />
 
-        <section className="mx-auto max-w-6xl px-5 pb-20 pt-14">
-          <h1 className="text-2xl font-medium tracking-tight text-neutral-950">
+        <section className="mx-auto max-w-6xl px-5 pb-16 pt-14">
+          <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-600">
+            Bye Bye Berlin
+          </div>
+          <h1 className="mt-3 font-sangbleu text-5xl font-bold tracking-tight">
             Bags
           </h1>
-          <p className="mt-2 text-sm text-neutral-600">
-            Structured shapes, polished hardware, and refined materials.
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-neutral-700">
+            Structured shapes, polished hardware, and refined materials — made to
+            travel well.
           </p>
 
           <div className="mt-10">
