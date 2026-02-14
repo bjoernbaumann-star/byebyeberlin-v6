@@ -172,32 +172,7 @@ export default function LandingPage() {
         </section>
 
         <section className="relative z-[95] mx-auto max-w-6xl px-5 pb-16 pt-16">
-          {/* Text entlang der Kontur um THE SELECTION + Produktgrid */}
-          <svg
-            className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
-            viewBox="0 0 1200 700"
-            preserveAspectRatio="xMidYMid meet"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-          >
-            <defs>
-              <path
-                id="selection-frame-path"
-                d="M 120,60 L 1080,60 Q 1120,60 1120,100 L 1120,620 Q 1120,660 1080,660 L 120,660 Q 80,660 80,620 L 80,100 Q 80,60 120,60 Z"
-              />
-            </defs>
-            <text
-              className="font-sangbleu text-[2.2rem] font-bold uppercase tracking-[0.35em] fill-neutral-300"
-              style={{ fontFamily: "SangBleuSunrise, ui-serif, Georgia, serif" }}
-            >
-              <textPath xlinkHref="#selection-frame-path" startOffset="0">
-                BYE BYE BERLIN · BYE BYE BERLIN · BYE BYE BERLIN · BYE BYE BERLIN · BYE BYE BERLIN · BYE BYE BERLIN ·
-              </textPath>
-            </text>
-          </svg>
-
-          <div className="relative z-10 flex flex-col items-center justify-center text-center">
+          <div className="flex flex-col items-center justify-center text-center">
             <motion.h2
               className="font-sangbleu text-3xl font-bold uppercase tracking-[0.2em] text-neutral-950 -mt-8"
               initial={{ opacity: 0, y: 20 }}
@@ -208,7 +183,7 @@ export default function LandingPage() {
               THE SELECTION
             </motion.h2>
           </div>
-          <div className="relative z-10 mt-10">
+          <div className="mt-10">
             {loading ? (
               <div className="flex justify-center py-24">
                 <div
@@ -219,6 +194,36 @@ export default function LandingPage() {
             ) : (
               <ProductGrid products={products} />
             )}
+          </div>
+
+          {/* Streifen unten – Text läuft von links nach rechts durch */}
+          <div className="relative -mx-5 mt-16 overflow-hidden border-t border-neutral-200 bg-neutral-100 py-[1.3rem]">
+            <motion.div
+              aria-hidden="true"
+              className="flex w-max gap-16 whitespace-nowrap"
+              animate={
+                reducedMotion
+                  ? undefined
+                  : {
+                      x: ["0%", "-50%"],
+                    }
+              }
+              transition={{
+                duration: 25,
+                ease: "linear",
+                repeat: Infinity,
+                repeatType: "loop",
+              }}
+            >
+              {Array.from({ length: 2 }).map((_, i) => (
+                <span
+                  key={i}
+                  className="font-sangbleu text-[1.46rem] font-bold uppercase tracking-[0.3em] text-neutral-400"
+                >
+                  BYE BYE BERLIN · BYE BYE BERLIN · BYE BYE BERLIN · BYE BYE BERLIN · BYE BYE BERLIN ·
+                </span>
+              ))}
+            </motion.div>
           </div>
         </section>
       </main>
