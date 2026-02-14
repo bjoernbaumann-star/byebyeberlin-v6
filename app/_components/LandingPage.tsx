@@ -197,7 +197,7 @@ export default function LandingPage() {
           </div>
 
           {/* Streifen unten – Text läuft von links nach rechts durch */}
-          <div className="relative -mx-5 mt-16 overflow-hidden border-t border-neutral-200 bg-neutral-100 py-[1.3rem]">
+          <div className="relative -mx-5 mt-16 overflow-hidden border-t border-neutral-200 bg-white py-[1.3rem]">
             <motion.div
               aria-hidden="true"
               className="flex w-max gap-16 whitespace-nowrap"
@@ -205,7 +205,7 @@ export default function LandingPage() {
                 reducedMotion
                   ? undefined
                   : {
-                      x: ["0%", "-50%"],
+                      x: ["-50%", "0%"],
                     }
               }
               transition={{
@@ -218,9 +218,9 @@ export default function LandingPage() {
               {Array.from({ length: 2 }).map((_, i) => (
                 <span
                   key={i}
-                  className="font-sangbleu text-[1.46rem] font-bold uppercase tracking-[0.3em] text-neutral-400"
+                  className="font-sangbleu text-[1.46rem] font-bold uppercase tracking-[0.3em] text-neutral-950"
                 >
-                  BYE BYE BERLIN · BYE BYE BERLIN · BYE BYE BERLIN · BYE BYE BERLIN · BYE BYE BERLIN ·
+                  BXBXBXBX · BXBXBXBX · BXBXBXBX · BXBXBXBX · BXBXBXBX · BXBXBXBX ·
                 </span>
               ))}
             </motion.div>
