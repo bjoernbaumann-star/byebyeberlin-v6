@@ -171,7 +171,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="relative z-[95] mx-auto max-w-6xl px-5 pb-16 pt-16">
+        <section className="relative z-[95] mx-auto max-w-6xl px-5 pb-0 pt-16">
           <div className="flex flex-col items-center justify-center text-center">
             <motion.h2
               className="font-sangbleu text-3xl font-bold uppercase tracking-[0.2em] text-neutral-950 -mt-8"
@@ -194,41 +194,6 @@ export default function LandingPage() {
             ) : (
               <ProductGrid products={products} />
             )}
-          </div>
-
-          {/* Streifen unten – B* Icons laufen von links nach rechts */}
-          <div className="relative -mx-5 mt-16 overflow-hidden border-t border-neutral-200 bg-white py-[1.3rem]">
-            <motion.div
-              aria-hidden="true"
-              className="flex w-max items-center gap-3 whitespace-nowrap"
-              animate={
-                reducedMotion
-                  ? undefined
-                  : {
-                      x: ["-50%", "0%"],
-                    }
-              }
-              transition={{
-                duration: 20,
-                ease: "linear",
-                repeat: Infinity,
-                repeatType: "loop",
-              }}
-            >
-              {Array.from({ length: 2 }).map((_, i) => (
-                <span
-                  key={i}
-                  className="flex items-center gap-3 font-sangbleu text-2xl font-bold tracking-widest text-neutral-950"
-                >
-                  {Array.from({ length: 15 }).map((_, j) => (
-                    <React.Fragment key={j}>
-                      <span>B</span>
-                      <span className="text-neutral-400">*</span>
-                    </React.Fragment>
-                  ))}
-                </span>
-              ))}
-            </motion.div>
           </div>
         </section>
       </main>

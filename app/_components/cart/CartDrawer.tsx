@@ -3,6 +3,7 @@
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCart } from "./CartContext";
+import { LeoPattern } from "../LeoPattern";
 
 function cn(...parts: Array<string | false | undefined | null>) {
   return parts.filter(Boolean).join(" ");
@@ -76,6 +77,11 @@ export default function CartDrawer({
             exit={{ x: "100%" }}
             transition={{ duration: 0.45, ease: [0.2, 0.8, 0.2, 1] }}
           >
+            {/* Leo-Muster als Akzent – fließt wenn Sidebar aufgeht */}
+            <div className="absolute inset-x-0 bottom-0 h-12 overflow-hidden border-t border-black/5 py-2">
+              <LeoPattern duration={22} variant="accent" />
+            </div>
+
             <div className="border-b border-black/10">
               <div className="flex items-center justify-between px-5 py-5">
                 <div>
@@ -101,7 +107,7 @@ export default function CartDrawer({
               </div>
             </div>
 
-            <div className="px-5 py-6">
+            <div className="max-h-[calc(100vh-12rem)] overflow-y-auto px-5 py-6 pb-20">
               {cart.lines.length === 0 ? (
                 <div className="rounded-2xl border border-black/10 bg-white p-5 text-sm text-neutral-700">
                   Your bag is empty.

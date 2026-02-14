@@ -318,15 +318,25 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
 <button
               type="button"
               onClick={() => setCartOpen(true)}
-              className="inline-flex items-center gap-1.5 p-2 hover:opacity-70"
+              className="relative inline-flex items-center gap-1.5 p-2 hover:opacity-70"
               aria-label="Shopping bag"
             >
+              {/* Leo-Muster Flash beim Hinzufügen */}
+              {cart.addTrigger > 0 && (
+                <motion.span
+                  key={cart.addTrigger}
+                  className="absolute inset-0 -m-1 rounded-full border-2 border-neutral-400/60"
+                  initial={{ scale: 0.8, opacity: 1 }}
+                  animate={{ scale: 1.8, opacity: 0 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                />
+              )}
               <motion.span
                 key={cart.addTrigger}
                 initial={{ scale: 1 }}
                 animate={{ scale: [1, 1.12, 1] }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
-                className="flex items-center gap-2"
+                className="relative flex items-center gap-2"
               >
                 <IconBag className="h-6 w-6 shrink-0" />
                 <span className="hidden sm:inline font-sangbleu text-[14.4px] font-bold uppercase tracking-[0.2em] leading-none">
