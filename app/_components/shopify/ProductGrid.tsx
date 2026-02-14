@@ -13,7 +13,7 @@ function formatPrice(amount: number, currencyCode: string) {
   }).format(amount);
 }
 
-function ArchiveGridCell({
+function ProductCard({
   product,
   cart,
 }: {
@@ -36,39 +36,38 @@ function ArchiveGridCell({
   );
 
   return (
-    <article className="archive-grid-cell">
-      <div className="archive-cell-patina">
-        <div className="archive-cell-image-wrap">
+    <article className="freitag-product-card">
+        <div className="freitag-product-image-wrap">
           {product.images?.[0]?.url ? (
             <img
               src={product.images[0].url}
               alt={product.images[0].altText ?? product.title}
-              className="archive-cell-image"
+              className="freitag-product-image"
               loading="lazy"
             />
           ) : (
-            <div className="archive-cell-image archive-cell-image-placeholder">
+            <div className="freitag-product-image freitag-product-image-placeholder">
               No image
             </div>
           )}
+          <button
+            type="button"
+            onClick={handleAdd}
+            disabled={!product.firstVariantId}
+            className="freitag-product-add"
+            aria-label={justAdded ? "Added to bag" : "Add to bag"}
+          >
+            {justAdded ? "✓" : "+"}
+          </button>
         </div>
-      </div>
-
-      <div className="archive-cell-info">
-        <span className="archive-cell-title">{product.title.toUpperCase()}</span>
-        <span className="archive-cell-price">{priceStr}</span>
-      </div>
-
-      <button
-        type="button"
-        onClick={handleAdd}
-        disabled={!product.firstVariantId}
-        className="archive-cell-add"
-        aria-label={justAdded ? "Added to bag" : "Add to bag"}
-      >
-        {justAdded ? "✓" : "+"}
-      </button>
-    </article>
+        <div className="freitag-product-info">
+          <span className="freitag-product-title">{product.title}</span>
+          {product.handle && (
+            <span className="freitag-product-model">{product.handle}</span>
+          )}
+          <span className="freitag-product-price">{priceStr}</span>
+        </div>
+      </article>
   );
 }
 
@@ -87,9 +86,9 @@ export default function ProductGrid({ products }: { products: ShopifyProduct[] }
   }
 
   return (
-    <div className="archive-grid">
+    <div className="freitag-product-grid">
       {products.map((p) => (
-        <ArchiveGridCell key={p.id} product={p} cart={cart} />
+        <ProductCard key={p.id} product={p} cart={cart} />
       ))}
     </div>
   );

@@ -10,14 +10,11 @@ export default async function KollektionPage() {
     <div className="min-h-dvh bg-white text-neutral-950">
       <ShopNav />
       <main className="pt-[76px]">
-        <section className="mx-auto max-w-6xl px-5 py-16">
-          <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-600">
-            Bye Bye Berlin
-          </div>
-          <h1 className="mt-3 font-sangbleu text-5xl font-bold tracking-tight">
+        <section className="mx-auto max-w-6xl px-5 pb-20 pt-14">
+          <h1 className="text-2xl font-medium tracking-tight text-neutral-950">
             Collection
           </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-neutral-700">
+          <p className="mt-2 text-sm text-neutral-600">
             The full edit — Clothes, Bags and Essentials.
           </p>
 
