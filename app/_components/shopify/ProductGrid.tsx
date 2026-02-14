@@ -5,7 +5,15 @@ import type { ShopifyProduct } from "../../../lib/shopify-types";
 import type { CartContextValue } from "../cart/CartContext";
 import { useCart } from "../cart/CartContext";
 
-function AddToBagButton({
+function formatPrice(amount: number, currencyCode: string) {
+  return new Intl.NumberFormat("de-DE", {
+    style: "currency",
+    currency: currencyCode || "EUR",
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
+function ArchiveGridCell({
   product,
   cart,
 }: {
@@ -14,30 +22,54 @@ function AddToBagButton({
 }) {
   const [justAdded, setJustAdded] = React.useState(false);
 
-  const handleAdd = () => {
+  const handleAdd = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     cart.add(product, 1);
     setJustAdded(true);
     window.setTimeout(() => setJustAdded(false), 1200);
   };
 
-  return (
-    <button
-      type="button"
-      onClick={handleAdd}
-      disabled={!product.firstVariantId}
-      className="rounded-full bg-neutral-950 px-5 py-2.5 font-sangbleu text-xs font-bold uppercase tracking-widest text-white hover:bg-neutral-800 disabled:opacity-50 transition-colors"
-    >
-      {justAdded ? "ADDED TO BAG" : "ADD TO BAG"}
-    </button>
+  const priceStr = formatPrice(
+    Number(product.priceRange.minVariantPrice.amount),
+    product.priceRange.minVariantPrice.currencyCode
   );
-}
 
-function formatPrice(amount: number, currencyCode: string) {
-  return new Intl.NumberFormat("de-DE", {
-    style: "currency",
-    currency: currencyCode || "EUR",
-    maximumFractionDigits: 0,
-  }).format(amount);
+  return (
+    <article className="archive-grid-cell">
+      <div className="archive-cell-patina">
+        <div className="archive-cell-image-wrap">
+          {product.images?.[0]?.url ? (
+            <img
+              src={product.images[0].url}
+              alt={product.images[0].altText ?? product.title}
+              className="archive-cell-image"
+              loading="lazy"
+            />
+          ) : (
+            <div className="archive-cell-image archive-cell-image-placeholder">
+              No image
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="archive-cell-info">
+        <span className="archive-cell-title">{product.title.toUpperCase()}</span>
+        <span className="archive-cell-price">{priceStr}</span>
+      </div>
+
+      <button
+        type="button"
+        onClick={handleAdd}
+        disabled={!product.firstVariantId}
+        className="archive-cell-add"
+        aria-label={justAdded ? "Added to bag" : "Add to bag"}
+      >
+        {justAdded ? "✓" : "+"}
+      </button>
+    </article>
+  );
 }
 
 export default function ProductGrid({ products }: { products: ShopifyProduct[] }) {
@@ -55,39 +87,10 @@ export default function ProductGrid({ products }: { products: ShopifyProduct[] }
   }
 
   return (
-    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="archive-grid">
       {products.map((p) => (
-        <article
-          key={p.id}
-          className="rounded-3xl bg-white p-5 shadow-sm"
-        >
-          <div className="polaroid-frame mb-5">
-            <div className="polaroid-inner">
-              {p.images?.[0]?.url ? (
-                <img
-                  src={p.images[0].url}
-                  alt={p.images[0].altText ?? p.title}
-                  className="polaroid-image"
-                  loading="lazy"
-                />
-              ) : (
-                <div className="polaroid-image flex items-center justify-center bg-neutral-200 text-sm text-neutral-500">
-                  No image
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="font-sangbleu text-xl font-bold capitalize">{p.title}</div>
-          <div className="mt-1.5 text-sm text-neutral-500">{p.handle}</div>
-          <div className="mt-6 flex items-end justify-between gap-3">
-            <div className="text-sm font-medium text-neutral-950">
-              {formatPrice(Number(p.priceRange.minVariantPrice.amount), p.priceRange.minVariantPrice.currencyCode)}
-            </div>
-            <AddToBagButton product={p} cart={cart} />
-          </div>
-        </article>
+        <ArchiveGridCell key={p.id} product={p} cart={cart} />
       ))}
     </div>
   );
 }
-
