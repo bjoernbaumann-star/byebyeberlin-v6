@@ -36,9 +36,9 @@ function ProductCard({
   );
 
   return (
-    <article className="group">
+    <article className="group border-0 ring-0">
       <div className="block">
-        <div className="aspect-[3/4] overflow-hidden bg-neutral-100">
+        <div className="aspect-[3/4] overflow-hidden rounded-none border-0 bg-neutral-50">
           {product.images?.[0]?.url ? (
             <img
               src={product.images[0].url}
@@ -47,7 +47,7 @@ function ProductCard({
               loading="lazy"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-neutral-200 text-sm text-neutral-500">
+            <div className="flex h-full w-full items-center justify-center rounded-none bg-neutral-200 text-sm text-neutral-500">
               No image
             </div>
           )}
