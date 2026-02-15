@@ -13,7 +13,7 @@ function formatPrice(amount: number, currencyCode: string) {
   }).format(amount);
 }
 
-function ArchiveGridCell({
+function ProductCard({
   product,
   cart,
 }: {
@@ -36,37 +36,41 @@ function ArchiveGridCell({
   );
 
   return (
-    <article className="archive-grid-cell">
-      <div className="archive-cell-patina">
-        <div className="archive-cell-image-wrap">
+    <article className="group">
+      <div className="block">
+        <div className="aspect-[3/4] overflow-hidden bg-neutral-100">
           {product.images?.[0]?.url ? (
             <img
               src={product.images[0].url}
               alt={product.images[0].altText ?? product.title}
-              className="archive-cell-image"
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
               loading="lazy"
             />
           ) : (
-            <div className="archive-cell-image archive-cell-image-placeholder">
+            <div className="flex h-full w-full items-center justify-center bg-neutral-200 text-sm text-neutral-500">
               No image
             </div>
           )}
         </div>
+        <div className="mt-4 space-y-1">
+          <h3 className="font-sangbleu text-sm font-medium text-neutral-950">
+            {product.title}
+          </h3>
+          <p className="text-sm text-neutral-600">{priceStr}</p>
+          {/* Color swatches – Platzhalter für spätere Varianten-Optionen */}
+          <div className="mt-2 flex items-center gap-1.5">
+            <span className="h-3 w-3 shrink-0 rounded-full border border-neutral-300 bg-neutral-200" />
+          </div>
+        </div>
       </div>
-
-      <div className="archive-cell-info">
-        <span className="archive-cell-title">{product.title.toUpperCase()}</span>
-        <span className="archive-cell-price">{priceStr}</span>
-      </div>
-
       <button
         type="button"
         onClick={handleAdd}
         disabled={!product.firstVariantId}
-        className="archive-cell-add"
-        aria-label={justAdded ? "Added to bag" : "Add to bag"}
+        className="mt-3 w-full border border-neutral-950 bg-white py-2.5 text-xs font-medium uppercase tracking-wider text-neutral-950 transition-colors hover:bg-neutral-950 hover:text-white disabled:opacity-50"
+        aria-label={justAdded ? "In den Warenkorb gelegt" : "In den Warenkorb"}
       >
-        {justAdded ? "✓" : "+"}
+        {justAdded ? "✓ Hinzugefügt" : "+ In den Warenkorb"}
       </button>
     </article>
   );
@@ -78,19 +82,36 @@ export default function ProductGrid({ products }: { products: ShopifyProduct[] }
   if (!products.length) {
     return (
       <div className="rounded-2xl border border-black/10 bg-white p-12 text-center">
-        <p className="text-neutral-600">No Products Found</p>
+        <p className="text-neutral-600">Keine Produkte gefunden</p>
         <p className="mt-2 text-sm text-neutral-500">
-          Shop is temporarily unavailable. Please try again later.
+          Der Shop ist vorübergehend nicht verfügbar.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="archive-grid">
-      {products.map((p) => (
-        <ArchiveGridCell key={p.id} product={p} cart={cart} />
-      ))}
+    <div className="mt-8">
+      <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+        <p className="font-sangbleu text-sm font-medium text-neutral-600">
+          {products.length} PRODUKTE
+        </p>
+        <div className="flex items-center gap-4 text-sm text-neutral-500">
+          <button type="button" className="hover:text-neutral-950">
+            Filtern nach
+          </button>
+          <span>|</span>
+          <button type="button" className="hover:text-neutral-950">
+            Sortieren nach: Empfehlungen
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-6 sm:gap-8 md:grid-cols-3 lg:grid-cols-4">
+        {products.map((p) => (
+          <ProductCard key={p.id} product={p} cart={cart} />
+        ))}
+      </div>
     </div>
   );
 }
