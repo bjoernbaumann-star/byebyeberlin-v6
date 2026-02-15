@@ -171,7 +171,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="relative z-[95] mx-auto max-w-6xl px-5 pb-0 pt-16">
+        <section className="relative z-[95] mx-auto max-w-6xl px-5 pb-0 pt-[200px]">
           <div className="flex flex-col items-center justify-center text-center">
             <motion.h2
               className="font-sangbleu text-3xl font-bold uppercase tracking-[0.2em] text-neutral-950 -mt-8"
