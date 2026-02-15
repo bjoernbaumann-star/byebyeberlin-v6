@@ -80,7 +80,7 @@ function ProductCard({
         )}
       </div>
       <Link href={`/produkt/${product.handle}`} className="mt-4 block space-y-1">
-        <h3 className="font-sangbleu text-sm font-medium text-neutral-950">
+        <h3 className="font-sangbleu font-bold text-[1.05rem] text-white">
           {product.title}
         </h3>
         <p className="text-sm text-neutral-600">{priceStr}</p>
