@@ -84,11 +84,62 @@ function HeroMarquee({
   );
 }
 
+function GapMarquee({
+  text,
+  reducedMotion,
+}: {
+  text: string;
+  reducedMotion: boolean;
+}) {
+  return (
+    <div className="pointer-events-none sticky top-[76px] z-10 -mx-5 -mt-[600px] mb-8 overflow-hidden">
+      <motion.div
+        aria-hidden="true"
+        className="flex w-max items-center gap-[5vw] whitespace-nowrap pl-[5vw]"
+        animate={
+          reducedMotion
+            ? undefined
+            : { x: ["-50%", "0%"] }
+        }
+        transition={{
+          duration: 51,
+          ease: "linear",
+          repeat: Infinity,
+          repeatType: "loop",
+        }}
+      >
+        <div className="flex items-center gap-[5vw]">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span
+              key={`a-${i}`}
+              className="font-sangbleu text-[21vw] font-bold leading-none text-neutral-300 whitespace-nowrap"
+              style={{ letterSpacing: "-0.02em" }}
+            >
+              {text}
+            </span>
+          ))}
+        </div>
+        <div aria-hidden="true" className="flex items-center gap-[5vw]">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span
+              key={`b-${i}`}
+              className="font-sangbleu text-[21vw] font-bold leading-none text-neutral-300 whitespace-nowrap"
+              style={{ letterSpacing: "-0.02em" }}
+            >
+              {text}
+            </span>
+          ))}
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 export default function LandingPage() {
   const reducedMotion = useReducedMotion();
   const { scrollY } = useScroll();
 
-  const marqueeOpacity = useTransform(scrollY, [0, 520], [1, 1]) as any;
+  const marqueeOpacity = useTransform(scrollY, [0, 600], [1, 0]) as any;
 
   const [products, setProducts] = React.useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -172,6 +223,7 @@ export default function LandingPage() {
         </section>
 
         <section className="relative z-[95] mx-auto max-w-6xl px-5 pb-0 pt-[600px]">
+          <GapMarquee text="BYE BYE BERLIN" reducedMotion={!!reducedMotion} />
           <div className="flex flex-col items-center justify-center text-center">
             <motion.h2
               className="font-sangbleu text-3xl font-bold uppercase tracking-[0.2em] text-neutral-950 -mt-8"
