@@ -37,14 +37,15 @@ function ProductCard({
   );
 
   return (
-    <article className="group border-0 ring-0">
-      <Link href={`/produkt/${product.handle}`} className="block">
-        <div className="aspect-[3/4] overflow-hidden rounded-none border-0 bg-transparent p-0">
+    <article className="group overflow-hidden !rounded-none !border-0 !shadow-none ring-0">
+      <Link href={`/produkt/${product.handle}`} className="block overflow-hidden !rounded-none">
+        <div className="product-card-image aspect-[3/4] overflow-hidden !rounded-none !border-0 bg-transparent p-0">
           {product.images?.[0]?.url ? (
             <img
               src={product.images[0].url}
               alt={product.images[0].altText ?? product.title}
-              className="h-full w-full rounded-none object-cover object-center transition-transform duration-300 group-hover:scale-[1.02]"
+              className="h-full w-full !rounded-none object-cover object-center transition-transform duration-300 group-hover:scale-[1.02]"
+              style={{ border: "none", borderRadius: 0 }}
               loading="lazy"
             />
           ) : (

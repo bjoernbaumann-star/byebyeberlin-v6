@@ -119,6 +119,14 @@ body {
   object-fit: cover;
 }
 
+/* Product card images – no border, no rounded corners */
+.product-card-image,
+.product-card-image img {
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
 /* Archive Grid – Strict layout, Patina aesthetic */
 .archive-grid {
   display: grid;
