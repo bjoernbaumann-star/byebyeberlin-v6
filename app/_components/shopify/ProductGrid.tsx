@@ -22,6 +22,9 @@ function ProductCard({
   cart: CartContextValue;
 }) {
   const [justAdded, setJustAdded] = React.useState(false);
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const images = product.images ?? [];
+  const hasMultipleImages = images.length > 1;
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -38,31 +41,51 @@ function ProductCard({
 
   return (
     <article className="group overflow-hidden !rounded-none !border-0 !shadow-none ring-0">
-      <Link href={`/produkt/${product.handle}`} className="block overflow-hidden !rounded-none">
-        <div className="product-card-image aspect-[3/4] overflow-hidden !rounded-none !border-0 bg-transparent p-0">
-          {product.images?.[0]?.url ? (
-            <img
-              src={product.images[0].url}
-              alt={product.images[0].altText ?? product.title}
-              className="h-full w-full !rounded-none object-cover object-center transition-transform duration-300 group-hover:scale-[1.02]"
-              style={{ border: "none", borderRadius: 0 }}
-              loading="lazy"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center rounded-none bg-neutral-100 text-sm text-neutral-500">
-              No image
-            </div>
-          )}
-        </div>
-        <div className="mt-4 space-y-1">
-          <h3 className="font-sangbleu text-sm font-medium text-neutral-950">
-            {product.title}
-          </h3>
-          <p className="text-sm text-neutral-600">{priceStr}</p>
-          {/* Color swatches – Platzhalter für spätere Varianten-Optionen */}
-          <div className="mt-2 flex items-center gap-1.5">
-            <span className="h-3 w-3 shrink-0 rounded-full border border-neutral-300 bg-neutral-200" />
+      <div className="relative">
+        <Link href={`/produkt/${product.handle}`} className="block overflow-hidden !rounded-none">
+          <div className="product-card-image aspect-[3/4] overflow-hidden !rounded-none !border-0 bg-transparent p-0">
+            {images[0]?.url ? (
+              <img
+                src={images[activeIndex]?.url ?? images[0].url}
+                alt={images[activeIndex]?.altText ?? images[0].altText ?? product.title}
+                className="h-full w-full !rounded-none object-cover object-center transition-transform duration-300 group-hover:scale-[1.02]"
+                style={{ border: "none", borderRadius: 0 }}
+                loading="lazy"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center rounded-none bg-neutral-100 text-sm text-neutral-500">
+                No image
+              </div>
+            )}
           </div>
+        </Link>
+        {hasMultipleImages && (
+          <div className="absolute bottom-3 left-0 right-0 z-10 flex justify-center gap-1.5">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setActiveIndex(i);
+                }}
+                className={`h-1.5 w-1.5 shrink-0 rounded-full transition-colors ${
+                  i === activeIndex ? "bg-white" : "bg-white/50"
+                }`}
+                aria-label={`Bild ${i + 1} von ${images.length}`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+      <Link href={`/produkt/${product.handle}`} className="mt-4 block space-y-1">
+        <h3 className="font-sangbleu text-sm font-medium text-neutral-950">
+          {product.title}
+        </h3>
+        <p className="text-sm text-neutral-600">{priceStr}</p>
+        <div className="mt-2 flex items-center gap-1.5">
+          <span className="h-3 w-3 shrink-0 rounded-full border border-neutral-300 bg-neutral-200" />
         </div>
       </Link>
       <button
