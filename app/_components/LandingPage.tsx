@@ -179,7 +179,7 @@ export default function LandingPage() {
         <section className="relative min-h-screen w-full overflow-hidden bg-neutral-950 text-white">
           <video
             className="absolute inset-0 h-full w-full object-cover object-[center_70%]"
-            src="/bg_video_landingpage.mp4"
+            src="/BG%20VIDEO.mp4"
             autoPlay
             muted
             loop
