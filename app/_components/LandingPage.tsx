@@ -88,7 +88,7 @@ export default function LandingPage() {
   const reducedMotion = useReducedMotion();
   const { scrollY } = useScroll();
 
-  const marqueeOpacity = useTransform(scrollY, [0, 520], [1, 0]) as any;
+  const marqueeOpacity = useTransform(scrollY, [0, 520], [1, 1]) as any;
 
   const [products, setProducts] = React.useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = React.useState(true);
