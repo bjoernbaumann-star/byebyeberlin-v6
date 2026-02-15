@@ -69,7 +69,7 @@ export default async function ProductPage({
         <section className="mx-auto max-w-6xl px-5 pb-20">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
             {/* Bildgalerie */}
-            <div className="aspect-[3/4] overflow-hidden bg-neutral-50">
+            <div className="aspect-[3/4] overflow-hidden bg-neutral-200">
               {product.images?.[0]?.url ? (
                 <ProductDetailClient
                   images={product.images}

@@ -39,7 +39,7 @@ function ProductCard({
   return (
     <article className="group border-0 ring-0">
       <Link href={`/produkt/${product.handle}`} className="block">
-        <div className="aspect-[3/4] overflow-hidden rounded-none border-0 bg-neutral-50">
+        <div className="aspect-[3/4] overflow-hidden rounded-none border-0 bg-neutral-200">
           {product.images?.[0]?.url ? (
             <img
               src={product.images[0].url}
