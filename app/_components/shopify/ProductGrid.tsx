@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import type { ShopifyProduct } from "../../../lib/shopify-types";
 import type { CartContextValue } from "../cart/CartContext";
 import { useCart } from "../cart/CartContext";
@@ -37,7 +38,7 @@ function ProductCard({
 
   return (
     <article className="group border-0 ring-0">
-      <div className="block">
+      <Link href={`/produkt/${product.handle}`} className="block">
         <div className="aspect-[3/4] overflow-hidden rounded-none border-0 bg-neutral-50">
           {product.images?.[0]?.url ? (
             <img
@@ -62,7 +63,7 @@ function ProductCard({
             <span className="h-3 w-3 shrink-0 rounded-full border border-neutral-300 bg-neutral-200" />
           </div>
         </div>
-      </div>
+      </Link>
       <button
         type="button"
         onClick={handleAdd}

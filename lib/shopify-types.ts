@@ -19,6 +19,7 @@ export type ShopifyProduct = {
   id: string;
   title: string;
   handle: string;
+  description?: string | null;
   priceRange: ShopifyPriceRange;
   images: ShopifyImage[];
   onlineStoreUrl?: string | null;

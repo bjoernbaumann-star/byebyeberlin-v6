@@ -265,6 +265,65 @@ export async function getProductsByCollectionSafe(
   );
 }
 
+type ProductByHandleData = {
+  product: {
+    id: string;
+    title: string;
+    handle: string;
+    description: string | null;
+    onlineStoreUrl: string | null;
+    priceRange: {
+      minVariantPrice: { amount: string; currencyCode: string };
+      maxVariantPrice: { amount: string; currencyCode: string };
+    };
+    images: { nodes: Array<{ url: string; altText: string | null; width: number | null; height: number | null }> };
+    variants: { nodes: Array<{ id: string }> };
+  } | null;
+};
+
+const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
+  query ProductByHandle($handle: String!) {
+    product(handle: $handle) {
+      id
+      title
+      handle
+      description
+      onlineStoreUrl
+      priceRange {
+        minVariantPrice { amount currencyCode }
+        maxVariantPrice { amount currencyCode }
+      }
+      images(first: 10) {
+        nodes { url altText width height }
+      }
+      variants(first: 1) {
+        nodes { id }
+      }
+    }
+  }
+`;
+
+export async function getProductByHandle(handle: string): Promise<ShopifyProduct | null> {
+  const data = await shopifyFetchSafe<ProductByHandleData>({
+    query: PRODUCT_BY_HANDLE_QUERY,
+    variables: { handle },
+    tags: [`shopify-product-${handle}`],
+    cache: "no-store",
+  });
+  if (!data?.product) return null;
+  const p = data.product;
+  return {
+    id: p.id,
+    title: p.title,
+    handle: p.handle,
+    description: p.description,
+    onlineStoreUrl: p.onlineStoreUrl,
+    priceRange: p.priceRange,
+    images: p.images.nodes,
+    firstVariantId: p.variants?.nodes?.[0]?.id ?? null,
+  };
+}
+
 // -----------------------------
 // Checkout (Cart + Checkout URL)
 // -----------------------------
