@@ -255,4 +255,4 @@ export default function LandingPage() {
       <ShopFooter />
     </div>
   );
-}
+
