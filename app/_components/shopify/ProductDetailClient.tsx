@@ -21,7 +21,7 @@ function ProductImageGallery({
         <img
           src={currentImage.url}
           alt={currentImage.altText ?? alt}
-          className="h-full w-full object-cover"
+          className="h-full w-full rounded-none border-0 object-cover object-center"
         />
       )}
       {images.length > 1 && (
