@@ -6,33 +6,40 @@ import type { ShopifyProduct } from "../../../lib/shopify-types";
 import { useCart } from "../cart/CartContext";
 
 function ProductImageGallery({
-  images,
-  alt,
+  images = [],
+  alt = "Produkt",
 }: {
-  images: ShopifyImage[];
-  alt: string;
+  images?: ShopifyImage[] | null;
+  alt?: string;
 }) {
+  const safeImages = Array.isArray(images) ? images : [];
   const [activeIndex, setActiveIndex] = React.useState(0);
-  const currentImage = images[activeIndex];
+  const clampedIndex =
+    safeImages.length === 0 ? 0 : Math.min(Math.max(0, activeIndex), Math.max(0, safeImages.length - 1));
+  const currentImage = safeImages[clampedIndex];
 
   return (
     <div className="relative h-full w-full">
-      {currentImage?.url && (
+      {currentImage?.url ? (
         <img
           src={currentImage.url}
-          alt={currentImage.altText ?? alt}
+          alt={currentImage.altText ?? alt ?? "Produkt"}
           className="h-full w-full rounded-none border-0 object-cover object-center"
         />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center bg-neutral-100 text-neutral-400">
+          Kein Bild
+        </div>
       )}
-      {images.length > 1 && (
+      {safeImages.length > 1 && (
         <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
-          {images.map((img, i) => (
+          {safeImages.map((img, i) => (
             <button
               key={i}
               type="button"
               onClick={() => setActiveIndex(i)}
               className={`h-1.5 w-1.5 rounded-full transition-colors ${
-                i === activeIndex ? "bg-neutral-950" : "bg-white/60 hover:bg-white/80"
+                i === clampedIndex ? "bg-neutral-950" : "bg-white/60 hover:bg-white/80"
               }`}
               aria-label={`Bild ${i + 1} anzeigen`}
             />
@@ -47,23 +54,27 @@ function AddToCartButton({
   product,
   className,
 }: {
-  product: ShopifyProduct;
+  product: ShopifyProduct | null | undefined;
   className?: string;
 }) {
   const cart = useCart();
   const [justAdded, setJustAdded] = React.useState(false);
+  const canAdd = product != null && product.firstVariantId != null && product.firstVariantId !== "";
 
   const handleClick = () => {
+    if (!product) return;
     cart.add(product, 1);
     setJustAdded(true);
     window.setTimeout(() => setJustAdded(false), 2000);
   };
 
+  if (product == null) return null;
+
   return (
     <button
       type="button"
       onClick={handleClick}
-      disabled={!product.firstVariantId}
+      disabled={!canAdd}
       className={className}
       aria-label={justAdded ? "In den Warenkorb gelegt" : "Zum Warenkorb hinzufügen"}
     >
@@ -73,11 +84,11 @@ function AddToCartButton({
 }
 
 export default function ProductDetailClient({
-  images,
-  alt,
+  images = [],
+  alt = "Produkt",
 }: {
-  images: ShopifyImage[];
-  alt: string;
+  images?: ShopifyImage[] | null;
+  alt?: string;
 }) {
   return <ProductImageGallery images={images} alt={alt} />;
 }

@@ -11,13 +11,18 @@ export async function generateMetadata({
 }: {
   params: Promise<{ handle: string }>;
 }): Promise<Metadata> {
-  const { handle } = await params;
-  const product = await getProductByHandle(handle);
-  if (!product) return { title: "Produkt nicht gefunden" };
-  return {
-    title: `${product.title} | Bye Bye Berlin`,
-    description: product.description?.replace(/<[^>]*>/g, "").slice(0, 160),
-  };
+  try {
+    const { handle } = await params;
+    if (!handle) return { title: "Produkt nicht gefunden" };
+    const product = await getProductByHandle(handle);
+    if (!product) return { title: "Produkt nicht gefunden" };
+    return {
+      title: `${product.title ?? "Produkt"} | Bye Bye Berlin`,
+      description: product.description?.replace(/<[^>]*>/g, "").slice(0, 160) ?? undefined,
+    };
+  } catch {
+    return { title: "Produkt nicht gefunden" };
+  }
 }
 
 function formatPrice(amount: number, currencyCode: string) {
@@ -33,17 +38,29 @@ export default async function ProductPage({
 }: {
   params: Promise<{ handle: string }>;
 }) {
-  const { handle } = await params;
-  const product = await getProductByHandle(handle);
+  let product: Awaited<ReturnType<typeof getProductByHandle>> = null;
+
+  try {
+    const { handle } = await params;
+    if (!handle) {
+      notFound();
+    }
+    product = await getProductByHandle(handle);
+  } catch {
+    notFound();
+  }
 
   if (!product) {
     notFound();
   }
 
-  const priceStr = formatPrice(
-    Number(product.priceRange.minVariantPrice.amount),
-    product.priceRange.minVariantPrice.currencyCode
-  );
+  const images = product.images ?? [];
+  const hasImages = images.length > 0 && images[0]?.url;
+  const minPrice = product.priceRange?.minVariantPrice;
+  const priceStr =
+    minPrice != null
+      ? formatPrice(Number(minPrice.amount), minPrice.currencyCode ?? "EUR")
+      : null;
 
   return (
     <div className="min-h-dvh bg-white text-neutral-950">
@@ -61,7 +78,7 @@ export default async function ProductPage({
               The Selection
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-neutral-950">{product.title}</span>
+            <span className="text-neutral-950">{product.title ?? "Produkt"}</span>
           </nav>
         </div>
 
@@ -70,13 +87,13 @@ export default async function ProductPage({
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
             {/* Bildgalerie */}
             <div className="aspect-[3/4] overflow-hidden rounded-none border-0 bg-transparent">
-              {product.images?.[0]?.url ? (
+              {hasImages ? (
                 <ProductDetailClient
-                  images={product.images}
-                  alt={product.images[0].altText ?? product.title}
+                  images={images}
+                  alt={images[0]?.altText ?? product.title ?? "Produkt"}
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-neutral-400">
+                <div className="flex h-full w-full items-center justify-center bg-neutral-100 text-neutral-400">
                   Kein Bild
                 </div>
               )}
@@ -85,9 +102,13 @@ export default async function ProductPage({
             {/* Produktinfos */}
             <div className="flex flex-col">
               <h1 className="font-sangbleu text-2xl font-bold tracking-tight text-neutral-950 md:text-3xl">
-                {product.title}
+                {product.title ?? "Produkt"}
               </h1>
-              <p className="mt-4 text-xl text-neutral-950">{priceStr}</p>
+              {priceStr != null ? (
+                <p className="mt-4 text-xl text-neutral-950">{priceStr}</p>
+              ) : (
+                <p className="mt-4 text-xl text-neutral-500">Preis auf Anfrage</p>
+              )}
 
               {/* Farbe – Platzhalter */}
               <div className="mt-6">
