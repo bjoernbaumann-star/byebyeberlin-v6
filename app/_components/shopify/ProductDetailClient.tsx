@@ -31,21 +31,6 @@ function ProductImageGallery({
           Kein Bild
         </div>
       )}
-      {safeImages.length > 1 && (
-        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
-          {safeImages.map((img, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setActiveIndex(i)}
-              className={`h-1.5 w-1.5 rounded-full transition-colors ${
-                i === clampedIndex ? "bg-neutral-950" : "bg-white/60 hover:bg-white/80"
-              }`}
-              aria-label={`Bild ${i + 1} anzeigen`}
-            />
-          ))}
-        </div>
-      )}
     </div>
   );
 }

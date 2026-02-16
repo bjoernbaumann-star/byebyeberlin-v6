@@ -20,9 +20,9 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Bye Bye Berlin — Luxury Essentials",
+  title: "BYE BYE BERLIN — Luxury Essentials",
   description:
-    "Luxury Essentials & Statements by Bye Bye Berlin. Editorial, minimal, high-quality.",
+    "Luxury Essentials & Statements by BYE BYE BERLIN. Editorial, minimal, high-quality.",
 };
 
 export default function RootLayout({

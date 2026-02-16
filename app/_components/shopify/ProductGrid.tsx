@@ -22,9 +22,7 @@ function ProductCard({
   cart: CartContextValue;
 }) {
   const [justAdded, setJustAdded] = React.useState(false);
-  const [activeIndex, setActiveIndex] = React.useState(0);
   const images = product.images ?? [];
-  const hasMultipleImages = images.length > 1;
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -46,8 +44,8 @@ function ProductCard({
           <div className="product-card-image aspect-[3/4] overflow-hidden !rounded-none !border-0 bg-transparent p-0">
             {images[0]?.url ? (
               <img
-                src={images[activeIndex]?.url ?? images[0].url}
-                alt={images[activeIndex]?.altText ?? images[0].altText ?? product.title}
+                src={images[0]?.url}
+                alt={images[0]?.altText ?? product.title}
                 className="h-full w-full !rounded-none object-cover object-center transition-transform duration-300 group-hover:scale-[1.02]"
                 style={{ border: "none", borderRadius: 0 }}
                 loading="lazy"
@@ -59,25 +57,6 @@ function ProductCard({
             )}
           </div>
         </Link>
-        {hasMultipleImages && (
-          <div className="absolute bottom-3 left-0 right-0 z-10 flex justify-center gap-1.5">
-            {images.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setActiveIndex(i);
-                }}
-                className={`h-1.5 w-1.5 shrink-0 rounded-full transition-colors ${
-                  i === activeIndex ? "bg-white" : "bg-white/50"
-                }`}
-                aria-label={`Bild ${i + 1} von ${images.length}`}
-              />
-            ))}
-          </div>
-        )}
       </div>
       <Link href={`/produkt/${product.handle}`} className="mt-2 block space-y-1">
         <h3 className="font-sangbleu font-bold text-[1.05rem] text-white">

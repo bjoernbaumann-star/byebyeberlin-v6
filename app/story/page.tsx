@@ -14,7 +14,7 @@ export default function StoryPage() {
             STORY
           </h1>
           <p className="mt-8 font-sangbleu text-2xl leading-relaxed text-neutral-900">
-            Bye Bye Berlin is a farewell to noise — and a hello to precision.
+            BYE BYE BERLIN is a farewell to noise — and a hello to precision.
             A brand for clean lines, substantial materials and details you notice
             at second glance.
           </p>

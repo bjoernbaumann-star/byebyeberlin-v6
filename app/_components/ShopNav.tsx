@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCart } from "./cart/CartContext";
@@ -169,6 +169,14 @@ function MenuDrawer({
             </button>
 
             <div className="h-full overflow-y-auto px-10 pb-14 pt-20">
+              <Link
+                href="/"
+                onClick={onClose}
+                className="mb-10 block w-fit font-sangbleu text-[22px] font-bold tracking-tight text-neutral-950"
+                aria-label="Home"
+              >
+                BYE BYE BERLIN
+              </Link>
               <nav className="space-y-5 font-sangbleu-medium text-[22px] leading-tight">
                 {[
                   { label: "BAGS", href: "/bags" },
@@ -245,7 +253,7 @@ function MenuDrawer({
                 <Link
                   href="/services"
                   onClick={onClose}
-                  className="text-sm text-neutral-500 transition-colors hover:text-neutral-800"
+                  className="font-sangbleu text-sm text-neutral-500 transition-colors hover:text-neutral-800"
                 >
                   BYE BYE BERLIN SERVICES
                 </Link>
@@ -260,6 +268,8 @@ function MenuDrawer({
 
 export default function ShopNav({ transparentOnTop = false }: { transparentOnTop?: boolean }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [cartOpen, setCartOpen] = React.useState(false);
@@ -316,14 +326,16 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
         )}
       >
         <div className="relative flex h-[76px] w-full items-center px-2 sm:px-4 lg:px-6">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="absolute left-2 z-20 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-inherit hover:opacity-70 sm:left-4 lg:left-6"
-            aria-label="Zurück"
-          >
-            <IconBack className="h-7 w-7 sm:h-8 sm:w-8" />
-          </button>
+          {!isHome && (
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="absolute left-2 z-20 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-inherit hover:opacity-70 sm:left-4 lg:left-6"
+              aria-label="Zurück"
+            >
+              <IconBack className="h-7 w-7 sm:h-8 sm:w-8" />
+            </button>
+          )}
 
           <Link
             href="/"

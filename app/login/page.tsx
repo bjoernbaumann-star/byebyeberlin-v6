@@ -48,7 +48,7 @@ export default function LoginPage() {
       <main className="mx-auto max-w-lg px-5 pt-[110px] pb-20">
         <div className="rounded-[2.5rem] border border-black/10 bg-neutral-50 p-10">
           <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-600">
-            Bye Bye Berlin
+            BYE BYE BERLIN
           </div>
           <h1 className="mt-3 font-sangbleu text-5xl font-bold tracking-tight">Login</h1>
           <p className="mt-4 text-sm leading-relaxed text-neutral-700">

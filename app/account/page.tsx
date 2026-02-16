@@ -142,7 +142,7 @@ export default function AccountPage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-600">
-              Bye Bye Berlin
+              BYE BYE BERLIN
             </div>
             <h1 className="mt-3 font-sangbleu text-5xl font-bold tracking-tight">My Account</h1>
             {customer?.firstName && (

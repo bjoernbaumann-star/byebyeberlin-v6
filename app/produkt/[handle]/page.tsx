@@ -16,7 +16,7 @@ export async function generateMetadata({
     const product = await getProductByHandle(handle);
     if (!product) return { title: "Produkt nicht gefunden" };
     return {
-      title: `${product.title ?? "Produkt"} | Bye Bye Berlin`,
+      title: `${product.title ?? "Produkt"} | BYE BYE BERLIN`,
       description: product.description?.replace(/<[^>]*>/g, "").slice(0, 160) ?? undefined,
     };
   } catch {
@@ -78,7 +78,7 @@ export default async function ProductPage({
         <div className="mx-auto max-w-6xl px-5 py-6">
           <nav className="text-xs text-neutral-500">
             <Link href="/" className="hover:text-neutral-950">
-              Bye Bye Berlin
+              BYE BYE BERLIN
             </Link>
             <span className="mx-2">/</span>
             <Link href="/" className="hover:text-neutral-950">
@@ -112,9 +112,9 @@ export default async function ProductPage({
                 {product?.title ?? "Produkt"}
               </h1>
               {priceStr != null ? (
-                <p className="mt-4 text-xl text-neutral-950">{priceStr}</p>
+                <p className="font-sangbleu mt-4 text-xl text-neutral-950">{priceStr}</p>
               ) : (
-                <p className="mt-4 text-xl text-neutral-500">Preis auf Anfrage</p>
+                <p className="font-sangbleu mt-4 text-xl text-neutral-500">Preis auf Anfrage</p>
               )}
 
               {/* Farbe/Color – nur wenn Option existiert (Color, Farbe, Colour) */}
@@ -135,7 +135,7 @@ export default async function ProductPage({
               {/* Zum Warenkorb */}
               <ProductDetailAddToCart
                 product={product}
-                className="mt-8 w-full border border-neutral-950 bg-white py-4 text-sm font-medium uppercase tracking-wider text-neutral-950 transition-colors hover:bg-neutral-950 hover:text-white"
+                className="font-sangbleu mt-8 w-full border border-neutral-950 bg-white py-4 text-sm font-medium uppercase tracking-wider text-neutral-950 transition-colors hover:bg-neutral-950 hover:text-white"
               />
 
               {/* Produktdetails – nur wenn descriptionHtml oder description vorhanden */}

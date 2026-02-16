@@ -80,7 +80,7 @@ export default function CartDrawer({
               <div className="flex items-center justify-between px-5 py-5">
                 <div>
                   <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-700">
-                    Bye Bye Berlin
+                    BYE BYE BERLIN
                   </div>
                   <div className="mt-1 font-sangbleu text-xl font-bold">
                     YOUR SELECTION

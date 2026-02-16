@@ -11,7 +11,7 @@ export default async function KollektionPage() {
       <ShopNav />
       <main className="pt-[76px]">
         <section className="mx-auto max-w-6xl px-5 py-16">
-          <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-600">
+          <div className="font-sangbleu text-[11px] uppercase tracking-[0.35em] text-neutral-600">
             BYE BYE BERLIN
           </div>
           <h1 className="mt-3 font-sangbleu text-5xl font-bold tracking-tight">
