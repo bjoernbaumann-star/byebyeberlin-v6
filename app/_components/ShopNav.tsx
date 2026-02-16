@@ -333,7 +333,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
               className="absolute left-2 z-20 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-inherit hover:opacity-70 sm:left-4 lg:left-6"
               aria-label="Zurück"
             >
-              <IconBack className="h-7 w-7 sm:h-8 sm:w-8" />
+              <IconBack className="h-[1.575rem] w-[1.575rem] sm:h-[1.8rem] sm:w-[1.8rem]" />
             </button>
           )}
 
