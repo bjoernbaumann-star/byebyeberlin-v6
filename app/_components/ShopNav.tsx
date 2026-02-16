@@ -100,14 +100,67 @@ function IconBack(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
+// Menu drawer layout and typography values
+const MENU_DRAWER = {
+  maxWidth: 520,
+  paddingX: 40,       // px-10 → 2.5rem
+  paddingTop: 80,      // pt-20
+  paddingBottom: 56,   // pb-14
+  brand: {
+    fontSize: 26,      // 20% larger than 22
+    marginBottom: 40,  // mb-10
+  },
+  titleBlockPaddingTop: 24,  // padding above "BYE BYE BERLIN"
+  closeButton: {
+    top: 15,           // 5px up from 20
+    right: 24,
+    size: 62,          // 10% bigger than 56
+    iconSize: 48,      // 10% bigger than 44
+  },
+  nav: {
+    fontSize: 22,
+    lineHeight: 1.25,
+    gap: 20,           // space between links
+    marginTop: 0,
+    marginBottom: 0,
+    maxWidth: 425,     // constrain nav width
+    link: {
+      minHeight: 28,
+      paddingY: 4,
+      paddingX: 0,
+    },
+  },
+  separator: {
+    borderColor: "rgba(0,0,0,0.1)",
+    borderWidth: 1,
+  },
+  utility: {
+    marginTop: 48,     // mt-12
+    paddingTop: 32,     // pt-8
+    gap: 16,           // space-y-4
+    fontSize: 14,
+    letterSpacing: "0.2em",
+    iconSize: 20,
+  },
+  services: {
+    marginTop: 24,     // mt-6
+    paddingTop: 24,     // pt-6
+    fontSize: 14,
+  },
+} as const;
+
 function MenuDrawer({
   open,
   onClose,
   me,
+  cartCount,
+  onOpenCart,
 }: {
   open: boolean;
   onClose: () => void;
   me: { loading: boolean; loggedIn: boolean; firstName: string | null };
+  cartCount: number;
+  onOpenCart: () => void;
 }) {
   React.useEffect(() => {
     if (!open) return;
@@ -145,10 +198,10 @@ function MenuDrawer({
             role="dialog"
             aria-label="Menu"
             className={cn(
-              "absolute right-0 top-0 h-full w-full max-w-[520px]",
-              "bg-white text-neutral-950",
+              "absolute right-0 top-0 flex h-full w-full flex-col bg-white text-neutral-950",
               "shadow-[0_60px_140px_-80px_rgba(0,0,0,.75)]",
             )}
+            style={{ maxWidth: MENU_DRAWER.maxWidth }}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -159,43 +212,125 @@ function MenuDrawer({
               onClick={onClose}
               aria-label="Close menu"
               className={cn(
-                "absolute right-6 top-6 grid h-12 w-12 place-items-center rounded-full",
-                "bg-neutral-950 text-white",
-                "transition-opacity hover:opacity-80",
+                "absolute grid place-items-center text-neutral-950",
+                "transition-opacity hover:opacity-70",
                 "focus:outline-none focus:ring-2 focus:ring-black/20 focus:ring-offset-2",
               )}
+              style={{
+                top: MENU_DRAWER.closeButton.top,
+                right: MENU_DRAWER.closeButton.right,
+                width: MENU_DRAWER.closeButton.size,
+                height: MENU_DRAWER.closeButton.size,
+              }}
             >
-              <IconX className="h-5 w-5" />
+              <span
+                className="inline-block animate-[spin_3s_linear_infinite] hover:[animation-play-state:paused]"
+                style={{ width: MENU_DRAWER.closeButton.iconSize, height: MENU_DRAWER.closeButton.iconSize }}
+              >
+                <img
+                  src="/x.svg"
+                  alt=""
+                  width={MENU_DRAWER.closeButton.iconSize}
+                  height={MENU_DRAWER.closeButton.iconSize}
+                  className="object-contain block"
+                />
+              </span>
             </button>
 
-            <div className="h-full overflow-y-auto px-10 pb-14 pt-20">
+            <div
+              className="shrink-0"
+              style={{
+                paddingTop: MENU_DRAWER.titleBlockPaddingTop,
+                paddingLeft: MENU_DRAWER.paddingX,
+                paddingRight: MENU_DRAWER.paddingX,
+                paddingBottom: 0,
+              }}
+            >
               <Link
                 href="/"
                 onClick={onClose}
-                className="mb-10 block w-fit font-sangbleu text-[22px] font-bold tracking-tight text-neutral-950"
+                className="block w-fit font-sangbleu font-bold tracking-tight text-neutral-950"
+                style={{ fontSize: MENU_DRAWER.brand.fontSize, marginBottom: MENU_DRAWER.brand.marginBottom }}
                 aria-label="Home"
               >
                 BYE BYE BERLIN
               </Link>
-              <nav className="space-y-5 font-sangbleu-medium text-[22px] leading-tight">
+            </div>
+
+            <div
+              className="min-h-0 flex-1 overflow-y-auto"
+              style={{
+                paddingLeft: MENU_DRAWER.paddingX,
+                paddingRight: MENU_DRAWER.paddingX,
+                paddingTop: 0,
+                paddingBottom: MENU_DRAWER.paddingBottom,
+              }}
+            >
+              <nav
+                className="font-sangbleu-medium"
+                style={{
+                  fontSize: MENU_DRAWER.nav.fontSize,
+                  lineHeight: MENU_DRAWER.nav.lineHeight,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: MENU_DRAWER.nav.gap,
+                  marginTop: MENU_DRAWER.nav.marginTop,
+                  marginBottom: MENU_DRAWER.nav.marginBottom,
+                  maxWidth: MENU_DRAWER.nav.maxWidth,
+                }}
+                aria-label="Main navigation"
+              >
                 {[
                   { label: "BAGS", href: "/bags" },
                   { label: "CLOTHES", href: "/clothes" },
                   { label: "COLLECTION", href: "/kollektion" },
                   { label: "STORY", href: "/story" },
+                  { label: "BOUNDARIES AND VALUES", href: "/boundaries-and-values" },
                 ].map((x) => (
                   <Link
                     key={x.label}
                     href={x.href}
                     onClick={onClose}
                     className="block w-fit text-neutral-950/90 transition-colors hover:text-neutral-950"
+                    style={{
+                      minHeight: MENU_DRAWER.nav.link.minHeight,
+                      paddingTop: MENU_DRAWER.nav.link.paddingY,
+                      paddingBottom: MENU_DRAWER.nav.link.paddingY,
+                      paddingLeft: MENU_DRAWER.nav.link.paddingX,
+                      paddingRight: MENU_DRAWER.nav.link.paddingX,
+                    }}
                   >
                     {x.label}
                   </Link>
                 ))}
               </nav>
 
-              <div className="mt-12 space-y-4 border-t border-black/10 pt-8">
+              <div
+                className="flex flex-col"
+                style={{
+                  marginTop: MENU_DRAWER.utility.marginTop,
+                  paddingTop: MENU_DRAWER.utility.paddingTop,
+                  gap: MENU_DRAWER.utility.gap,
+                  borderTop: `${MENU_DRAWER.separator.borderWidth}px solid ${MENU_DRAWER.separator.borderColor}`,
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    onOpenCart();
+                  }}
+                  className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:text-neutral-700"
+                  aria-label={cartCount > 0 ? `Bag (${cartCount} items)` : "Bag"}
+                >
+                  <IconBag style={{ width: MENU_DRAWER.utility.iconSize, height: MENU_DRAWER.utility.iconSize }} />
+                  <span
+                    className="font-sangbleu-medium uppercase"
+                    style={{ fontSize: MENU_DRAWER.utility.fontSize, letterSpacing: MENU_DRAWER.utility.letterSpacing }}
+                  >
+                    BAG{cartCount > 0 ? ` (${cartCount})` : ""}
+                  </span>
+                </button>
                 {me.loggedIn ? (
                   <>
                     <Link
@@ -203,8 +338,11 @@ function MenuDrawer({
                       onClick={onClose}
                       className="flex items-center gap-2 text-neutral-950 transition-colors hover:text-neutral-700"
                     >
-                      <IconUser className="h-5 w-5" />
-                      <span className="font-sangbleu-medium text-sm uppercase tracking-[0.2em]">
+                      <IconUser style={{ width: MENU_DRAWER.utility.iconSize, height: MENU_DRAWER.utility.iconSize }} />
+                      <span
+                        className="font-sangbleu-medium uppercase"
+                        style={{ fontSize: MENU_DRAWER.utility.fontSize, letterSpacing: MENU_DRAWER.utility.letterSpacing }}
+                      >
                         {me.firstName || "MY ACCOUNT"}
                       </span>
                     </Link>
@@ -218,9 +356,12 @@ function MenuDrawer({
                       }}
                       className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:text-neutral-700"
                     >
-                      <IconUser className="h-5 w-5" />
-                      <span className="font-sangbleu-medium text-sm uppercase tracking-[0.2em]">
-                        Logout
+                      <IconUser style={{ width: MENU_DRAWER.utility.iconSize, height: MENU_DRAWER.utility.iconSize }} />
+                      <span
+                        className="font-sangbleu-medium uppercase"
+                        style={{ fontSize: MENU_DRAWER.utility.fontSize, letterSpacing: MENU_DRAWER.utility.letterSpacing }}
+                      >
+                        LOGOUT
                       </span>
                     </button>
                   </>
@@ -230,9 +371,12 @@ function MenuDrawer({
                     onClick={onClose}
                     className="flex items-center gap-2 text-neutral-950 transition-colors hover:text-neutral-700"
                   >
-                    <IconUser className="h-5 w-5" />
-                    <span className="font-sangbleu-medium text-sm uppercase tracking-[0.2em]">
-                      {me.loading ? "…" : "Login"}
+                    <IconUser style={{ width: MENU_DRAWER.utility.iconSize, height: MENU_DRAWER.utility.iconSize }} />
+                    <span
+                      className="font-sangbleu-medium uppercase"
+                      style={{ fontSize: MENU_DRAWER.utility.fontSize, letterSpacing: MENU_DRAWER.utility.letterSpacing }}
+                    >
+                      {me.loading ? "…" : "LOGIN"}
                     </span>
                   </Link>
                 )}
@@ -242,18 +386,28 @@ function MenuDrawer({
                   className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:text-neutral-700"
                   aria-label="Search"
                 >
-                  <IconSearch className="h-5 w-5" />
-                  <span className="font-sangbleu-medium text-sm uppercase tracking-[0.2em]">
-                    Search
+                  <IconSearch style={{ width: MENU_DRAWER.utility.iconSize, height: MENU_DRAWER.utility.iconSize }} />
+                  <span
+                    className="font-sangbleu-medium uppercase"
+                    style={{ fontSize: MENU_DRAWER.utility.fontSize, letterSpacing: MENU_DRAWER.utility.letterSpacing }}
+                  >
+                    SEARCH
                   </span>
                 </button>
               </div>
 
-              <div className="mt-6 border-t border-black/10 pt-6">
+              <div
+                style={{
+                  marginTop: MENU_DRAWER.services.marginTop,
+                  paddingTop: MENU_DRAWER.services.paddingTop,
+                  borderTop: `${MENU_DRAWER.separator.borderWidth}px solid ${MENU_DRAWER.separator.borderColor}`,
+                }}
+              >
                 <Link
                   href="/services"
                   onClick={onClose}
-                  className="font-sangbleu text-sm text-neutral-500 transition-colors hover:text-neutral-800"
+                  className="font-sangbleu text-neutral-500 transition-colors hover:text-neutral-800"
+                  style={{ fontSize: MENU_DRAWER.services.fontSize }}
                 >
                   BYE BYE BERLIN SERVICES
                 </Link>
@@ -395,7 +549,13 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
 
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
 
-      <MenuDrawer open={menuOpen} onClose={() => setMenuOpen(false)} me={me} />
+      <MenuDrawer
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        me={me}
+        cartCount={cart.count}
+        onOpenCart={() => setCartOpen(true)}
+      />
     </>
   );
 }
