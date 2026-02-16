@@ -79,12 +79,12 @@ function ProductCard({
           </div>
         )}
       </div>
-      <Link href={`/produkt/${product.handle}`} className="mt-4 block space-y-1">
+      <Link href={`/produkt/${product.handle}`} className="mt-2 block space-y-1">
         <h3 className="font-sangbleu font-bold text-[1.05rem] text-white">
           {product.title}
         </h3>
         <p className="text-sm text-neutral-600">{priceStr}</p>
-        <div className="mt-2 flex items-center gap-1.5">
+        <div className="mt-1.5 flex items-center gap-1.5">
           <span className="h-3 w-3 shrink-0 rounded-full border border-neutral-300 bg-neutral-200" />
         </div>
       </Link>
@@ -92,7 +92,7 @@ function ProductCard({
         type="button"
         onClick={handleAdd}
         disabled={!product.firstVariantId}
-        className="mt-3 w-full border border-neutral-950 bg-white py-2.5 text-xs font-medium uppercase tracking-wider text-neutral-950 transition-colors hover:bg-neutral-950 hover:text-white disabled:opacity-50"
+        className="mt-1.5 w-full border border-neutral-950 bg-white py-2.5 text-xs font-medium uppercase tracking-wider text-neutral-950 transition-colors hover:bg-neutral-950 hover:text-white disabled:opacity-50"
         aria-label={justAdded ? "In den Warenkorb gelegt" : "In den Warenkorb"}
       >
         {justAdded ? "✓ Hinzugefügt" : "+ In den Warenkorb"}
@@ -132,7 +132,7 @@ export default function ProductGrid({ products }: { products: ShopifyProduct[] }
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-6 sm:gap-8 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-[10px] md:grid-cols-3 lg:grid-cols-4">
         {products.map((p) => (
           <ProductCard key={p.id} product={p} cart={cart} />
         ))}

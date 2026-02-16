@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCart } from "./cart/CartContext";
@@ -87,6 +88,14 @@ function IconMenu(props: React.SVGProps<SVGSVGElement>) {
         strokeWidth="1.5"
         strokeLinecap="round"
       />
+    </svg>
+  );
+}
+
+function IconBack(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 91.6 91.8" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M0,46L42.6,0l7.4,5-23.4,41,23.4,41-7.4,4.8L0,46ZM41.6,46L84.2,0l7.4,5-23.4,41,23.4,41-7.4,4.8-42.6-45.8Z" />
     </svg>
   );
 }
@@ -250,6 +259,7 @@ function MenuDrawer({
 }
 
 export default function ShopNav({ transparentOnTop = false }: { transparentOnTop?: boolean }) {
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [cartOpen, setCartOpen] = React.useState(false);
@@ -306,15 +316,24 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
         )}
       >
         <div className="relative flex h-[76px] w-full items-center px-2 sm:px-4 lg:px-6">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="absolute left-2 z-20 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-inherit hover:opacity-70 sm:left-4 lg:left-6"
+            aria-label="Zurück"
+          >
+            <IconBack className="h-7 w-7 sm:h-8 sm:w-8" />
+          </button>
+
           <Link
             href="/"
-            className="absolute inset-x-0 flex justify-center font-sangbleu text-[18px] font-bold tracking-tight whitespace-nowrap leading-none transition-opacity hover:opacity-80"
+            className="absolute inset-x-0 z-10 flex justify-center font-sangbleu text-[18px] font-bold tracking-tight whitespace-nowrap leading-none transition-opacity hover:opacity-80"
             aria-label="Home"
           >
             BYE BYE BERLIN
           </Link>
 
-          <div className="absolute right-2 flex items-center gap-1 sm:right-4 sm:gap-2 lg:right-6 lg:gap-4">
+          <div className="absolute right-2 z-20 flex items-center gap-1 sm:right-4 sm:gap-2 lg:right-6 lg:gap-4">
 <button
               type="button"
               onClick={() => setCartOpen(true)}
