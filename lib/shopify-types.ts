@@ -30,6 +30,8 @@ export type ShopifyProduct = {
   title: string;
   handle: string;
   description?: string | null;
+  /** Formatiert (HTML) – aus Shopify product.descriptionHtml */
+  descriptionHtml?: string | null;
   priceRange: ShopifyPriceRange;
   images: ShopifyImage[];
   onlineStoreUrl?: string | null;

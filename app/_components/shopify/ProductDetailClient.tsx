@@ -50,7 +50,7 @@ function ProductImageGallery({
   );
 }
 
-function AddToCartButton({
+export function ProductDetailAddToCart({
   product,
   className,
 }: {
@@ -92,5 +92,3 @@ export default function ProductDetailClient({
 }) {
   return <ProductImageGallery images={images} alt={alt} />;
 }
-
-ProductDetailClient.AddToCart = AddToCartButton;
