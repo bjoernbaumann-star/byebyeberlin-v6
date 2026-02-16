@@ -62,6 +62,17 @@ export default async function ProductPage({
       ? formatPrice(Number(minPrice.amount), minPrice.currencyCode ?? "EUR")
       : null;
 
+  const options = product.options ?? [];
+  const colorOption = options.find(
+    (o) => o?.name && /^(color|farbe|colour)$/i.test(o.name.trim())
+  );
+  const colorValues = colorOption?.values?.filter(Boolean) ?? [];
+  const firstVariant = product.variants?.[0];
+  const selectedColor =
+    firstVariant?.selectedOptions?.find(
+      (s) => s?.name && /^(color|farbe|colour)$/i.test(s.name.trim())
+    )?.value ?? colorValues[0];
+
   return (
     <div className="min-h-dvh bg-white text-neutral-950">
       <ShopNav />
@@ -110,16 +121,20 @@ export default async function ProductPage({
                 <p className="mt-4 text-xl text-neutral-500">Preis auf Anfrage</p>
               )}
 
-              {/* Farbe – Platzhalter */}
-              <div className="mt-6">
-                <p className="text-xs font-medium uppercase tracking-wider text-neutral-600">
-                  Farbe
-                </p>
-                <div className="mt-2 flex items-center gap-2">
-                  <span className="h-4 w-4 shrink-0 rounded-full border border-neutral-300 bg-neutral-200" />
-                  <span className="text-sm text-neutral-600">—</span>
+              {/* Farbe – nur wenn Option in Shopify vorhanden */}
+              {colorValues.length > 0 && (
+                <div className="mt-6">
+                  <p className="text-xs font-medium uppercase tracking-wider text-neutral-600">
+                    {colorOption?.name ?? "Farbe"}
+                  </p>
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <span className="h-4 w-4 shrink-0 rounded-full border border-neutral-300 bg-neutral-200" />
+                    <span className="text-sm text-neutral-600">
+                      {selectedColor ?? colorValues.join(", ")}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Zum Warenkorb */}
               <ProductDetailClient.AddToCart
@@ -127,7 +142,7 @@ export default async function ProductPage({
                 className="mt-8 w-full border border-neutral-950 bg-white py-4 text-sm font-medium uppercase tracking-wider text-neutral-950 transition-colors hover:bg-neutral-950 hover:text-white"
               />
 
-              {/* Produktdetails */}
+              {/* Produktdetails – nur wenn descriptionHtml/description in Shopify vorhanden */}
               {product.description && (
                 <div className="mt-12 border-t border-neutral-200 pt-8">
                   <h2 className="font-sangbleu text-sm font-bold uppercase tracking-wider text-neutral-950">
@@ -139,16 +154,6 @@ export default async function ProductPage({
                   />
                 </div>
               )}
-
-              {/* Versand */}
-              <div className="mt-8 border-t border-neutral-200 pt-8">
-                <h2 className="font-sangbleu text-sm font-bold uppercase tracking-wider text-neutral-950">
-                  Versand und Rückgabe
-                </h2>
-                <p className="mt-4 text-sm leading-relaxed text-neutral-600">
-                  Kostenloser Versand. Rückgabe innerhalb von 14 Tagen möglich.
-                </p>
-              </div>
             </div>
           </div>
         </section>

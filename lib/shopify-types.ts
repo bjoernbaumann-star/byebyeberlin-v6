@@ -15,6 +15,16 @@ export type ShopifyPriceRange = {
   maxVariantPrice: ShopifyMoney;
 };
 
+export type ShopifyProductOption = {
+  name: string;
+  values: string[];
+};
+
+export type ShopifyProductVariant = {
+  id: string;
+  selectedOptions?: Array<{ name: string; value: string }>;
+};
+
 export type ShopifyProduct = {
   id: string;
   title: string;
@@ -26,6 +36,12 @@ export type ShopifyProduct = {
 
   /** GID für Variant (z.B. gid://shopify/ProductVariant/...) – für Checkout/Cart */
   firstVariantId?: string | null;
+
+  /** Produkt-Optionen (z.B. Farbe, Größe) – aus Shopify product.options */
+  options?: ShopifyProductOption[];
+
+  /** Produkt-Varianten – aus Shopify product.variants */
+  variants?: ShopifyProductVariant[];
 
   // optional UI helpers (not from Shopify by default)
   category?: "bags" | "clothes" | "other";

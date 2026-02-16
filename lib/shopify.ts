@@ -271,13 +271,20 @@ type ProductByHandleData = {
     title: string;
     handle: string;
     description: string | null;
+    descriptionHtml?: string | null;
     onlineStoreUrl: string | null;
     priceRange: {
       minVariantPrice: { amount: string; currencyCode: string };
       maxVariantPrice: { amount: string; currencyCode: string };
     };
     images: { nodes: Array<{ url: string; altText: string | null; width: number | null; height: number | null }> };
-    variants: { nodes: Array<{ id: string }> };
+    options: Array<{ name: string; values?: string[]; optionValues?: Array<{ name: string }> }>;
+    variants: {
+      nodes: Array<{
+        id: string;
+        selectedOptions?: Array<{ name: string; value: string }>;
+      }>;
+    };
   } | null;
 };
 
@@ -288,6 +295,7 @@ const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
       title
       handle
       description
+      descriptionHtml
       onlineStoreUrl
       priceRange {
         minVariantPrice { amount currencyCode }
@@ -296,8 +304,19 @@ const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
       images(first: 10) {
         nodes { url altText width height }
       }
-      variants(first: 1) {
-        nodes { id }
+      options(first: 10) {
+        name
+        values
+        optionValues { name }
+      }
+      variants(first: 50) {
+        nodes {
+          id
+          selectedOptions {
+            name
+            value
+          }
+        }
       }
     }
   }
@@ -316,10 +335,15 @@ export async function getProductByHandle(handle: string): Promise<ShopifyProduct
     id: p.id,
     title: p.title,
     handle: p.handle,
-    description: p.description,
+    description: p.descriptionHtml ?? p.description,
     onlineStoreUrl: p.onlineStoreUrl,
     priceRange: p.priceRange,
     images: p.images.nodes,
+    options: (p.options ?? []).map((o) => ({
+      name: o.name,
+      values: o.values ?? o.optionValues?.map((v) => v.name) ?? [],
+    })),
+    variants: p.variants?.nodes ?? [],
     firstVariantId: p.variants?.nodes?.[0]?.id ?? null,
   };
 }
