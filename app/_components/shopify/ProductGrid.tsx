@@ -41,15 +41,26 @@ function ProductCard({
     <article className="group overflow-hidden !rounded-none !border-0 !shadow-none ring-0">
       <div className="relative">
         <Link href={`/produkt/${product.handle}`} className="block overflow-hidden !rounded-none">
-          <div className="product-card-image aspect-[3/4] overflow-hidden !rounded-none !border-0 bg-transparent p-0">
+          <div className="product-card-image relative aspect-[3/4] overflow-hidden !rounded-none !border-0 bg-transparent p-0">
             {images[0]?.url ? (
-              <img
-                src={images[0]?.url}
-                alt={images[0]?.altText ?? product.title}
-                className="h-full w-full !rounded-none object-cover object-center transition-transform duration-300 group-hover:scale-[1.02]"
-                style={{ border: "none", borderRadius: 0 }}
-                loading="lazy"
-              />
+              <>
+                <img
+                  src={images[0]?.url}
+                  alt={images[0]?.altText ?? product.title}
+                  className="h-full w-full !rounded-none object-cover object-center transition-transform duration-300 group-hover:scale-[1.02]"
+                  style={{ border: "none", borderRadius: 0 }}
+                  loading="lazy"
+                />
+                {images[1]?.url && (
+                  <img
+                    src={images[1]?.url}
+                    alt={images[1]?.altText ?? product.title}
+                    className="absolute inset-0 h-full w-full !rounded-none object-cover object-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                    style={{ border: "none", borderRadius: 0 }}
+                    loading="lazy"
+                  />
+                )}
+              </>
             ) : (
               <div className="flex h-full w-full items-center justify-center rounded-none bg-neutral-100 text-sm text-neutral-500">
                 No image
