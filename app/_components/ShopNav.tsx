@@ -224,7 +224,7 @@ function MenuDrawer({
               }}
             >
               <span
-                className="inline-block animate-[spin_3s_linear_infinite] hover:[animation-play-state:paused]"
+                className="inline-block animate-[spin_3s_linear_infinite]"
                 style={{ width: MENU_DRAWER.closeButton.iconSize, height: MENU_DRAWER.closeButton.iconSize }}
               >
                 <img

@@ -16,19 +16,6 @@ function formatPrice(amount: number, currencyCode: string) {
   }).format(amount);
 }
 
-function IconX(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
-      <path
-        d="M6 6l12 12M18 6 6 18"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 export default function CartDrawer({
   open,
   onClose,
@@ -79,7 +66,7 @@ export default function CartDrawer({
             <div className="border-b border-black/10">
               <div className="flex items-center justify-between px-5 py-5">
                 <div>
-                  <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-700">
+                  <div className="font-sangbleu text-[11px] uppercase tracking-[0.35em] text-neutral-700">
                     BYE BYE BERLIN
                   </div>
                   <div className="mt-1 font-sangbleu text-xl font-bold">
@@ -90,13 +77,23 @@ export default function CartDrawer({
                   type="button"
                   onClick={onClose}
                   className={cn(
-                    "grid h-12 w-12 place-items-center rounded-full",
-                    "bg-neutral-950 text-white",
-                    "transition-opacity hover:opacity-80",
+                    "grid h-14 w-14 place-items-center text-neutral-950",
+                    "transition-opacity hover:opacity-70",
                   )}
                   aria-label="Close"
                 >
-                  <IconX className="h-5 w-5" />
+                  <span
+                    className="inline-block animate-[spin_3s_linear_infinite]"
+                    style={{ width: 44, height: 44 }}
+                  >
+                    <img
+                      src="/x.svg"
+                      alt=""
+                      width={44}
+                      height={44}
+                      className="object-contain block"
+                    />
+                  </span>
                 </button>
               </div>
             </div>
