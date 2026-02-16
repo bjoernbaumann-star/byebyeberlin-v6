@@ -84,53 +84,84 @@ function HeroMarquee({
   );
 }
 
+const BX_ICON_SIZE_PX = 140;
+const BX_STRIP_HEIGHT_PX = 200;
+
 function GapMarquee({
-  text,
   reducedMotion,
 }: {
-  text: string;
   reducedMotion: boolean;
 }) {
   return (
-    <div className="relative -mx-5 -mt-[600px] mb-8 h-[50vh] min-h-[300px]">
-      <div className="pointer-events-none sticky top-1/2 z-10 flex h-0 w-full -translate-y-1/2 items-center overflow-hidden">
+    <div
+      className="relative -mt-[600px] mb-8 flex w-full justify-center overflow-hidden bg-transparent"
+      style={{ height: BX_STRIP_HEIGHT_PX }}
+    >
+      <div className="w-full overflow-hidden">
         <motion.div
           aria-hidden="true"
-          className="flex w-max items-center gap-[5vw] whitespace-nowrap pl-[5vw]"
+          className="flex w-max shrink-0 items-center justify-center gap-10"
+          style={{ willChange: "transform", minHeight: BX_STRIP_HEIGHT_PX }}
           animate={
             reducedMotion
               ? undefined
-              : { x: ["-50%", "0%"] }
+              : { x: ["0%", "-50%"] }
           }
           transition={{
-            duration: 51,
+            duration: 40,
             ease: "linear",
             repeat: Infinity,
             repeatType: "loop",
           }}
         >
-          <div className="flex items-center gap-[5vw]">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <span
-                key={`a-${i}`}
-                className="font-sangbleu text-[21vw] font-bold leading-none text-neutral-300 whitespace-nowrap"
-                style={{ letterSpacing: "-0.02em" }}
-              >
-                {text}
-              </span>
-            ))}
-          </div>
-          <div aria-hidden="true" className="flex items-center gap-[5vw]">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <span
-                key={`b-${i}`}
-                className="font-sangbleu text-[21vw] font-bold leading-none text-neutral-300 whitespace-nowrap"
-                style={{ letterSpacing: "-0.02em" }}
-              >
-                {text}
-              </span>
-            ))}
-          </div>
+          {[0, 1].map((repeat) => (
+            <div key={repeat} className="flex items-center justify-center gap-10">
+              {Array.from({ length: 14 }).map((_, i) => (
+                <span
+                  key={`${repeat}-${i}`}
+                  className="flex shrink-0 items-center justify-center overflow-visible"
+                  style={{
+                    width: BX_ICON_SIZE_PX,
+                    height: BX_ICON_SIZE_PX,
+                    minWidth: BX_ICON_SIZE_PX,
+                    minHeight: BX_ICON_SIZE_PX,
+                  }}
+                >
+                  {i % 2 === 0 ? (
+                    <motion.div
+                      className="flex h-full w-full items-center justify-center"
+                      animate={{
+                        // Abwechselnd: 1. X Uhrzeigersinn, 2. X Gegenurzeigersinn, …
+                        rotate: (i / 2) % 2 === 0 ? [0, 360] : [0, -360],
+                      }}
+                      transition={{
+                        duration: 8,
+                        ease: "linear",
+                        repeat: Infinity,
+                        repeatType: "loop",
+                      }}
+                    >
+                      <img
+                        src="/x.svg"
+                        alt=""
+                        width={BX_ICON_SIZE_PX}
+                        height={BX_ICON_SIZE_PX}
+                        className="max-h-full max-w-full object-contain object-center"
+                      />
+                    </motion.div>
+                  ) : (
+                    <img
+                      src="/b.svg"
+                      alt=""
+                      width={BX_ICON_SIZE_PX}
+                      height={BX_ICON_SIZE_PX}
+                      className="max-h-full max-w-full object-contain object-center"
+                    />
+                  )}
+                </span>
+              ))}
+            </div>
+          ))}
         </motion.div>
       </div>
     </div>
@@ -225,7 +256,7 @@ export default function LandingPage() {
         </section>
 
         <section className="relative z-[95] mx-auto max-w-6xl px-5 pb-32 pt-[600px]">
-          <GapMarquee text="BYE BYE BERLIN" reducedMotion={!!reducedMotion} />
+          <GapMarquee reducedMotion={!!reducedMotion} />
           <div className="flex flex-col items-center justify-center text-center">
             <motion.h2
               className="font-sangbleu text-3xl font-bold uppercase tracking-[0.2em] text-neutral-950 -mt-8"

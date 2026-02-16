@@ -76,7 +76,7 @@ export default async function ProductPage({
       <main className="pt-[76px]">
         {/* Breadcrumb */}
         <div className="mx-auto max-w-6xl px-5 py-6">
-          <nav className="text-xs text-neutral-500">
+          <nav className="font-sangbleu text-xs text-neutral-500">
             <Link href="/" className="hover:text-neutral-950">
               BYE BYE BERLIN
             </Link>
@@ -100,7 +100,7 @@ export default async function ProductPage({
                   alt={images[0]?.altText ?? product?.title ?? "Produkt"}
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-neutral-100 text-neutral-400">
+                <div className="font-sangbleu flex h-full w-full items-center justify-center bg-neutral-100 text-neutral-400">
                   Kein Bild
                 </div>
               )}
@@ -119,7 +119,7 @@ export default async function ProductPage({
 
               {/* Farbe/Color – nur wenn Option existiert (Color, Farbe, Colour) */}
               {colorOption && colorValues.length > 0 && (
-                <div className="mt-6">
+                <div className="font-sangbleu mt-6">
                   <p className="text-xs font-medium uppercase tracking-wider text-neutral-600">
                     {colorOption?.name ?? "Farbe"}
                   </p>
@@ -140,8 +140,8 @@ export default async function ProductPage({
 
               {/* Produktdetails – nur wenn descriptionHtml oder description vorhanden */}
               {(product?.descriptionHtml ?? product?.description) && (
-                <div className="mt-12 border-t border-neutral-200 pt-8">
-                  <h2 className="font-sangbleu text-sm font-bold uppercase tracking-wider text-neutral-950">
+                <div className="font-sangbleu mt-12 border-t border-neutral-200 pt-8">
+                  <h2 className="text-sm font-bold uppercase tracking-wider text-neutral-950">
                     Produktdetails
                   </h2>
                   <div className="mt-4 text-sm leading-relaxed text-neutral-600 [&>p]:mb-2">
@@ -149,7 +149,7 @@ export default async function ProductPage({
                       const content = product?.descriptionHtml ?? product?.description ?? "";
                       const isHtml = typeof content === "string" && /<[a-z][\s\S]*>/i.test(content);
                       return isHtml ? (
-                        <div dangerouslySetInnerHTML={{ __html: content }} />
+                        <div className="font-sangbleu" dangerouslySetInnerHTML={{ __html: content }} />
                       ) : (
                         <p>{content}</p>
                       );
