@@ -94,7 +94,7 @@ function GapMarquee({
 }) {
   return (
     <div
-      className="relative -mt-[600px] mb-8 flex w-full justify-center overflow-hidden bg-transparent"
+      className="relative mb-8 flex w-full justify-center overflow-hidden bg-transparent"
       style={{ height: BX_STRIP_HEIGHT_PX }}
     >
       <div className="w-full overflow-hidden">
@@ -255,8 +255,11 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="relative z-[95] mx-auto max-w-6xl px-5 pb-32 pt-[600px]">
+        <section className="relative z-[95] w-full overflow-hidden">
           <GapMarquee reducedMotion={!!reducedMotion} />
+        </section>
+
+        <section className="relative z-[95] mx-auto max-w-6xl px-5 pb-32 pt-8">
           <div className="flex flex-col items-center justify-center text-center">
             <motion.h2
               className="font-sangbleu text-3xl font-bold uppercase tracking-[0.2em] text-neutral-950 -mt-8"
