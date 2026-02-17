@@ -22,8 +22,9 @@ export default async function ClothesPage() {
       <ShopNav />
       <main className="pt-[76px]">
         <CenteredVideoHero
-          primarySrc="/clothes-hero.mp4"
+          primarySrc="/header_video_cloths.mp4"
           fallbackSrc="/hero-video.mp4"
+          fullScreen
         />
 
         <section className="mx-auto max-w-6xl px-5 pb-16 pt-14">
