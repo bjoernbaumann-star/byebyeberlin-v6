@@ -21,10 +21,10 @@ export default function CenteredVideoHero({
 
   if (fullScreen) {
     return (
-      <section className="relative h-screen w-full overflow-hidden bg-neutral-950">
+      <section className="relative h-[70vh] w-full overflow-hidden bg-neutral-950">
         <video
           key={src}
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover object-[center_25%]"
           src={src}
           autoPlay
           muted
