@@ -34,11 +34,8 @@ export default function FuckNazisMarquee() {
           {Array.from({ length: 6 }).map((_, i) => (
             <span
               key={`fn-a-${i}`}
-              className="font-sangbleu text-[8vw] font-bold uppercase leading-none text-black whitespace-nowrap"
-              style={{
-                letterSpacing: "0.12em",
-                WebkitTextStroke: "1px rgba(255,255,255,0.4)",
-              }}
+              className="font-sangbleu text-[28vw] font-bold uppercase leading-none text-black whitespace-nowrap"
+              style={{ letterSpacing: "0.12em" }}
             >
               {text}
             </span>
@@ -48,11 +45,8 @@ export default function FuckNazisMarquee() {
           {Array.from({ length: 6 }).map((_, i) => (
             <span
               key={`fn-b-${i}`}
-              className="font-sangbleu text-[8vw] font-bold uppercase leading-none text-black whitespace-nowrap"
-              style={{
-                letterSpacing: "0.12em",
-                WebkitTextStroke: "1px rgba(255,255,255,0.4)",
-              }}
+              className="font-sangbleu text-[28vw] font-bold uppercase leading-none text-black whitespace-nowrap"
+              style={{ letterSpacing: "0.12em" }}
             >
               {text}
             </span>

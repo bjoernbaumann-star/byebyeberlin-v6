@@ -203,13 +203,13 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-dvh bg-white text-neutral-950">
+    <div className="min-h-dvh overflow-x-hidden bg-white text-neutral-950">
       <ShopNav transparentOnTop />
 
       <main>
         <section className="relative min-h-screen w-full overflow-hidden bg-neutral-950 text-white">
           <video
-            className="absolute inset-0 h-full w-full object-cover object-[center_70%]"
+            className="absolute inset-0 h-full w-full object-cover object-[center_70%] scale-110"
             src="/BG%20VIDEO.mp4"
             autoPlay
             muted
