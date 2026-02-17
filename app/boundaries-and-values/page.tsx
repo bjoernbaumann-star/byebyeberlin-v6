@@ -1,4 +1,5 @@
 import CenteredVideoHero from "../_components/CenteredVideoHero";
+import FuckNazisMarquee from "../_components/FuckNazisMarquee";
 import ShopFooter from "../_components/ShopFooter";
 import ShopNav from "../_components/ShopNav";
 
@@ -7,11 +8,14 @@ export default function BoundariesAndValuesPage() {
     <div className="min-h-dvh bg-white text-neutral-950">
       <ShopNav />
       <main className="pt-[76px]">
-        <CenteredVideoHero
-          primarySrc="/header_video_B&V.mp4"
-          fallbackSrc="/BG%20VIDEO.mp4"
-          fullScreen
-        />
+        <div className="relative">
+          <CenteredVideoHero
+            primarySrc="/header_video_B&V.mp4"
+            fallbackSrc="/BG%20VIDEO.mp4"
+            fullScreen
+          />
+          <FuckNazisMarquee />
+        </div>
         <section className="mx-auto max-w-4xl px-5 py-16">
           <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-600">
             BYE BYE BERLIN
