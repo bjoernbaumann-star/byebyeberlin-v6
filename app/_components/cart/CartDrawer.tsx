@@ -53,7 +53,7 @@ export default function CartDrawer({
           <motion.aside
             className={cn(
               "absolute right-0 top-0 h-full w-full max-w-md",
-              "bg-white/95 text-neutral-950 backdrop-blur",
+              "bg-white text-neutral-950",
               "shadow-[0_40px_120px_-70px_rgba(0,0,0,.8)]",
             )}
             role="dialog"
@@ -104,18 +104,18 @@ export default function CartDrawer({
                   Your bag is empty.
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-0">
                   {cart.lines.map((l) => (
                     <div
                       key={l.product.id}
-                      className="flex gap-4 rounded-2xl border border-black/10 bg-white p-4"
+                      className="flex gap-4 bg-white py-2"
                     >
-                      <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-black/10 bg-neutral-50">
+                      <div className="h-[162px] w-[162px] shrink-0 overflow-hidden bg-white">
                         {l.product.images?.[0]?.url ? (
                           <img
                             src={l.product.images[0].url}
                             alt={l.product.images[0].altText ?? l.product.title}
-                            className="h-full w-full object-cover"
+                            className="h-full w-full rounded-none object-cover"
                           />
                         ) : (
                           <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">
@@ -162,15 +162,7 @@ export default function CartDrawer({
                   </span>
                 </div>
 
-                <div className="mt-4 flex gap-2">
-                  <button
-                    type="button"
-                    onClick={cart.clear}
-                    disabled={cart.lines.length === 0}
-                    className="flex-1 rounded-xl border border-black/10 bg-white px-4 py-3 text-sm disabled:opacity-50"
-                  >
-                    Clear
-                  </button>
+                <div className="mt-4 flex flex-col items-stretch gap-1">
                   <button
                     type="button"
                     disabled={
@@ -205,9 +197,17 @@ export default function CartDrawer({
                         setCheckoutLoading(false);
                       }
                     }}
-                    className="flex-1 rounded-xl bg-neutral-950 px-4 py-3 text-sm text-white disabled:opacity-50"
+                    className="w-full rounded-none bg-neutral-950 px-6 py-3 text-lg font-bold uppercase text-white disabled:opacity-50"
                   >
                     {checkoutLoading ? "…" : "Checkout"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={cart.clear}
+                    disabled={cart.lines.length === 0}
+                    className="self-end text-[11px] uppercase text-neutral-500 underline-offset-2 hover:underline disabled:opacity-50"
+                  >
+                    Clear
                   </button>
                 </div>
               </div>
