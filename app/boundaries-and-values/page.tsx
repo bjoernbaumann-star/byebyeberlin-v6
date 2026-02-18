@@ -29,9 +29,9 @@ export default function BoundariesAndValuesPage() {
             </p>
 
             <div className="mt-12 space-y-10 text-lg leading-relaxed text-neutral-800">
-              <p className="font-sangbleu">
-                Content for this page.
-              </p>
+            <p className="font-sangbleu">
+              We donate 3% of our profits to hateaid.com
+            </p>
             </div>
           </div>
         </section>

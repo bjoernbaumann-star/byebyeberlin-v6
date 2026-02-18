@@ -524,7 +524,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 400, damping: 25 }}
                     className={cn(
-                      "tabular-nums font-sangbleu text-[14.4px] font-bold leading-none",
+                      "tabular-nums font-sangbleu text-[11.5px] font-bold leading-none not-italic",
                       useTransparent ? "text-white" : "text-neutral-950",
                     )}
                   >

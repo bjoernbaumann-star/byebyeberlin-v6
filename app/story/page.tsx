@@ -6,14 +6,15 @@ export default function StoryPage() {
     <div className="min-h-dvh bg-white text-neutral-950">
       <ShopNav />
       <main className="pt-[76px]">
-        <section className="mx-auto max-w-4xl px-5 py-16">
-          <div className="font-sangbleu text-[11px] uppercase tracking-[0.35em] text-neutral-600">
-            NO STORY
-          </div>
-          <h1 className="mt-4 font-sangbleu text-6xl font-bold tracking-tight">
-            STORY
-          </h1>
-          <p className="mt-8 font-sangbleu text-2xl leading-relaxed text-neutral-900">
+        <section className="mx-auto max-w-4xl py-16">
+          <div className="px-4 text-left md:px-8">
+            <div className="ml-[2px] font-sangbleu text-[11px] uppercase tracking-[0.35em] text-neutral-600">
+              NO STORY
+            </div>
+            <h1 className="-ml-[4px] mt-4 font-sangbleu text-6xl font-bold leading-none tracking-tight">
+              BUT THERE IS A LOVE STORY
+            </h1>
+            <p className="mt-8 font-sangbleu text-2xl leading-relaxed text-neutral-900">
             BYE BYE BERLIN is a farewell to noise — and a hello to precision.
             A brand for clean lines, substantial materials and details you notice
             at second glance.
@@ -33,6 +34,7 @@ export default function StoryPage() {
               Berlin stays in the energy: direct, clear, honest. But the
               expression is refined — quiet, precise, editorial.
             </p>
+          </div>
           </div>
         </section>
       </main>
