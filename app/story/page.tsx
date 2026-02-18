@@ -7,8 +7,8 @@ export default function StoryPage() {
       <ShopNav />
       <main className="pt-[76px]">
         <section className="mx-auto max-w-4xl px-5 py-16">
-          <div className="text-[11px] uppercase tracking-[0.35em] text-neutral-600">
-            EDITORIAL
+          <div className="font-sangbleu text-[11px] uppercase tracking-[0.35em] text-neutral-600">
+            NO STORY
           </div>
           <h1 className="mt-4 font-sangbleu text-6xl font-bold tracking-tight">
             STORY
