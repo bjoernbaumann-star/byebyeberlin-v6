@@ -69,12 +69,12 @@ function ProductCard({
           </div>
         </Link>
       </div>
-      <Link href={`/produkt/${product.handle}`} className="mt-2 block space-y-1">
+      <Link href={`/produkt/${product.handle}`} className="mt-1 block space-y-0.5">
         <h3 className="font-sangbleu font-bold text-[1.05rem] text-white">
           {product.title}
         </h3>
         <p className="text-sm text-neutral-600">{priceStr}</p>
-        <div className="mt-1.5 flex items-center gap-1.5">
+        <div className="mt-1 flex items-center gap-1.5">
           <span className="h-3 w-3 shrink-0 rounded-full border border-neutral-300 bg-neutral-200" />
         </div>
       </Link>
@@ -82,7 +82,7 @@ function ProductCard({
         type="button"
         onClick={handleAdd}
         disabled={!product.firstVariantId}
-        className="mt-1.5 w-full border border-neutral-950 bg-white py-2.5 text-xs font-medium uppercase tracking-wider text-neutral-950 transition-colors hover:bg-neutral-950 hover:text-white disabled:opacity-50"
+        className="mt-1 w-full border border-neutral-950 bg-white py-2.5 text-xs font-medium uppercase tracking-wider text-neutral-950 transition-colors hover:bg-neutral-950 hover:text-white disabled:opacity-50"
         aria-label={justAdded ? "In den Warenkorb gelegt" : "In den Warenkorb"}
       >
         {justAdded ? "✓ Hinzugefügt" : "+ In den Warenkorb"}
@@ -107,19 +107,10 @@ export default function ProductGrid({ products }: { products: ShopifyProduct[] }
 
   return (
     <div className="mt-8">
-      <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+      <div className="mb-6">
         <p className="font-sangbleu text-sm font-medium text-neutral-600">
           {products.length} PRODUKTE
         </p>
-        <div className="flex items-center gap-4 text-sm text-neutral-500">
-          <button type="button" className="hover:text-neutral-950">
-            Filtern nach
-          </button>
-          <span>|</span>
-          <button type="button" className="hover:text-neutral-950">
-            Sortieren nach: Empfehlungen
-          </button>
-        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-[10px] md:grid-cols-3 lg:grid-cols-4">
