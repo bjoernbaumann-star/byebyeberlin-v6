@@ -8,6 +8,8 @@ const CART_STORAGE_KEY = "bbb_cart_v2";
 export type CartLine = {
   product: ShopifyProduct;
   qty: number;
+  /** Variant GID for checkout – falls back to product.firstVariantId */
+  variantId?: string | null;
 };
 
 type CartState = {
@@ -19,9 +21,9 @@ export type CartContextValue = {
   count: number;
   subtotal: { amount: number; currencyCode: string };
   addTrigger: number;
-  add: (product: ShopifyProduct, qty?: number) => void;
-  remove: (productId: string) => void;
-  setQty: (productId: string, qty: number) => void;
+  add: (product: ShopifyProduct, qty?: number, variantId?: string | null) => void;
+  remove: (productId: string, variantId?: string | null) => void;
+  setQty: (productId: string, qty: number, variantId?: string | null) => void;
   clear: () => void;
 };
 
@@ -78,33 +80,43 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       count,
       subtotal,
       addTrigger,
-      add: (product, qty = 1) => {
+      add: (product, qty = 1, variantId) => {
         const addQty = clampQty(qty);
         if (addQty <= 0) return;
+        const vid = variantId ?? product.firstVariantId;
+        if (!vid) return;
         setAddTrigger((t) => t + 1);
         setState((prev) => {
-          const idx = prev.lines.findIndex((l) => l.product.id === product.id);
+          const idx = prev.lines.findIndex(
+            (l) => l.product.id === product.id && (l.variantId ?? l.product.firstVariantId) === vid,
+          );
           if (idx === -1) {
-            return { lines: [...prev.lines, { product, qty: addQty }] };
+            return { lines: [...prev.lines, { product, qty: addQty, variantId: vid }] };
           }
           const next = [...prev.lines];
           next[idx] = { ...next[idx], qty: clampQty(next[idx].qty + addQty) };
           return { lines: next };
         });
       },
-      remove: (productId) => {
-        setState((prev) => ({ lines: prev.lines.filter((l) => l.product.id !== productId) }));
+      remove: (productId, variantId) => {
+        setState((prev) => ({
+          lines: prev.lines.filter((l) =>
+            l.product.id !== productId ||
+            (variantId != null && (l.variantId ?? l.product.firstVariantId) !== variantId),
+          ),
+        }));
       },
-      setQty: (productId, qty) => {
+      setQty: (productId, qty, variantId) => {
         const nextQty = clampQty(qty);
         setState((prev) => {
+          const match = (l: CartLine) =>
+            l.product.id === productId &&
+            (variantId == null || (l.variantId ?? l.product.firstVariantId) === variantId);
           if (nextQty <= 0) {
-            return { lines: prev.lines.filter((l) => l.product.id !== productId) };
+            return { lines: prev.lines.filter((l) => !match(l)) };
           }
           return {
-            lines: prev.lines.map((l) =>
-              l.product.id === productId ? { ...l, qty: nextQty } : l,
-            ),
+            lines: prev.lines.map((l) => (match(l) ? { ...l, qty: nextQty } : l)),
           };
         });
       },

@@ -18,6 +18,21 @@ function formatPrice(amount: number, currencyCode: string) {
   }).format(amount);
 }
 
+function findVariantByOption(
+  product: ShopifyProduct,
+  optionName: string,
+  value: string,
+): string | null {
+  const variants = product.variants ?? [];
+  for (const v of variants) {
+    const opt = v.selectedOptions?.find(
+      (o) => o.name.toLowerCase() === optionName.toLowerCase() && o.value === value,
+    );
+    if (opt) return v.id;
+  }
+  return null;
+}
+
 function ProductCard({
   product,
   cart,
@@ -26,12 +41,25 @@ function ProductCard({
   cart: CartContextValue;
 }) {
   const [justAdded, setJustAdded] = React.useState(false);
+  const [selectedSize, setSelectedSize] = React.useState<string | null>(null);
   const images = product.images ?? [];
+
+  const sizeOption = product.options?.find(
+    (o) =>
+      o.name.toLowerCase().includes("size") ||
+      o.name.toLowerCase().includes("größe") ||
+      o.name.toLowerCase().includes("grosse"),
+  );
+  const sizeValues = sizeOption?.values ?? [];
+  const effectiveVariantId =
+    selectedSize && sizeOption
+      ? findVariantByOption(product, sizeOption.name, selectedSize)
+      : product.firstVariantId;
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    cart.add(product, 1);
+    cart.add(product, 1, effectiveVariantId ?? undefined);
     setJustAdded(true);
     window.setTimeout(() => setJustAdded(false), 1200);
   };
@@ -76,10 +104,33 @@ function ProductCard({
       <Link href={`/produkt/${product.handle}`} className="mt-2 block">
         <p className="text-sm text-neutral-600">{priceStr}</p>
       </Link>
+      {sizeValues.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-1">
+          {sizeValues.map((val) => (
+            <button
+              key={val}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSelectedSize(val);
+              }}
+              className={cn(
+                "rounded-none border px-2 py-1 text-xs font-medium transition-colors",
+                selectedSize === val
+                  ? "border-neutral-950 bg-neutral-950 text-white"
+                  : "border-neutral-300 bg-white text-neutral-700 hover:border-neutral-500",
+              )}
+            >
+              {val}
+            </button>
+          ))}
+        </div>
+      )}
       <button
         type="button"
         onClick={handleAdd}
-        disabled={!product.firstVariantId}
+        disabled={!effectiveVariantId}
         className="group/btn relative mt-2 flex w-full items-center justify-center rounded-none bg-transparent py-1 transition-[filter,background-color] duration-200 hover:bg-neutral-950 disabled:opacity-50"
         aria-label={justAdded ? "In den Warenkorb gelegt" : "In den Warenkorb"}
       >

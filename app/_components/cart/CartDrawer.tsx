@@ -107,7 +107,7 @@ export default function CartDrawer({
                 <div className="space-y-0">
                   {cart.lines.map((l) => (
                     <div
-                      key={l.product.id}
+                      key={`${l.product.id}-${l.variantId ?? l.product.firstVariantId}`}
                       className="flex gap-4 bg-white py-2"
                     >
                       <div className="h-[162px] w-[162px] shrink-0 overflow-hidden bg-white">
@@ -125,6 +125,19 @@ export default function CartDrawer({
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="font-medium">{l.product.title}</div>
+                        {(() => {
+                          const vid = l.variantId ?? l.product.firstVariantId;
+                          const variant = l.product.variants?.find((v) => v.id === vid);
+                          const sizeOpt = variant?.selectedOptions?.find(
+                            (o) =>
+                              o.name.toLowerCase().includes("size") ||
+                              o.name.toLowerCase().includes("größe") ||
+                              o.name.toLowerCase().includes("grosse"),
+                          );
+                          return sizeOpt ? (
+                            <div className="mt-0.5 text-xs text-neutral-500">{sizeOpt.value}</div>
+                          ) : null;
+                        })()}
                         <div className="mt-1 text-sm text-neutral-600">
                           {l.qty} ×{" "}
                           {formatPrice(
@@ -135,14 +148,14 @@ export default function CartDrawer({
                         <div className="mt-2 flex items-center gap-2">
                           <button
                             type="button"
-                            onClick={() => cart.setQty(l.product.id, l.qty - 1)}
+                            onClick={() => cart.setQty(l.product.id, l.qty - 1, l.variantId ?? l.product.firstVariantId)}
                             className="rounded-full border border-black/10 bg-white px-3 py-1 text-xs hover:bg-neutral-50"
                           >
                             −
                           </button>
                           <button
                             type="button"
-                            onClick={() => cart.setQty(l.product.id, l.qty + 1)}
+                            onClick={() => cart.setQty(l.product.id, l.qty + 1, l.variantId ?? l.product.firstVariantId)}
                             className="rounded-full border border-black/10 bg-white px-3 py-1 text-xs hover:bg-neutral-50"
                           >
                             +
@@ -168,13 +181,13 @@ export default function CartDrawer({
                     disabled={
                       cart.lines.length === 0 ||
                       checkoutLoading ||
-                      cart.lines.some((l) => !l.product.firstVariantId)
+                      cart.lines.some((l) => !(l.variantId ?? l.product.firstVariantId))
                     }
                     onClick={async () => {
                       const lines = cart.lines
-                        .filter((l) => l.product.firstVariantId)
+                        .filter((l) => l.variantId ?? l.product.firstVariantId)
                         .map((l) => ({
-                          merchandiseId: l.product.firstVariantId!,
+                          merchandiseId: (l.variantId ?? l.product.firstVariantId)!,
                           quantity: l.qty,
                         }));
                       if (lines.length === 0) return;

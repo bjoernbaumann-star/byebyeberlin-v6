@@ -112,8 +112,12 @@ type ProductsQueryData = {
             height: number | null;
           }>;
         };
+        options?: Array<{ name: string; values?: string[]; optionValues?: Array<{ name: string }> }>;
         variants: {
-          nodes: Array<{ id: string }>;
+          nodes: Array<{
+            id: string;
+            selectedOptions?: Array<{ name: string; value: string }>;
+          }>;
         };
       };
     }>;
@@ -147,9 +151,18 @@ const PRODUCTS_QUERY = /* GraphQL */ `
               height
             }
           }
-          variants(first: 1) {
+          options(first: 5) {
+            name
+            values
+            optionValues { name }
+          }
+          variants(first: 50) {
             nodes {
               id
+              selectedOptions {
+                name
+                value
+              }
             }
           }
         }
@@ -159,6 +172,7 @@ const PRODUCTS_QUERY = /* GraphQL */ `
 `;
 
 function mapProductNode(node: ProductsQueryData["products"]["edges"][0]["node"]): ShopifyProduct {
+  const variants = node.variants?.nodes ?? [];
   return {
     id: node.id,
     title: node.title,
@@ -166,7 +180,15 @@ function mapProductNode(node: ProductsQueryData["products"]["edges"][0]["node"])
     onlineStoreUrl: node.onlineStoreUrl,
     priceRange: node.priceRange,
     images: node.images.nodes,
-    firstVariantId: node.variants?.nodes?.[0]?.id ?? null,
+    firstVariantId: variants[0]?.id ?? null,
+    options: (node.options ?? []).map((o) => ({
+      name: o.name,
+      values: o.values ?? o.optionValues?.map((v) => v.name) ?? [],
+    })),
+    variants: variants.map((v) => ({
+      id: v.id,
+      selectedOptions: v.selectedOptions ?? [],
+    })),
   };
 }
 
@@ -218,8 +240,16 @@ const COLLECTION_PRODUCTS_QUERY = /* GraphQL */ `
             images(first: 10) {
               nodes { url altText width height }
             }
-            variants(first: 1) {
-              nodes { id }
+            options(first: 5) {
+              name
+              values
+              optionValues { name }
+            }
+            variants(first: 50) {
+              nodes {
+                id
+                selectedOptions { name value }
+              }
             }
           }
         }
