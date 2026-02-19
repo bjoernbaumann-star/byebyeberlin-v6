@@ -209,7 +209,7 @@ export default function LandingPage() {
       <ShopNav transparentOnTop />
 
       <main>
-        <section className="relative h-[70vh] w-full overflow-hidden bg-neutral-950 text-white">
+        <section className="relative h-[91vh] w-full overflow-hidden bg-neutral-950 text-white">
           <video
             className="absolute inset-0 h-full w-full object-cover object-[center_70%] scale-110"
             src="/BG%20VIDEO.mp4"

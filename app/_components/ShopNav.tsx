@@ -214,7 +214,7 @@ function MenuDrawer({
               className={cn(
                 "absolute grid place-items-center text-neutral-950",
                 "transition-opacity hover:opacity-70",
-                "focus:outline-none focus:ring-2 focus:ring-black/20 focus:ring-offset-2",
+                "focus:outline-none",
               )}
               style={{
                 top: MENU_DRAWER.closeButton.top,
@@ -308,7 +308,7 @@ function MenuDrawer({
                     <Link
                       href={x.href}
                       onClick={onClose}
-                      className="block w-fit text-neutral-950/90 transition-colors hover:font-bold hover:tracking-[0.4em] hover:text-neutral-950"
+                      className="block w-fit text-neutral-950/90 transition-colors hover:font-bold hover:text-neutral-950"
                       style={{
                         minHeight: MENU_DRAWER.nav.link.minHeight,
                         paddingTop: MENU_DRAWER.nav.link.paddingY,
@@ -333,7 +333,7 @@ function MenuDrawer({
                             key={c.label}
                             href={c.href}
                             onClick={onClose}
-                            className="block w-fit italic text-neutral-950/70 text-[0.72em] transition-colors hover:font-bold hover:tracking-[0.4em] hover:text-neutral-950"
+                            className="block w-fit italic text-neutral-950/70 text-[0.72em] transition-colors hover:font-bold hover:text-neutral-950"
                             style={{
                               minHeight: MENU_DRAWER.nav.link.minHeight,
                               paddingTop: 2,
@@ -364,7 +364,7 @@ function MenuDrawer({
                     onClose();
                     onOpenCart();
                   }}
-                  className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:font-bold hover:tracking-[0.4em] hover:text-neutral-700"
+                  className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:font-bold hover:text-neutral-700"
                   aria-label={cartCount > 0 ? `Bag (${cartCount} items)` : "Bag"}
                 >
                   <IconBag style={{ width: MENU_DRAWER.utility.iconSize, height: MENU_DRAWER.utility.iconSize }} />
@@ -380,7 +380,7 @@ function MenuDrawer({
                     <Link
                       href="/account"
                       onClick={onClose}
-                      className="flex items-center gap-2 text-neutral-950 transition-colors hover:font-bold hover:tracking-[0.4em] hover:text-neutral-700"
+                      className="flex items-center gap-2 text-neutral-950 transition-colors hover:font-bold hover:text-neutral-700"
                     >
                       <IconUser style={{ width: MENU_DRAWER.utility.iconSize, height: MENU_DRAWER.utility.iconSize }} />
                       <span
@@ -398,7 +398,7 @@ function MenuDrawer({
                           window.location.href = "/login";
                         });
                       }}
-                      className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:font-bold hover:tracking-[0.4em] hover:text-neutral-700"
+                      className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:font-bold hover:text-neutral-700"
                     >
                       <IconUser style={{ width: MENU_DRAWER.utility.iconSize, height: MENU_DRAWER.utility.iconSize }} />
                       <span
@@ -413,7 +413,7 @@ function MenuDrawer({
                   <Link
                     href="/login"
                     onClick={onClose}
-                    className="flex items-center gap-2 text-neutral-950 transition-colors hover:font-bold hover:tracking-[0.4em] hover:text-neutral-700"
+                    className="flex items-center gap-2 text-neutral-950 transition-colors hover:font-bold hover:text-neutral-700"
                   >
                     <IconUser style={{ width: MENU_DRAWER.utility.iconSize, height: MENU_DRAWER.utility.iconSize }} />
                     <span
@@ -427,7 +427,7 @@ function MenuDrawer({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:font-bold hover:tracking-[0.4em] hover:text-neutral-700"
+                  className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:font-bold hover:text-neutral-700"
                   aria-label="Search"
                 >
                   <IconSearch style={{ width: MENU_DRAWER.utility.iconSize, height: MENU_DRAWER.utility.iconSize }} />
@@ -450,7 +450,7 @@ function MenuDrawer({
                 <Link
                   href="/services"
                   onClick={onClose}
-                  className="font-sangbleu text-neutral-500 transition-colors hover:font-bold hover:tracking-[0.4em] hover:text-neutral-800"
+                  className="font-sangbleu text-neutral-500 transition-colors hover:font-bold hover:text-neutral-800"
                   style={{ fontSize: MENU_DRAWER.services.fontSize }}
                 >
                   BYE BYE BERLIN SERVICES
