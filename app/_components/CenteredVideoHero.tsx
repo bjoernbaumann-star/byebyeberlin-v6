@@ -30,7 +30,7 @@ export default function CenteredVideoHero({
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           onError={() => {
             if (src !== fallbackSrc) setSrc(fallbackSrc);
           }}
@@ -58,7 +58,7 @@ export default function CenteredVideoHero({
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           onError={() => {
             if (src !== fallbackSrc) setSrc(fallbackSrc);
           }}

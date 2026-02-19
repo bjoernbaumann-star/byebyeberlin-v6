@@ -135,8 +135,8 @@ const MENU_DRAWER = {
     borderWidth: 1,
   },
   utility: {
-    marginTop: 48,     // mt-12
-    paddingTop: 32,     // pt-8
+    marginTop: 12,     // mt-3
+    paddingTop: 12,     // pt-3
     gap: 16,           // space-y-4
     fontSize: 14,
     letterSpacing: "0.2em",
@@ -281,27 +281,71 @@ function MenuDrawer({
                 aria-label="Main navigation"
               >
                 {[
-                  { label: "BAGS", href: "/bags" },
-                  { label: "CLOTHES", href: "/clothes" },
                   { label: "COLLECTION", href: "/kollektion" },
-                  { label: "STORY", href: "/story" },
+                  { label: "BAGS", href: "/bags" },
+                  {
+                    label: "CLOTHES",
+                    href: "/clothes",
+                    children: [
+                      { label: "for here & him", href: "/clothes?filter=for-here-him" },
+                      { label: "for him & here", href: "/clothes?filter=for-him-here" },
+                    ],
+                  },
+                  { label: "ACCESSOIRES", href: "/accessoires" },
+                  { label: "STORY", href: "/story", separatorBefore: true },
                   { label: "BOUNDARIES AND VALUES", href: "/boundaries-and-values" },
                 ].map((x) => (
-                  <Link
-                    key={x.label}
-                    href={x.href}
-                    onClick={onClose}
-                    className="block w-fit text-neutral-950/90 transition-colors hover:text-neutral-950"
-                    style={{
-                      minHeight: MENU_DRAWER.nav.link.minHeight,
-                      paddingTop: MENU_DRAWER.nav.link.paddingY,
-                      paddingBottom: MENU_DRAWER.nav.link.paddingY,
-                      paddingLeft: MENU_DRAWER.nav.link.paddingX,
-                      paddingRight: MENU_DRAWER.nav.link.paddingX,
-                    }}
-                  >
-                    {x.label}
-                  </Link>
+                  <div key={x.label}>
+                    {"separatorBefore" in x && x.separatorBefore && (
+                      <div
+                        className="mb-3 w-full shrink-0"
+                        style={{
+                          height: 1,
+                          backgroundColor: MENU_DRAWER.separator.borderColor,
+                        }}
+                      />
+                    )}
+                    <Link
+                      href={x.href}
+                      onClick={onClose}
+                      className="block w-fit text-neutral-950/90 transition-colors hover:font-bold hover:tracking-[0.4em] hover:text-neutral-950"
+                      style={{
+                        minHeight: MENU_DRAWER.nav.link.minHeight,
+                        paddingTop: MENU_DRAWER.nav.link.paddingY,
+                        paddingBottom: MENU_DRAWER.nav.link.paddingY,
+                        paddingLeft: MENU_DRAWER.nav.link.paddingX,
+                        paddingRight: MENU_DRAWER.nav.link.paddingX,
+                      }}
+                    >
+                      {x.label}
+                    </Link>
+                    {"children" in x && x.children && (
+                      <div
+                        className="flex flex-col pl-4"
+                        style={{
+                          gap: 2,
+                          marginTop: 4,
+                          paddingBottom: 4,
+                        }}
+                      >
+                        {x.children.map((c) => (
+                          <Link
+                            key={c.label}
+                            href={c.href}
+                            onClick={onClose}
+                            className="block w-fit italic text-neutral-950/70 text-[0.72em] transition-colors hover:font-bold hover:tracking-[0.4em] hover:text-neutral-950"
+                            style={{
+                              minHeight: MENU_DRAWER.nav.link.minHeight,
+                              paddingTop: 2,
+                              paddingBottom: 2,
+                            }}
+                          >
+                            {c.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 ))}
               </nav>
 
@@ -320,7 +364,7 @@ function MenuDrawer({
                     onClose();
                     onOpenCart();
                   }}
-                  className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:text-neutral-700"
+                  className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:font-bold hover:tracking-[0.4em] hover:text-neutral-700"
                   aria-label={cartCount > 0 ? `Bag (${cartCount} items)` : "Bag"}
                 >
                   <IconBag style={{ width: MENU_DRAWER.utility.iconSize, height: MENU_DRAWER.utility.iconSize }} />
@@ -336,7 +380,7 @@ function MenuDrawer({
                     <Link
                       href="/account"
                       onClick={onClose}
-                      className="flex items-center gap-2 text-neutral-950 transition-colors hover:text-neutral-700"
+                      className="flex items-center gap-2 text-neutral-950 transition-colors hover:font-bold hover:tracking-[0.4em] hover:text-neutral-700"
                     >
                       <IconUser style={{ width: MENU_DRAWER.utility.iconSize, height: MENU_DRAWER.utility.iconSize }} />
                       <span
@@ -354,7 +398,7 @@ function MenuDrawer({
                           window.location.href = "/login";
                         });
                       }}
-                      className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:text-neutral-700"
+                      className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:font-bold hover:tracking-[0.4em] hover:text-neutral-700"
                     >
                       <IconUser style={{ width: MENU_DRAWER.utility.iconSize, height: MENU_DRAWER.utility.iconSize }} />
                       <span
@@ -369,7 +413,7 @@ function MenuDrawer({
                   <Link
                     href="/login"
                     onClick={onClose}
-                    className="flex items-center gap-2 text-neutral-950 transition-colors hover:text-neutral-700"
+                    className="flex items-center gap-2 text-neutral-950 transition-colors hover:font-bold hover:tracking-[0.4em] hover:text-neutral-700"
                   >
                     <IconUser style={{ width: MENU_DRAWER.utility.iconSize, height: MENU_DRAWER.utility.iconSize }} />
                     <span
@@ -383,7 +427,7 @@ function MenuDrawer({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:text-neutral-700"
+                  className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:font-bold hover:tracking-[0.4em] hover:text-neutral-700"
                   aria-label="Search"
                 >
                   <IconSearch style={{ width: MENU_DRAWER.utility.iconSize, height: MENU_DRAWER.utility.iconSize }} />
@@ -406,7 +450,7 @@ function MenuDrawer({
                 <Link
                   href="/services"
                   onClick={onClose}
-                  className="font-sangbleu text-neutral-500 transition-colors hover:text-neutral-800"
+                  className="font-sangbleu text-neutral-500 transition-colors hover:font-bold hover:tracking-[0.4em] hover:text-neutral-800"
                   style={{ fontSize: MENU_DRAWER.services.fontSize }}
                 >
                   BYE BYE BERLIN SERVICES

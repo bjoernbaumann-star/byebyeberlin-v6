@@ -64,6 +64,12 @@ body {
     Times, serif;
 }
 
+/* Hide default play button overlay while video loads – show first frame only */
+video::-webkit-media-controls-start-playback-button,
+video::-webkit-media-controls-overlay-play-button {
+  display: none !important;
+}
+
 /* Polaroid-style product frame – Vintage Patina */
 .polaroid-frame {
   position: relative;

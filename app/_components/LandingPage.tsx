@@ -215,7 +215,7 @@ export default function LandingPage() {
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
           />
           <div className="absolute inset-0 bg-black/30" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,.08),transparent_45%),radial-gradient(circle_at_80%_25%,rgba(255,255,255,.05),transparent_55%)]" />

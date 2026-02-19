@@ -79,7 +79,7 @@ function ProductCard({
         className="mt-2 w-full border border-neutral-950 bg-white py-2.5 text-xs font-medium uppercase tracking-wider text-neutral-950 transition-colors hover:bg-neutral-950 hover:text-white disabled:opacity-50"
         aria-label={justAdded ? "In den Warenkorb gelegt" : "In den Warenkorb"}
       >
-        {justAdded ? "✓ Hinzugefügt" : "+ In den Warenkorb"}
+        {justAdded ? "✓ Hinzugefügt" : "Yes, I'll take it!"}
       </button>
     </article>
   );
