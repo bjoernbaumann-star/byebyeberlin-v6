@@ -3,6 +3,7 @@
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCart } from "./CartContext";
+import ButtonCta from "../shopify/ButtonCta";
 
 function cn(...parts: Array<string | false | undefined | null>) {
   return parts.filter(Boolean).join(" ");
@@ -25,6 +26,7 @@ export default function CartDrawer({
 }) {
   const cart = useCart();
   const [checkoutLoading, setCheckoutLoading] = React.useState(false);
+  const [isHovered, setIsHovered] = React.useState(false);
 
   React.useEffect(() => {
     if (!open) return;
@@ -183,6 +185,8 @@ export default function CartDrawer({
                       checkoutLoading ||
                       cart.lines.some((l) => !(l.variantId ?? l.product.firstVariantId))
                     }
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
                     onClick={async () => {
                       const lines = cart.lines
                         .filter((l) => l.variantId ?? l.product.firstVariantId)
@@ -210,9 +214,18 @@ export default function CartDrawer({
                         setCheckoutLoading(false);
                       }
                     }}
-                    className="w-full rounded-none bg-neutral-950 px-6 py-3 text-lg font-bold uppercase text-white disabled:opacity-50"
+                    className="group/btn relative flex w-full items-center justify-center rounded-none border border-black bg-transparent py-1 transition-[filter,background-color] duration-200 hover:bg-neutral-950 disabled:opacity-50"
                   >
-                    {checkoutLoading ? "…" : "Checkout"}
+                    <ButtonCta
+                      className="scale-[0.7] transition-[filter] duration-200 invert group-hover/btn:invert-0"
+                      invisible={checkoutLoading}
+                      isHovered={isHovered}
+                    />
+                    {checkoutLoading && (
+                      <span className="absolute inset-0 flex items-center justify-center font-sangbleu text-[16px] font-bold leading-none text-white">
+                        …
+                      </span>
+                    )}
                   </button>
                   <button
                     type="button"

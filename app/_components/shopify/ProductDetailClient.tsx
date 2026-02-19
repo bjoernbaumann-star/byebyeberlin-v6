@@ -4,6 +4,7 @@ import React from "react";
 import type { ShopifyImage } from "../../../lib/shopify-types";
 import type { ShopifyProduct } from "../../../lib/shopify-types";
 import { useCart } from "../cart/CartContext";
+import ButtonCta from "./ButtonCta";
 
 function ProductImageGallery({
   images = [],
@@ -44,6 +45,7 @@ export function ProductDetailAddToCart({
 }) {
   const cart = useCart();
   const [justAdded, setJustAdded] = React.useState(false);
+  const [isHovered, setIsHovered] = React.useState(false);
   const canAdd = product != null && product.firstVariantId != null && product.firstVariantId !== "";
 
   const handleClick = () => {
@@ -60,10 +62,21 @@ export function ProductDetailAddToCart({
       type="button"
       onClick={handleClick}
       disabled={!canAdd}
-      className={className}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={`group/btn relative flex w-full items-center justify-center rounded-none border border-black bg-transparent py-1 transition-[filter,background-color] duration-200 hover:bg-neutral-950 disabled:opacity-50 ${className ?? ""}`}
       aria-label={justAdded ? "In den Warenkorb gelegt" : "Zum Warenkorb hinzufügen"}
     >
-      {justAdded ? "✓ Hinzugefügt" : "Zum Warenkorb hinzufügen"}
+      <ButtonCta
+        className="scale-[0.7] transition-[filter] duration-200 invert group-hover/btn:invert-0"
+        invisible={justAdded}
+        isHovered={isHovered}
+      />
+      {justAdded && (
+        <span className="absolute inset-0 flex items-center justify-center font-sangbleu text-[16px] font-bold leading-none text-white uppercase">
+          nice, nice, nice
+        </span>
+      )}
     </button>
   );
 }

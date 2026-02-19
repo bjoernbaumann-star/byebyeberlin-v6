@@ -135,7 +135,7 @@ export default async function ProductPage({
               {/* Zum Warenkorb */}
               <ProductDetailAddToCart
                 product={product}
-                className="font-sangbleu mt-8 w-full border border-neutral-950 bg-white py-4 text-sm font-medium uppercase tracking-wider text-neutral-950 transition-colors hover:bg-neutral-950 hover:text-white"
+                className="mt-8"
               />
 
               {/* Produktdetails – nur wenn descriptionHtml oder description vorhanden */}
