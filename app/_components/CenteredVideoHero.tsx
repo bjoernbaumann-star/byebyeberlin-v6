@@ -41,7 +41,7 @@ export default function CenteredVideoHero({
   }
 
   return (
-    <section className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-neutral-950">
+    <section className="relative flex h-[70vh] w-full items-center justify-center overflow-hidden bg-neutral-950">
       <div
         className={cn(
           "relative overflow-hidden bg-black",
@@ -52,7 +52,7 @@ export default function CenteredVideoHero({
       >
         <video
           key={src}
-          className="h-full w-full object-cover"
+          className="h-full w-full scale-[1.25] object-cover"
           src={src}
           autoPlay
           muted

@@ -20,7 +20,11 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "BYE BYE BERLIN — Luxury Essentials",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://byebyeberlin.com"),
+  title: {
+    default: "byebyeberlin.com | SAY BYE – OK BYE",
+    template: "byebyeberlin.com | %s",
+  },
   description:
     "Luxury Essentials & Statements by BYE BYE BERLIN. Editorial, minimal, high-quality.",
 };
