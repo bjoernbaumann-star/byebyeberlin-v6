@@ -131,7 +131,7 @@ function ProductCard({
         type="button"
         onClick={handleAdd}
         disabled={!effectiveVariantId}
-        className="group/btn relative mt-2 flex w-full items-center justify-center rounded-none bg-transparent py-1 transition-[filter,background-color] duration-200 hover:bg-neutral-950 disabled:opacity-50"
+        className="group/btn relative mt-2 flex w-full items-center justify-center rounded-none border border-black bg-transparent py-1 transition-[filter,background-color] duration-200 hover:bg-neutral-950 disabled:opacity-50"
         aria-label={justAdded ? "In den Warenkorb gelegt" : "In den Warenkorb"}
       >
         <img
@@ -174,7 +174,7 @@ export default function ProductGrid({ products }: { products: ShopifyProduct[] }
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-[10px] md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-x-[10px] gap-y-[40px] md:grid-cols-3 lg:grid-cols-4">
         {products.map((p) => (
           <ProductCard key={p.id} product={p} cart={cart} />
         ))}
