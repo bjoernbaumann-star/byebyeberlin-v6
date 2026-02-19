@@ -150,13 +150,15 @@ function GapMarquee({
                       />
                     </motion.div>
                   ) : (
-                    <img
-                      src="/b.svg"
-                      alt=""
-                      width={BX_ICON_SIZE_PX}
-                      height={BX_ICON_SIZE_PX}
-                      className="max-h-full max-w-full object-contain object-center"
-                    />
+                    <div className="flex h-full w-full items-center justify-center">
+                      <img
+                        src="/b.svg"
+                        alt=""
+                        width={BX_ICON_SIZE_PX}
+                        height={BX_ICON_SIZE_PX}
+                        className="max-h-full max-w-full object-contain object-center"
+                      />
+                    </div>
                   )}
                 </span>
               ))}

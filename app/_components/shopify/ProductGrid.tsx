@@ -2,6 +2,10 @@
 
 import React from "react";
 import Link from "next/link";
+
+function cn(...parts: Array<string | false | undefined | null>) {
+  return parts.filter(Boolean).join(" ");
+}
 import type { ShopifyProduct } from "../../../lib/shopify-types";
 import type { CartContextValue } from "../cart/CartContext";
 import { useCart } from "../cart/CartContext";
@@ -76,10 +80,22 @@ function ProductCard({
         type="button"
         onClick={handleAdd}
         disabled={!product.firstVariantId}
-        className="mt-2 w-full border border-neutral-950 bg-white py-2.5 text-xs font-medium uppercase tracking-wider text-neutral-950 transition-colors hover:bg-neutral-950 hover:text-white disabled:opacity-50"
+        className="group/btn relative mt-2 flex w-full items-center justify-center rounded-none bg-transparent py-1 transition-[filter,background-color] duration-200 hover:bg-neutral-950 disabled:opacity-50"
         aria-label={justAdded ? "In den Warenkorb gelegt" : "In den Warenkorb"}
       >
-        {justAdded ? "✓ Hinzugefügt" : "Yes, I'll take it!"}
+        <img
+          src="/button_cta_passiv.svg"
+          alt="Yes, I'll take it!"
+          className={cn(
+            "block h-auto w-full scale-[0.7] transition-[filter] duration-200 invert group-hover/btn:invert-0",
+            justAdded && "invisible"
+          )}
+        />
+        {justAdded && (
+          <span className="absolute inset-0 flex items-center justify-center font-sangbleu text-[16px] font-bold leading-none text-white uppercase">
+            nice, nice, nice
+          </span>
+        )}
       </button>
     </article>
   );
