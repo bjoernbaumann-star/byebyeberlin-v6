@@ -153,7 +153,13 @@ function ProductCard({
   );
 }
 
-export default function ProductGrid({ products }: { products: ShopifyProduct[] }) {
+export default function ProductGrid({
+  products,
+  showCount = true,
+}: {
+  products: ShopifyProduct[];
+  showCount?: boolean;
+}) {
   const cart = useCart();
 
   if (!products.length) {
@@ -169,11 +175,13 @@ export default function ProductGrid({ products }: { products: ShopifyProduct[] }
 
   return (
     <div className="mt-8">
-      <div className="mb-6">
-        <p className="font-sangbleu text-sm font-medium text-neutral-600">
-          {products.length} PRODUKTE
-        </p>
-      </div>
+      {showCount && (
+        <div className="mb-6">
+          <p className="font-sangbleu text-sm font-medium text-neutral-600">
+            {products.length} PRODUKTE
+          </p>
+        </div>
+      )}
 
       <div className="grid grid-cols-2 gap-x-[10px] gap-y-[40px] md:grid-cols-3 lg:grid-cols-4">
         {products.map((p) => (

@@ -282,7 +282,7 @@ export default function LandingPage() {
                 />
               </div>
             ) : (
-              <ProductGrid products={products} />
+              <ProductGrid products={products} showCount={false} />
             )}
           </div>
         </section>
