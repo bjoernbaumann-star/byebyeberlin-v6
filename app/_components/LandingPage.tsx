@@ -89,8 +89,10 @@ const BX_STRIP_HEIGHT_PX = 200;
 
 function GapMarquee({
   reducedMotion,
+  isChaos,
 }: {
   reducedMotion: boolean;
+  isChaos?: boolean;
 }) {
   return (
     <div
@@ -129,17 +131,27 @@ function GapMarquee({
                 >
                   {i % 2 === 0 ? (
                     <motion.div
-                      className="flex h-full w-full items-center justify-center"
-                      animate={{
-                        // Abwechselnd: 1. X Uhrzeigersinn, 2. X Gegenurzeigersinn, …
-                        rotate: (i / 2) % 2 === 0 ? [0, 360] : [0, -360],
-                      }}
-                      transition={{
-                        duration: 8,
-                        ease: "linear",
-                        repeat: Infinity,
-                        repeatType: "loop",
-                      }}
+                      className={cn(
+                        "flex h-full w-full items-center justify-center",
+                        isChaos && "animate-spin",
+                      )}
+                      animate={
+                        isChaos
+                          ? undefined
+                          : {
+                              rotate: (i / 2) % 2 === 0 ? [0, 360] : [0, -360],
+                            }
+                      }
+                      transition={
+                        isChaos
+                          ? undefined
+                          : {
+                              duration: 8,
+                              ease: "linear",
+                              repeat: Infinity,
+                              repeatType: "loop",
+                            }
+                      }
                     >
                       <img
                         src="/x.svg"
@@ -150,7 +162,12 @@ function GapMarquee({
                       />
                     </motion.div>
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center">
+                    <div
+                      className={cn(
+                        "flex h-full w-full items-center justify-center",
+                        isChaos && "animate-spin",
+                      )}
+                    >
                       <img
                         src="/b.svg"
                         alt=""
@@ -171,6 +188,7 @@ function GapMarquee({
 }
 
 export default function LandingPage() {
+  const [isChaos, setIsChaos] = React.useState(false);
   const reducedMotion = useReducedMotion();
   const { scrollY } = useScroll();
 
@@ -206,6 +224,26 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-dvh overflow-x-hidden bg-white text-neutral-950">
+      {isChaos && (
+        <div
+          className="fixed inset-0 -z-50 flex items-center justify-center bg-black/10 pointer-events-none"
+          aria-hidden="true"
+        >
+          <h1 className="text-[20vw] font-black text-red-600/30 uppercase tracking-tighter leading-none animate-pulse">
+            CHAOOOOOS
+          </h1>
+        </div>
+      )}
+
+      <button
+        type="button"
+        onClick={() => setIsChaos((c) => !c)}
+        className="fixed bottom-4 right-4 z-[100] rounded-full p-2 text-[10px] text-neutral-400 hover:text-neutral-600 transition-colors"
+        aria-label="Do not press"
+      >
+        Do not press
+      </button>
+
       <ShopNav transparentOnTop />
 
       <main>
@@ -258,7 +296,7 @@ export default function LandingPage() {
         </section>
 
         <section className="relative z-[95] w-full overflow-hidden">
-          <GapMarquee reducedMotion={!!reducedMotion} />
+          <GapMarquee reducedMotion={!!reducedMotion} isChaos={isChaos} />
         </section>
 
         <section className="relative z-[95] mx-auto max-w-6xl px-5 pb-32 pt-8">
