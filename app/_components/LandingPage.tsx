@@ -1,54 +1,4 @@
-"use client";
 
-import Link from "next/link";
-import React from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import type { ShopifyProduct } from "../../lib/shopify-types";
-import ShopFooter from "./ShopFooter";
-import ShopNav from "./ShopNav";
-import ProductGrid from "./shopify/ProductGrid";
-
-function cn(...parts: Array<string | false | undefined | null>) {
-  return parts.filter(Boolean).join(" ");
-}
-
-function HeroMarquee({
-  text,
-  reducedMotion,
-  phase = 0,
-  opacity,
-}: {
-  text: string;
-  reducedMotion: boolean;
-  phase?: number;
-  opacity?: any;
-}) {
-  return (
-    <motion.div
-      aria-hidden="true"
-      className="pointer-events-none fixed inset-x-0 top-1/2 -translate-y-1/2 whitespace-nowrap z-10"
-      style={{
-        opacity,
-        whiteSpace: "nowrap",
-        willChange: "transform",
-        filter:
-          "drop-shadow(0 10px 40px rgba(0,0,0,.55)) drop-shadow(0 0 24px rgba(255,255,255,.10))",
-      }}
-    >
-      <motion.div
-        className="flex w-max items-center gap-[5vw] whitespace-nowrap pl-[5vw]"
-        style={{ willChange: "transform", transform: "translate3d(0,0,0)" }}
-        animate={
-          reducedMotion
-            ? undefined
-            : {
-                x: [`${phase * -50 - 50}%`, `${phase * -50}%`],
-              }
-        }
-        transition={
-          reducedMotion
-            ? undefined
-            : {
                 duration: 51,
                 ease: "linear",
                 repeat: Infinity,
@@ -180,24 +130,49 @@ function GapMarquee({
 export default function LandingPage() {
   const [isChaos, setIsChaos] = React.useState(false);
   const [isLeoExpanded, setIsLeoExpanded] = React.useState(false);
-  const [wiggleScale, setWiggleScale] = React.useState(12);
+  const [wiggleIntensity, setWiggleIntensity] = React.useState(0);
+  const [leoCount, setLeoCount] = React.useState(1);
+  const [tick, setTick] = React.useState(0);
   const leoObjectRef = React.useRef<HTMLObjectElement>(null);
   const leoReverseObjectRef = React.useRef<HTMLObjectElement>(null);
 
-  const applyWiggleToObject = React.useCallback((obj: HTMLObjectElement | null, scale: number) => {
-    try {
-      const doc = obj?.contentDocument;
-      const map = doc?.querySelector("feDisplacementMap");
-      if (map) map.setAttribute("scale", String(scale));
-    } catch {
-      // cross-origin or not loaded
-    }
+  React.useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      setWiggleIntensity(e.clientX / window.innerWidth);
+      const yRatio = Math.max(0, Math.min(1, 1 - e.clientY / window.innerHeight));
+      const doublings = Math.min(6, Math.floor(yRatio * 6));
+      setLeoCount(Math.pow(2, doublings));
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
   React.useEffect(() => {
-    applyWiggleToObject(leoObjectRef.current, wiggleScale);
-    applyWiggleToObject(leoReverseObjectRef.current, wiggleScale);
-  }, [wiggleScale, applyWiggleToObject]);
+    if (!isLeoExpanded || wiggleIntensity <= 0) return;
+    let raf = 0;
+    const loop = () => {
+      setTick(Date.now());
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [isLeoExpanded, wiggleIntensity]);
+
+  React.useEffect(() => {
+    if (!isLeoExpanded) return;
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      const gamma = e.gamma ?? 0;
+      const intensity = Math.min(1, Math.abs(gamma) / 90);
+      setWiggleIntensity(intensity);
+      const beta = e.beta ?? 0;
+      const betaForward = Math.max(0, Math.min(90, beta));
+      const doublings = Math.min(6, Math.floor((betaForward / 90) * 6));
+      const count = Math.min(64, Math.pow(2, doublings));
+      setLeoCount(count);
+    };
+    window.addEventListener("deviceorientation", handleOrientation);
+    return () => window.removeEventListener("deviceorientation", handleOrientation);
+  }, [isLeoExpanded]);
   const reducedMotion = useReducedMotion();
   const { scrollY } = useScroll();
 
@@ -254,17 +229,31 @@ export default function LandingPage() {
           aria-label="Schließen"
         >
           <div
-            className={`flex items-center justify-center animate-spin-y scale-[0.84] transition-all duration-300 ${isChaos ? "scale-[1.5]" : ""}`}
+            className={`absolute inset-0 flex flex-wrap justify-center items-center gap-4 overflow-hidden animate-spin-y scale-[0.84] transition-all duration-300 ${isChaos ? "scale-[1.5]" : ""}`}
             onClick={(e) => e.stopPropagation()}
           >
-            <object
-              ref={leoObjectRef}
-              data="/leo.svg"
-              type="image/svg+xml"
-              className="max-h-[100vh] max-w-[100vw] w-auto h-auto object-contain block pointer-events-none"
-              aria-hidden
-              onLoad={() => applyWiggleToObject(leoObjectRef.current, wiggleScale)}
-            />
+            {Array.from({ length: leoCount }).map((_, i) => {
+              const size = leoCount === 1 ? "100vh" : "min(35vw, 35vh)";
+              return (
+                <div
+                  key={i}
+                  className="flex shrink-0 items-center justify-center"
+                  style={{
+                    width: leoCount === 1 ? "auto" : size,
+                    transform: `rotate(${Math.sin(tick / 50 + i) * wiggleIntensity * 45}deg) scale(${1 + wiggleIntensity * 0.5}) translate(${(i % 4 - 2) * 5}%, ${(Math.floor(i / 4) - 2) * 5}%)`,
+                  }}
+                >
+                  <object
+                    ref={i === 0 ? leoObjectRef : undefined}
+                    data="/leo.svg"
+                    type="image/svg+xml"
+                    className="max-h-[100vh] max-w-[100vw] w-auto h-auto object-contain block pointer-events-none"
+                    style={leoCount > 1 ? { maxHeight: "35vh", maxWidth: "35vw" } : undefined}
+                    aria-hidden
+                  />
+                </div>
+              );
+            })}
           </div>
           <div
             className={`absolute inset-0 flex items-center justify-center animate-spin-y scale-[0.84] transition-all duration-300 pointer-events-none ${isChaos ? "scale-[1.5]" : ""}`}
@@ -275,30 +264,23 @@ export default function LandingPage() {
               type="image/svg+xml"
               className="max-h-[100vh] max-w-[100vw] w-auto h-auto object-contain block pointer-events-none"
               aria-hidden
-              onLoad={() => applyWiggleToObject(leoReverseObjectRef.current, wiggleScale)}
             />
-          </div>
-          <div
-            className="absolute bottom-6 left-6 right-6 flex justify-center pointer-events-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <label className="flex items-center gap-3 text-white/80 text-xs">
-              <span className="w-16">Wiggle</span>
-              <input
-                type="range"
-                min={0}
-                max={24}
-                value={wiggleScale}
-                onChange={(e) => setWiggleScale(Number(e.target.value))}
-                className="w-32 h-1.5 accent-white/60"
-              />
-            </label>
           </div>
         </div>
       )}
       <button
         type="button"
-        onClick={() => {
+        onClick={async () => {
+          const needsPermission =
+            typeof DeviceOrientationEvent !== "undefined" &&
+            typeof (DeviceOrientationEvent as any).requestPermission === "function";
+          if (needsPermission) {
+            try {
+              await (DeviceOrientationEvent as any).requestPermission();
+            } catch {
+              // Nutzer hat abgelehnt oder Fehler – Overlay trotzdem öffnen
+            }
+          }
           setIsChaos((c) => !c);
           setIsLeoExpanded(true);
         }}

@@ -23,13 +23,20 @@ function findVariantByOption(
   product: ShopifyProduct,
   optionName: string,
   value: string,
+  isSizeLike?: (n: string) => boolean,
 ): string | null {
   const variants = product.variants ?? [];
   for (const v of variants) {
-    const opt = v.selectedOptions?.find(
+    const exact = v.selectedOptions?.find(
       (o) => o.name.toLowerCase() === optionName.toLowerCase() && o.value === value,
     );
-    if (opt) return v.id;
+    if (exact) return v.id;
+    if (isSizeLike) {
+      const bySize = v.selectedOptions?.find(
+        (o) => isSizeLike(o.name) && o.value === value,
+      );
+      if (bySize) return v.id;
+    }
   }
   return null;
 }
@@ -72,7 +79,7 @@ function ProductCard({
       return name ? { name, values: [] as string[] } : null;
     })();
 
-  const sizeValues =
+  const sizeValuesRaw =
     sizeOption?.values?.filter(Boolean) ??
     (() => {
       const fromVariants = new Set<string>();
@@ -87,10 +94,24 @@ function ProductCard({
       return Array.from(fromVariants).sort();
     })() ??
     [];
+
+  const sizeValues =
+    sizeValuesRaw.length > 0 ? sizeValuesRaw : ["S", "M", "L", "XL"];
+  const effectiveSizeOption =
+    sizeOption ?? (sizeValuesRaw.length === 0 ? { name: "Size", values: sizeValues } : sizeOption);
+  const foundVariant =
+    selectedSize && effectiveSizeOption
+      ? findVariantByOption(
+          product,
+          effectiveSizeOption.name,
+          selectedSize,
+          sizeValuesRaw.length === 0 ? isSizeOptionName : undefined,
+        )
+      : null;
   const effectiveVariantId =
-    selectedSize && sizeOption
-      ? findVariantByOption(product, sizeOption.name, selectedSize)
-      : product.firstVariantId;
+    foundVariant ??
+    (selectedSize && product.variants?.length === 1 ? product.variants[0].id : null) ??
+    product.firstVariantId;
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
