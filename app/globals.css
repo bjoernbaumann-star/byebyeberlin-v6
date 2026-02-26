@@ -288,3 +288,33 @@ video::-webkit-media-controls-overlay-play-button {
   opacity: 0.4;
   cursor: not-allowed;
 }
+
+/* 3D Y-Achsen-Animation */
+@keyframes spin-y {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+.animate-spin-y {
+  animation: spin-y 8s linear infinite;
+  transform-style: preserve-3d;
+}
+
+@keyframes spin-y-reverse {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(-360deg);
+  }
+}
+
+.animate-spin-y-reverse {
+  animation: spin-y-reverse 8s linear infinite;
+  transform-style: preserve-3d;
+}
+

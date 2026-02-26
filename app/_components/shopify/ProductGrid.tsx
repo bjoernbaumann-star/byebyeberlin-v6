@@ -46,13 +46,47 @@ function ProductCard({
   const [isHovered, setIsHovered] = React.useState(false);
   const images = product.images ?? [];
 
-  const sizeOption = product.options?.find(
-    (o) =>
-      o.name.toLowerCase().includes("size") ||
-      o.name.toLowerCase().includes("größe") ||
-      o.name.toLowerCase().includes("grosse"),
-  );
-  const sizeValues = sizeOption?.values ?? [];
+  function isSizeOptionName(name: string | undefined): boolean {
+    const n = (name ?? "").trim().toLowerCase();
+    return (
+      n === "size" ||
+      /^gr[oö]s?se$/.test(n) ||
+      /^gr[oö][sß]e$/.test(n) ||
+      n.includes("size") ||
+      n.includes("größe") ||
+      n.includes("grösse") ||
+      n.includes("grosse")
+    );
+  }
+
+  const sizeOption =
+    product.options?.find((o) => isSizeOptionName(o?.name)) ??
+    (() => {
+      const names = new Set<string>();
+      for (const v of product.variants ?? []) {
+        for (const o of v.selectedOptions ?? []) {
+          if (isSizeOptionName(o.name)) names.add(o.name);
+        }
+      }
+      const name = names.values().next().value;
+      return name ? { name, values: [] as string[] } : null;
+    })();
+
+  const sizeValues =
+    sizeOption?.values?.filter(Boolean) ??
+    (() => {
+      const fromVariants = new Set<string>();
+      const optName = sizeOption?.name?.toLowerCase();
+      for (const v of product.variants ?? []) {
+        const opt = v.selectedOptions?.find(
+          (o) =>
+            (optName && o.name?.toLowerCase() === optName) || isSizeOptionName(o.name),
+        );
+        if (opt?.value) fromVariants.add(opt.value);
+      }
+      return Array.from(fromVariants).sort();
+    })() ??
+    [];
   const effectiveVariantId =
     selectedSize && sizeOption
       ? findVariantByOption(product, sizeOption.name, selectedSize)
@@ -118,7 +152,7 @@ function ProductCard({
                 setSelectedSize(val);
               }}
               className={cn(
-                "rounded-none border px-2 py-1 text-xs font-medium transition-colors",
+                "rounded-none border px-1.5 py-0.5 text-[10px] font-medium transition-colors",
                 selectedSize === val
                   ? "border-neutral-950 bg-neutral-950 text-white"
                   : "border-neutral-300 bg-white text-neutral-700 hover:border-neutral-500",

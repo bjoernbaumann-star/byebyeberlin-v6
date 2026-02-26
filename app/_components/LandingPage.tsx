@@ -89,10 +89,8 @@ const BX_STRIP_HEIGHT_PX = 200;
 
 function GapMarquee({
   reducedMotion,
-  isChaos,
 }: {
   reducedMotion: boolean;
-  isChaos?: boolean;
 }) {
   return (
     <div
@@ -131,19 +129,16 @@ function GapMarquee({
                 >
                   {i % 2 === 0 ? (
                     <motion.div
-                      className={cn(
-                        "flex h-full w-full items-center justify-center",
-                        isChaos && "animate-spin",
-                      )}
+                      className="flex h-full w-full items-center justify-center"
                       animate={
-                        isChaos
+                        reducedMotion
                           ? undefined
                           : {
                               rotate: (i / 2) % 2 === 0 ? [0, 360] : [0, -360],
                             }
                       }
                       transition={
-                        isChaos
+                        reducedMotion
                           ? undefined
                           : {
                               duration: 8,
@@ -162,12 +157,7 @@ function GapMarquee({
                       />
                     </motion.div>
                   ) : (
-                    <div
-                      className={cn(
-                        "flex h-full w-full items-center justify-center",
-                        isChaos && "animate-spin",
-                      )}
-                    >
+                    <div className="flex h-full w-full items-center justify-center">
                       <img
                         src="/b.svg"
                         alt=""
@@ -189,6 +179,25 @@ function GapMarquee({
 
 export default function LandingPage() {
   const [isChaos, setIsChaos] = React.useState(false);
+  const [isLeoExpanded, setIsLeoExpanded] = React.useState(false);
+  const [wiggleScale, setWiggleScale] = React.useState(12);
+  const leoObjectRef = React.useRef<HTMLObjectElement>(null);
+  const leoReverseObjectRef = React.useRef<HTMLObjectElement>(null);
+
+  const applyWiggleToObject = React.useCallback((obj: HTMLObjectElement | null, scale: number) => {
+    try {
+      const doc = obj?.contentDocument;
+      const map = doc?.querySelector("feDisplacementMap");
+      if (map) map.setAttribute("scale", String(scale));
+    } catch {
+      // cross-origin or not loaded
+    }
+  }, []);
+
+  React.useEffect(() => {
+    applyWiggleToObject(leoObjectRef.current, wiggleScale);
+    applyWiggleToObject(leoReverseObjectRef.current, wiggleScale);
+  }, [wiggleScale, applyWiggleToObject]);
   const reducedMotion = useReducedMotion();
   const { scrollY } = useScroll();
 
@@ -235,13 +244,73 @@ export default function LandingPage() {
         </div>
       )}
 
+      {isLeoExpanded && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-transparent cursor-pointer [perspective:1200px] [transform-style:preserve-3d]"
+          role="button"
+          tabIndex={0}
+          onClick={() => setIsLeoExpanded(false)}
+          onKeyDown={(e) => e.key === "Escape" && setIsLeoExpanded(false)}
+          aria-label="Schließen"
+        >
+          <div
+            className={`flex items-center justify-center animate-spin-y scale-[0.84] transition-all duration-300 ${isChaos ? "scale-[1.5]" : ""}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <object
+              ref={leoObjectRef}
+              data="/leo.svg"
+              type="image/svg+xml"
+              className="max-h-[100vh] max-w-[100vw] w-auto h-auto object-contain block pointer-events-none"
+              aria-hidden
+              onLoad={() => applyWiggleToObject(leoObjectRef.current, wiggleScale)}
+            />
+          </div>
+          <div
+            className={`absolute inset-0 flex items-center justify-center animate-spin-y scale-[0.84] transition-all duration-300 pointer-events-none ${isChaos ? "scale-[1.5]" : ""}`}
+          >
+            <object
+              ref={leoReverseObjectRef}
+              data="/leo-reverse.svg"
+              type="image/svg+xml"
+              className="max-h-[100vh] max-w-[100vw] w-auto h-auto object-contain block pointer-events-none"
+              aria-hidden
+              onLoad={() => applyWiggleToObject(leoReverseObjectRef.current, wiggleScale)}
+            />
+          </div>
+          <div
+            className="absolute bottom-6 left-6 right-6 flex justify-center pointer-events-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <label className="flex items-center gap-3 text-white/80 text-xs">
+              <span className="w-16">Wiggle</span>
+              <input
+                type="range"
+                min={0}
+                max={24}
+                value={wiggleScale}
+                onChange={(e) => setWiggleScale(Number(e.target.value))}
+                className="w-32 h-1.5 accent-white/60"
+              />
+            </label>
+          </div>
+        </div>
+      )}
       <button
         type="button"
-        onClick={() => setIsChaos((c) => !c)}
-        className="fixed bottom-4 right-4 z-[100] rounded-full p-2 text-[10px] text-neutral-400 hover:text-neutral-600 transition-colors"
+        onClick={() => {
+          setIsChaos((c) => !c);
+          setIsLeoExpanded(true);
+        }}
+        className="group fixed bottom-4 right-4 z-[150] p-2 transition-colors hover:bg-black"
         aria-label="Do not press"
       >
-        Do not press
+        <object
+          data="/donotpress.svg"
+          type="image/svg+xml"
+          className="h-8 w-auto block pointer-events-none transition-[filter] group-hover:invert"
+          aria-hidden
+        />
       </button>
 
       <ShopNav transparentOnTop />
@@ -296,7 +365,7 @@ export default function LandingPage() {
         </section>
 
         <section className="relative z-[95] w-full overflow-hidden">
-          <GapMarquee reducedMotion={!!reducedMotion} isChaos={isChaos} />
+          <GapMarquee reducedMotion={!!reducedMotion} />
         </section>
 
         <section className="relative z-[95] mx-auto max-w-6xl px-5 pb-32 pt-8">

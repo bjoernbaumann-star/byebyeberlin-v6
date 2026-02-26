@@ -126,18 +126,23 @@ export default function CartDrawer({
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="font-medium">{l.product.title}</div>
+                        <div className="font-bold">{l.product.title}</div>
                         {(() => {
                           const vid = l.variantId ?? l.product.firstVariantId;
                           const variant = l.product.variants?.find((v) => v.id === vid);
-                          const sizeOpt = variant?.selectedOptions?.find(
+                          const opts = variant?.selectedOptions?.filter(
                             (o) =>
                               o.name.toLowerCase().includes("size") ||
                               o.name.toLowerCase().includes("größe") ||
-                              o.name.toLowerCase().includes("grosse"),
+                              o.name.toLowerCase().includes("grosse") ||
+                              o.name.toLowerCase().includes("color") ||
+                              o.name.toLowerCase().includes("farbe") ||
+                              o.name.toLowerCase().includes("colour"),
                           );
-                          return sizeOpt ? (
-                            <div className="mt-0.5 text-xs text-neutral-500">{sizeOpt.value}</div>
+                          return opts?.length ? (
+                            <div className="mt-0.5 text-xs text-neutral-500">
+                              {opts.map((o) => o.value).join(" / ")}
+                            </div>
                           ) : null;
                         })()}
                         <div className="mt-1 text-sm text-neutral-600">
