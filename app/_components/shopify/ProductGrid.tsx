@@ -111,7 +111,7 @@ function ProductCard({
   const effectiveVariantId =
     foundVariant ??
     (selectedSize && product.variants?.length === 1 ? product.variants[0].id : null) ??
-    product.firstVariantId;
+    (sizeValuesRaw.length === 0 ? product.firstVariantId : null);
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
