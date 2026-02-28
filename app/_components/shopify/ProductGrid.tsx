@@ -12,6 +12,12 @@ import type { CartContextValue } from "../cart/CartContext";
 import { useCart } from "../cart/CartContext";
 import ButtonCta from "./ButtonCta";
 
+function isBagProduct(handle: string, title: string): boolean {
+  const h = handle.toLowerCase();
+  const t = (title ?? "").toLowerCase();
+  return h.includes("bag") || t.includes("bag") || h.includes("tasche") || t.includes("tasche");
+}
+
 function formatPrice(amount: number, currencyCode: string) {
   return new Intl.NumberFormat("de-DE", {
     style: "currency",
@@ -289,8 +295,8 @@ export default function ProductGrid({
 }: {
   products: ShopifyProduct[];
   showCount?: boolean;
-  /** true = alle Produkte mit Größen zeigen; false = nie; (product) => boolean = pro Produkt */
-  showSizeSelection?: boolean | ((product: ShopifyProduct) => boolean);
+  /** true = Größen für Nicht-Bags zeigen; false = nie Größen zeigen (z.B. Bags-Seite) */
+  showSizeSelection?: boolean;
 }) {
   const cart = useCart();
 
@@ -306,7 +312,7 @@ export default function ProductGrid({
   }
 
   const getShowSize = (p: ShopifyProduct): boolean =>
-    typeof showSizeSelection === "function" ? showSizeSelection(p) : showSizeSelection;
+    showSizeSelection ? !isBagProduct(p.handle, p.title ?? "") : false;
 
   return (
     <div className="mt-8">

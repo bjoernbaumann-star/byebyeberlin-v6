@@ -3,12 +3,6 @@ import ShopNav from "../_components/ShopNav";
 import ProductGrid from "../_components/shopify/ProductGrid";
 import { getStorefrontProductsSafe } from "../../lib/shopify";
 
-function isBagProduct(handle: string, title: string): boolean {
-  const h = handle.toLowerCase();
-  const t = (title ?? "").toLowerCase();
-  return h.includes("bag") || t.includes("bag") || h.includes("tasche") || t.includes("tasche");
-}
-
 export default async function KollektionPage() {
   const products = await getStorefrontProductsSafe(50);
 
@@ -28,10 +22,7 @@ export default async function KollektionPage() {
           </p>
 
           <div className="mt-10">
-            <ProductGrid
-              products={products}
-              showSizeSelection={(p) => !isBagProduct(p.handle, p.title ?? "")}
-            />
+            <ProductGrid products={products} />
           </div>
         </section>
       </main>

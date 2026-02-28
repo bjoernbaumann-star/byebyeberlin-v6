@@ -12,12 +12,6 @@ function cn(...parts: Array<string | false | undefined | null>) {
   return parts.filter(Boolean).join(" ");
 }
 
-function isBagProduct(handle: string, title: string): boolean {
-  const h = handle.toLowerCase();
-  const t = (title ?? "").toLowerCase();
-  return h.includes("bag") || t.includes("bag") || h.includes("tasche") || t.includes("tasche");
-}
-
 function HeroMarquee({
   text,
   reducedMotion,
@@ -372,25 +366,57 @@ export default function LandingPage() {
             opacity={marqueeOpacity}
           />
 
-          <div className="absolute inset-x-0 bottom-6 z-20 flex justify-center gap-6 px-4 sm:gap-24 md:gap-32 lg:gap-40">
-            <Link
-              href="/bags"
-              className="font-sangbleu text-white text-xs font-medium uppercase tracking-[0.15em] hover:font-bold hover:opacity-80 transition-opacity sm:tracking-[0.2em] sm:text-base shrink-0"
-            >
-              BAGS
-            </Link>
+          <div className="absolute inset-x-0 bottom-6 z-[50] flex items-center justify-center gap-2 px-3 sm:gap-24 sm:px-4 md:gap-32 lg:gap-40">
+            <img
+              src="/x.svg"
+              alt=""
+              width={20}
+              height={20}
+              className="h-4 w-4 shrink-0 animate-spin brightness-0 invert sm:h-5 sm:w-5"
+              aria-hidden
+            />
             <Link
               href="/clothes"
               className="font-sangbleu text-white text-xs font-medium uppercase tracking-[0.15em] hover:font-bold hover:opacity-80 transition-opacity sm:tracking-[0.2em] sm:text-base shrink-0"
             >
               CLOTHES
             </Link>
+            <img
+              src="/x.svg"
+              alt=""
+              width={20}
+              height={20}
+              className="h-4 w-4 shrink-0 animate-spin brightness-0 invert sm:h-5 sm:w-5"
+              aria-hidden
+            />
+            <Link
+              href="/bags"
+              className="font-sangbleu text-white text-xs font-medium uppercase tracking-[0.15em] hover:font-bold hover:opacity-80 transition-opacity sm:tracking-[0.2em] sm:text-base shrink-0"
+            >
+              BAGS
+            </Link>
+            <img
+              src="/x.svg"
+              alt=""
+              width={20}
+              height={20}
+              className="h-4 w-4 shrink-0 animate-spin brightness-0 invert sm:h-5 sm:w-5"
+              aria-hidden
+            />
             <Link
               href="/accessoires"
               className="font-sangbleu text-white text-xs font-medium uppercase tracking-[0.15em] hover:font-bold hover:opacity-80 transition-opacity sm:tracking-[0.2em] sm:text-base shrink-0"
             >
               ACCESSOIRES
             </Link>
+            <img
+              src="/x.svg"
+              alt=""
+              width={20}
+              height={20}
+              className="h-4 w-4 shrink-0 animate-spin brightness-0 invert sm:h-5 sm:w-5"
+              aria-hidden
+            />
           </div>
         </section>
 
@@ -419,11 +445,7 @@ export default function LandingPage() {
                 />
               </div>
             ) : (
-              <ProductGrid
-                products={products}
-                showCount={false}
-                showSizeSelection={(p) => !isBagProduct(p.handle, p.title ?? "")}
-              />
+              <ProductGrid products={products} showCount={false} />
             )}
           </div>
         </section>

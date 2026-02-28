@@ -555,9 +555,21 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
                 initial={{ scale: 1 }}
                 animate={{ scale: [1, 1.12, 1] }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
-                className="flex items-center gap-2"
+                className="relative flex items-center gap-2"
               >
-                <IconBag className="h-6 w-6 shrink-0" />
+                <span className="relative inline-flex shrink-0">
+                  <IconBag className="h-[25.2px] w-[25.2px]" />
+                  {cart.count > 0 && (
+                    <span
+                      className={cn(
+                        "absolute inset-0 flex items-center justify-center pt-[7px] font-sangbleu text-[10px] font-bold tabular-nums sm:hidden",
+                        useTransparent ? "text-white" : "text-neutral-950",
+                      )}
+                    >
+                      {cart.count}
+                    </span>
+                  )}
+                </span>
                 <span className="hidden sm:inline font-sangbleu text-[14.4px] font-bold uppercase tracking-[0.2em] leading-none">
                   BAG
                 </span>
@@ -568,7 +580,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 400, damping: 25 }}
                     className={cn(
-                      "tabular-nums font-sangbleu text-[11.5px] font-bold leading-none not-italic",
+                      "hidden sm:inline tabular-nums font-sangbleu text-[11.5px] font-bold leading-none not-italic",
                       useTransparent ? "text-white" : "text-neutral-950",
                     )}
                   >
