@@ -79,16 +79,19 @@ function IconSearch(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-function IconMenu(props: React.SVGProps<SVGSVGElement>) {
+function IconMenu({
+  className,
+  light,
+  ...props
+}: React.ImgHTMLAttributes<HTMLImageElement> & { light?: boolean }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
-      <path
-        d="M4 7h16M4 12h16M4 17h16"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
+    <img
+      src="/hamburger.svg"
+      alt=""
+      aria-hidden
+      className={cn(className, "object-contain", light ? "brightness-0 invert" : "brightness-0")}
+      {...props}
+    />
   );
 }
 
@@ -367,7 +370,10 @@ function MenuDrawer({
                   className="flex w-fit items-center gap-2 text-neutral-950 transition-colors hover:font-bold hover:text-neutral-700"
                   aria-label={cartCount > 0 ? `Bag (${cartCount} items)` : "Bag"}
                 >
-                  <IconBag style={{ width: MENU_DRAWER.utility.iconSize, height: MENU_DRAWER.utility.iconSize }} />
+                  <IconBag
+                    className="shrink-0"
+                    style={{ width: MENU_DRAWER.utility.iconSize, height: MENU_DRAWER.utility.iconSize }}
+                  />
                   <span
                     className="font-sangbleu-medium uppercase"
                     style={{ fontSize: MENU_DRAWER.utility.fontSize, letterSpacing: MENU_DRAWER.utility.letterSpacing }}
@@ -543,11 +549,54 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
             BYE BYE BERLIN
           </Link>
 
-          <div className="absolute right-2 z-20 flex items-center gap-1 sm:right-4 sm:gap-2 lg:right-6 lg:gap-4">
-<button
+          {/* Mobile: cart left, hamburger right – icons only, no text */}
+          <button
+            type="button"
+            onClick={() => setCartOpen(true)}
+            className={cn(
+              "absolute left-2 z-20 inline-flex items-center p-2 hover:opacity-70 sm:hidden",
+              !isHome && "left-12",
+            )}
+            aria-label="Shopping bag"
+          >
+            <motion.span
+              key={cart.addTrigger}
+              initial={{ scale: 1 }}
+              animate={{ scale: [1, 1.12, 1] }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="relative flex items-center justify-center"
+            >
+              <span className="relative inline-flex shrink-0">
+                <IconBag className="h-8 w-8" />
+                {cart.count > 0 && (
+                  <span
+                    className={cn(
+                      "absolute inset-0 flex items-center justify-center pt-2.5 font-sangbleu text-[11px] font-bold tabular-nums",
+                      useTransparent ? "text-white" : "text-neutral-950",
+                    )}
+                  >
+                    {cart.count}
+                  </span>
+                )}
+              </span>
+            </motion.span>
+          </button>
+          <div className="absolute right-2 z-20 flex items-center sm:hidden">
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              className="inline-flex items-center p-2 hover:opacity-70"
+            >
+              <IconMenu className="h-[2.2rem] w-[2.2rem] shrink-0" light={useTransparent} />
+            </button>
+          </div>
+
+          {/* Desktop: cart + hamburger together on right – icons only */}
+          <div className="absolute right-2 z-20 hidden items-center gap-1 sm:right-4 sm:flex sm:gap-2 lg:right-6 lg:gap-4">
+            <button
               type="button"
               onClick={() => setCartOpen(true)}
-              className="relative inline-flex items-center gap-1.5 p-2 hover:opacity-70"
+              className="relative inline-flex items-center p-2 hover:opacity-70"
               aria-label="Shopping bag"
             >
               <motion.span
@@ -555,14 +604,14 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
                 initial={{ scale: 1 }}
                 animate={{ scale: [1, 1.12, 1] }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
-                className="relative flex items-center gap-2"
+                className="relative flex items-center justify-center"
               >
                 <span className="relative inline-flex shrink-0">
-                  <IconBag className="h-[25.2px] w-[25.2px]" />
+                  <IconBag className="h-8 w-8" />
                   {cart.count > 0 && (
                     <span
                       className={cn(
-                        "absolute inset-0 flex items-center justify-center pt-[7px] font-sangbleu text-[10px] font-bold tabular-nums sm:hidden",
+                        "absolute inset-0 flex items-center justify-center pt-2.5 font-sangbleu text-[11px] font-bold tabular-nums",
                         useTransparent ? "text-white" : "text-neutral-950",
                       )}
                     >
@@ -570,34 +619,14 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
                     </span>
                   )}
                 </span>
-                <span className="hidden sm:inline font-sangbleu text-[14.4px] font-bold uppercase tracking-[0.2em] leading-none">
-                  BAG
-                </span>
-                {cart.count > 0 && (
-                  <motion.span
-                    key={cart.count}
-                    initial={{ scale: 1.2 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                    className={cn(
-                      "hidden sm:inline tabular-nums font-sangbleu text-[11.5px] font-bold leading-none not-italic",
-                      useTransparent ? "text-white" : "text-neutral-950",
-                    )}
-                  >
-                    ({cart.count})
-                  </motion.span>
-                )}
               </motion.span>
             </button>
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
-              className="inline-flex items-center gap-2 px-2 py-2 hover:opacity-70"
+              className="inline-flex items-center p-2 hover:opacity-70"
             >
-              <IconMenu className="h-6 w-6 shrink-0" />
-              <span className="hidden sm:inline font-sangbleu text-[14.4px] font-bold uppercase tracking-[0.2em] leading-none">
-                Menu
-              </span>
+              <IconMenu className="h-[2.2rem] w-[2.2rem] shrink-0" light={useTransparent} />
             </button>
           </div>
         </div>

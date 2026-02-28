@@ -21,7 +21,7 @@ export default function ButtonCta({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="-40 0 729.29 78.82"
+      viewBox="-55 0 759.29 78.82"
       className={cn("block h-auto w-full", invisible && "invisible", className)}
       style={{ overflow: "visible" }}
       aria-hidden
@@ -38,7 +38,7 @@ export default function ButtonCta({
         `}</style>
       </defs>
       <g id="Ebene_1-2">
-        <g transform="translate(-40,0)">
+        <g transform="translate(-55,0)">
           <g className="star-spin">
             <polygon
               className="btn-cls-4"
@@ -46,7 +46,7 @@ export default function ButtonCta({
             />
           </g>
         </g>
-        <g transform="translate(40,0)">
+        <g transform="translate(55,0)">
           <g className="star-spin-right">
             <polygon
               className="btn-cls-4"
