@@ -35,7 +35,7 @@ export default async function BagsPage() {
           </p>
 
           <div className="mt-10">
-            <ProductGrid products={products} />
+            <ProductGrid products={products} showSizeSelection={false} />
           </div>
         </section>
       </main>

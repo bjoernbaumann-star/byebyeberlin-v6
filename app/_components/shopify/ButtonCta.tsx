@@ -10,11 +10,14 @@ export default function ButtonCta({
   className,
   invisible,
   isHovered,
+  label,
 }: {
   className?: string;
   invisible?: boolean;
   isHovered?: boolean;
+  label?: "add" | "checkout";
 }) {
+  const text = label === "checkout" ? "CHECK OUT" : "YES, I'LL TAKE IT";
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -50,27 +53,9 @@ export default function ButtonCta({
             />
           </g>
         </g>
-        <g style={{ opacity: isHovered ? 0 : 1, transition: "opacity 0.2s" }}>
-          <text className="btn-cls-1" transform="translate(83.86 57.15)">
-            <tspan x="0" y="0">Y</tspan>
-            <tspan x="39.73" y="0">E</tspan>
-            <tspan x="73.44" y="0">S</tspan>
-            <tspan x="107.33" y="0">, </tspan>
-            <tspan x="138.21" y="0">I</tspan>
-            <tspan x="156.33" y="0">&apos;</tspan>
-            <tspan x="168.19" y="0">L</tspan>
-            <tspan x="200.33" y="0">L </tspan>
-            <tspan x="247.82" y="0">T</tspan>
-            <tspan x="280.37" y="0">A</tspan>
-            <tspan x="320.37" y="0">K</tspan>
-            <tspan x="364.01" y="0">E </tspan>
-            <tspan x="413.7" y="0">I</tspan>
-            <tspan x="431.31" y="0">T</tspan>
-          </text>
-        </g>
-        <g style={{ opacity: isHovered ? 1 : 0, transition: "opacity 0.2s", pointerEvents: "none" }}>
+        <g style={{ opacity: 1 }}>
           <text className="btn-cls-1" x="324.65" y="57.15" textAnchor="middle">
-            F* YEEEEEES
+            {text}
           </text>
         </g>
       </g>

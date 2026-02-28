@@ -54,7 +54,7 @@ export default function CartDrawer({
 
           <motion.aside
             className={cn(
-              "absolute right-0 top-0 h-full w-full max-w-md",
+              "absolute right-0 top-0 flex h-full w-full max-w-md flex-col",
               "bg-white text-neutral-950",
               "shadow-[0_40px_120px_-70px_rgba(0,0,0,.8)]",
             )}
@@ -65,7 +65,7 @@ export default function CartDrawer({
             exit={{ x: "100%" }}
             transition={{ duration: 0.45, ease: [0.2, 0.8, 0.2, 1] }}
           >
-            <div className="border-b border-black/10">
+            <div className="shrink-0 border-b border-black/10">
               <div className="flex items-center justify-between px-5 py-5">
                 <div>
                   <div className="font-sangbleu text-[11px] uppercase tracking-[0.35em] text-neutral-700">
@@ -100,7 +100,7 @@ export default function CartDrawer({
               </div>
             </div>
 
-            <div className="max-h-[calc(100vh-12rem)] overflow-y-auto px-5 py-6">
+            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-6">
               {cart.lines.length === 0 ? (
                 <div className="rounded-2xl border border-black/10 bg-white p-5 text-sm text-neutral-700">
                   Your bag is empty.
@@ -173,8 +173,10 @@ export default function CartDrawer({
                   ))}
                 </div>
               )}
+            </div>
 
-              <div className="mt-5 rounded-2xl border border-black/10 bg-white p-5">
+            <div className="shrink-0 border-t border-black/10 px-5 py-5">
+              <div className="rounded-2xl border border-black/10 bg-white p-5">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-neutral-600">Subtotal</span>
                   <span className="font-medium">
@@ -225,6 +227,7 @@ export default function CartDrawer({
                       className="scale-[0.7] transition-[filter] duration-200 invert group-hover/btn:invert-0"
                       invisible={checkoutLoading}
                       isHovered={isHovered}
+                      label="checkout"
                     />
                     {checkoutLoading && (
                       <span className="absolute inset-0 flex items-center justify-center font-sangbleu text-[16px] font-bold leading-none text-white">

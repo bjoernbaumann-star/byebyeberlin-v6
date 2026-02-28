@@ -118,15 +118,11 @@ export default async function ProductPage({
               <h1 className="font-sangbleu text-2xl font-bold tracking-tight text-neutral-950 md:text-3xl">
                 {product?.title ?? "Produkt"}
               </h1>
-              {priceStr != null ? (
-                <p className="font-sangbleu mt-4 text-xl text-neutral-950">{priceStr}</p>
-              ) : (
-                <p className="font-sangbleu mt-4 text-xl text-neutral-500">Preis auf Anfrage</p>
-              )}
 
               <ProductDetailAddToCart
                 product={product}
-                className="mt-8"
+                priceStr={priceStr ?? "Preis auf Anfrage"}
+                className="mt-4"
               />
 
               {(product?.descriptionHtml ?? product?.description) && (

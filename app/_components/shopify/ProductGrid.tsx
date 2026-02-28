@@ -6,6 +6,7 @@ import Link from "next/link";
 function cn(...parts: Array<string | false | undefined | null>) {
   return parts.filter(Boolean).join(" ");
 }
+import { sortSizeValues } from "../../../lib/shopify";
 import type { ShopifyProduct } from "../../../lib/shopify-types";
 import type { CartContextValue } from "../cart/CartContext";
 import { useCart } from "../cart/CartContext";
@@ -44,9 +45,11 @@ function findVariantByOption(
 function ProductCard({
   product,
   cart,
+  showSizeSelection = true,
 }: {
   product: ShopifyProduct;
   cart: CartContextValue;
+  showSizeSelection?: boolean;
 }) {
   const [justAdded, setJustAdded] = React.useState(false);
   const [selectedSize, setSelectedSize] = React.useState<string | null>(null);
@@ -59,6 +62,7 @@ function ProductCard({
       n === "size" ||
       /^gr[oö]s?se$/.test(n) ||
       /^gr[oö][sß]e$/.test(n) ||
+      n === "taille" ||
       n.includes("size") ||
       n.includes("größe") ||
       n.includes("grösse") ||
@@ -66,13 +70,42 @@ function ProductCard({
     );
   }
 
+  function looksLikeSizeValue(val: string | undefined): boolean {
+    if (!val || !val.trim()) return false;
+    const v = val.trim().toLowerCase();
+    if (v === "default title") return false;
+    const letterSizes = ["xxs", "xs", "s", "m", "l", "xl", "xxl", "2xl", "3xl", "4xl"];
+    if (letterSizes.includes(v)) return true;
+    if (/^one\s*size$|^os$|^single\s*size$/i.test(v)) return true;
+    const num = parseInt(v, 10);
+    if (!isNaN(num) && num >= 26 && num <= 62) return true; // EU/DE Konfektionsgrößen
+    const wordSizes = ["small", "medium", "large", "extra small", "extra large"];
+    if (wordSizes.includes(v)) return true;
+    return false;
+  }
+
+  function isTitleOptionWithRealValues(o: { name?: string; values?: string[] } | null): boolean {
+    if (!o) return false;
+    const name = (o.name ?? "").trim().toLowerCase();
+    const vals = o.values?.filter(Boolean) ?? [];
+    return name === "title" && vals.length > 0 && vals.some((v) => v?.trim() !== "Default Title");
+  }
+
+  const variants = product.variants ?? [];
+
   const sizeOption =
     product.options?.find((o) => isSizeOptionName(o?.name)) ??
+    product.options?.find((o) => isTitleOptionWithRealValues(o)) ??
+    product.options?.find((o) => {
+      const vals = o?.values ?? [];
+      return vals.length > 0 && vals.some((v) => looksLikeSizeValue(v));
+    }) ??
     (() => {
       const names = new Set<string>();
-      for (const v of product.variants ?? []) {
+      for (const v of variants) {
         for (const o of v.selectedOptions ?? []) {
-          if (isSizeOptionName(o.name)) names.add(o.name);
+          if (o.value === "Default Title") continue;
+          if (isSizeOptionName(o.name) || looksLikeSizeValue(o.value)) names.add(o.name);
         }
       }
       const name = names.values().next().value;
@@ -84,34 +117,69 @@ function ProductCard({
     (() => {
       const fromVariants = new Set<string>();
       const optName = sizeOption?.name?.toLowerCase();
-      for (const v of product.variants ?? []) {
+      for (const v of variants) {
         const opt = v.selectedOptions?.find(
           (o) =>
-            (optName && o.name?.toLowerCase() === optName) || isSizeOptionName(o.name),
+            (optName && o.name?.toLowerCase() === optName) ||
+            isSizeOptionName(o.name) ||
+            looksLikeSizeValue(o.value),
         );
-        if (opt?.value) fromVariants.add(opt.value);
+        if (opt?.value && opt.value !== "Default Title") fromVariants.add(opt.value);
       }
-      return Array.from(fromVariants).sort();
+      return sortSizeValues(Array.from(fromVariants));
     })() ??
     [];
 
-  const sizeValues =
-    sizeValuesRaw.length > 0 ? sizeValuesRaw : ["S", "M", "L", "XL"];
-  const effectiveSizeOption =
-    sizeOption ?? (sizeValuesRaw.length === 0 ? { name: "Size", values: sizeValues } : sizeOption);
+  const sizeOptionFromVariantsOnly =
+    sizeValuesRaw.length > 0
+      ? null
+      : (() => {
+          const optionValues = new Map<string, Set<string>>();
+          for (const v of variants) {
+            for (const o of v.selectedOptions ?? []) {
+              if (o.name === "Title" && o.value === "Default Title") continue;
+              const set = optionValues.get(o.name) ?? new Set();
+              set.add(o.value);
+              optionValues.set(o.name, set);
+            }
+          }
+          for (const [optName, vals] of optionValues) {
+            const arr = Array.from(vals).filter(Boolean);
+            if (arr.length === 0) continue;
+            const isTitleWithReal = optName.toLowerCase() === "title" && !arr.every((a) => a?.trim() === "Default Title");
+            const hasSizeLikeValue = arr.some((a) => looksLikeSizeValue(a));
+            const hasSizeLikeName = isSizeOptionName(optName);
+            if (isTitleWithReal || hasSizeLikeValue || hasSizeLikeName) {
+              return { name: optName, values: sortSizeValues(arr) };
+            }
+          }
+          return null;
+        })();
+
+  const effectiveSizeOption = sizeOption ?? sizeOptionFromVariantsOnly;
+  const sizeValues = sortSizeValues(
+    sizeValuesRaw.length > 0 ? sizeValuesRaw : (sizeOptionFromVariantsOnly?.values ?? []),
+  );
+  const hasSizeOptions = showSizeSelection && sizeValues.length > 0;
+
+  React.useEffect(() => {
+    if (sizeValues.length >= 1 && effectiveSizeOption) {
+      setSelectedSize(sizeValues[0] ?? null);
+    }
+  }, [sizeValues.length, sizeValues[0], effectiveSizeOption?.name]);
   const foundVariant =
-    selectedSize && effectiveSizeOption
+    hasSizeOptions && selectedSize && effectiveSizeOption
       ? findVariantByOption(
           product,
           effectiveSizeOption.name,
           selectedSize,
-          sizeValuesRaw.length === 0 ? isSizeOptionName : undefined,
+          isSizeOptionName,
         )
       : null;
   const effectiveVariantId =
     foundVariant ??
-    (selectedSize && product.variants?.length === 1 ? product.variants[0].id : null) ??
-    (sizeValuesRaw.length === 0 ? product.firstVariantId : null);
+    (hasSizeOptions && selectedSize && product.variants?.length === 1 ? product.variants[0].id : null) ??
+    (!hasSizeOptions ? product.firstVariantId : null);
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -130,7 +198,7 @@ function ProductCard({
     <article className="group overflow-hidden !rounded-none !border-0 !shadow-none ring-0">
       <div className="relative">
         <Link href={`/produkt/${product.handle}`} className="block overflow-hidden !rounded-none">
-          <div className="product-card-image relative aspect-[3/4] overflow-hidden !rounded-none !border-0 bg-transparent p-0">
+          <div className="product-card-image relative aspect-square overflow-hidden !rounded-none !border-0 bg-transparent p-0">
             {images[0]?.url ? (
               <>
                 <img
@@ -158,32 +226,35 @@ function ProductCard({
           </div>
         </Link>
       </div>
-      <Link href={`/produkt/${product.handle}`} className="mt-2 block">
-        <p className="text-sm text-neutral-600">{priceStr}</p>
-      </Link>
-      {sizeValues.length > 0 && (
-        <div className="mt-2 flex flex-wrap gap-1">
-          {sizeValues.map((val) => (
-            <button
-              key={val}
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setSelectedSize(val);
-              }}
-              className={cn(
-                "rounded-none border px-1.5 py-0.5 text-[10px] font-medium transition-colors",
-                selectedSize === val
-                  ? "border-neutral-950 bg-neutral-950 text-white"
-                  : "border-neutral-300 bg-white text-neutral-700 hover:border-neutral-500",
-              )}
-            >
-              {val}
-            </button>
-          ))}
-        </div>
-      )}
+      <div className="mt-2 flex flex-nowrap items-center justify-between gap-x-2 md:flex-wrap md:gap-y-1">
+        <Link href={`/produkt/${product.handle}`} className="block shrink-0">
+          <p className="text-sm text-neutral-600">{priceStr}</p>
+        </Link>
+        {hasSizeOptions && sizeValues.length > 1 && (
+          <div className="flex flex-wrap justify-end gap-1 shrink-0 scale-90 origin-right md:scale-100 md:origin-center md:justify-start">
+            {sizeValues.map((val) => (
+              <button
+                key={val}
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setSelectedSize(val);
+                }}
+                className={cn(
+                  "rounded-none border w-[22px] h-[18px] flex items-center justify-center font-medium transition-colors",
+                  /^(XXS|XS|XL|XXL|2XL|3XL|4XL)$/i.test(val.trim()) ? "text-[8px]" : "text-[10px]",
+                  selectedSize === val
+                    ? "border-neutral-950 bg-neutral-950 text-white"
+                    : "border-neutral-300 bg-white text-neutral-700 hover:border-neutral-500",
+                )}
+              >
+                {val}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
       <button
         type="button"
         onClick={handleAdd}
@@ -211,9 +282,12 @@ function ProductCard({
 export default function ProductGrid({
   products,
   showCount = true,
+  showSizeSelection = true,
 }: {
   products: ShopifyProduct[];
   showCount?: boolean;
+  /** true = alle Produkte mit Größen zeigen; false = nie; (product) => boolean = pro Produkt */
+  showSizeSelection?: boolean | ((product: ShopifyProduct) => boolean);
 }) {
   const cart = useCart();
 
@@ -228,6 +302,9 @@ export default function ProductGrid({
     );
   }
 
+  const getShowSize = (p: ShopifyProduct): boolean =>
+    typeof showSizeSelection === "function" ? showSizeSelection(p) : showSizeSelection;
+
   return (
     <div className="mt-8">
       {showCount && (
@@ -240,7 +317,7 @@ export default function ProductGrid({
 
       <div className="grid grid-cols-2 gap-x-[10px] gap-y-[40px] md:grid-cols-3 lg:grid-cols-4">
         {products.map((p) => (
-          <ProductCard key={p.id} product={p} cart={cart} />
+          <ProductCard key={p.id} product={p} cart={cart} showSizeSelection={getShowSize(p)} />
         ))}
       </div>
     </div>

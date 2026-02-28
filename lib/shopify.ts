@@ -1,5 +1,20 @@
 import type { ShopifyProduct } from "./shopify-types";
 
+/** Sort size values: S, M, L, XL, then XXS/XS, XXL/2XL, numeric, One Size, etc. */
+export function sortSizeValues(values: string[]): string[] {
+  const order = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "2XL", "3XL", "4XL"];
+  const byIndex = (v: string) => {
+    const upper = v.trim().toUpperCase();
+    const i = order.findIndex((o) => o === upper || upper === o);
+    if (i >= 0) return i;
+    const num = parseInt(v.trim(), 10);
+    if (!isNaN(num) && num >= 26 && num <= 62) return 100 + num;
+    if (/^one\s*size$|^os$/i.test(v.trim())) return 200;
+    return 300;
+  };
+  return [...values].sort((a, b) => byIndex(a) - byIndex(b));
+}
+
 type StorefrontResponse<T> = {
   data?: T;
   errors?: Array<{ message: string }>;

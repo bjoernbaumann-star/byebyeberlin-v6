@@ -12,6 +12,12 @@ function cn(...parts: Array<string | false | undefined | null>) {
   return parts.filter(Boolean).join(" ");
 }
 
+function isBagProduct(handle: string, title: string): boolean {
+  const h = handle.toLowerCase();
+  const t = (title ?? "").toLowerCase();
+  return h.includes("bag") || t.includes("bag") || h.includes("tasche") || t.includes("tasche");
+}
+
 function HeroMarquee({
   text,
   reducedMotion,
@@ -48,7 +54,7 @@ function HeroMarquee({
           {Array.from({ length: 8 }).map((_, i) => (
             <span
               key={`a-${i}`}
-              className="font-sangbleu text-[21vw] font-bold leading-none text-white whitespace-nowrap"
+              className="font-sangbleu text-[84vw] font-bold leading-none text-white whitespace-nowrap md:text-[21vw]"
               style={{ letterSpacing: "-0.02em" }}
             >
               {text}
@@ -59,7 +65,7 @@ function HeroMarquee({
           {Array.from({ length: 8 }).map((_, i) => (
             <span
               key={`b-${i}`}
-              className="font-sangbleu text-[21vw] font-bold leading-none text-white whitespace-nowrap"
+              className="font-sangbleu text-[84vw] font-bold leading-none text-white whitespace-nowrap md:text-[21vw]"
               style={{ letterSpacing: "-0.02em" }}
             >
               {text}
@@ -303,7 +309,7 @@ export default function LandingPage() {
             );
           })()}
           <div
-            className="absolute inset-0 overflow-hidden animate-spin-y transition-all duration-300"
+            className="absolute inset-0 overflow-visible animate-spin-y transition-all duration-300"
             onClick={(e) => e.stopPropagation()}
           >
             {Array.from({ length: leoCount }).map((_, i) => {
@@ -319,7 +325,7 @@ export default function LandingPage() {
               return (
                 <div
                   key={i}
-                  className="absolute w-[60vw] h-auto flex items-center justify-center"
+                  className="absolute w-[180vw] h-auto flex items-center justify-center"
                   style={{
                     left: `${left}%`,
                     top: `${top}%`,
@@ -330,7 +336,7 @@ export default function LandingPage() {
                     ref={i === 0 ? leoObjectRef : undefined}
                     data="/leo.svg"
                     type="image/svg+xml"
-                    className="w-[60vw] h-auto object-contain block pointer-events-none"
+                    className="w-[180vw] h-auto object-contain block pointer-events-none"
                     aria-hidden
                   />
                 </div>
@@ -344,7 +350,7 @@ export default function LandingPage() {
               ref={leoReverseObjectRef}
               data="/leo-reverse.svg"
               type="image/svg+xml"
-              className="w-[60vw] h-auto object-contain block pointer-events-none"
+              className="w-[180vw] h-auto object-contain block pointer-events-none"
               aria-hidden
             />
           </div>
@@ -449,7 +455,11 @@ export default function LandingPage() {
                 />
               </div>
             ) : (
-              <ProductGrid products={products} showCount={false} />
+              <ProductGrid
+                products={products}
+                showCount={false}
+                showSizeSelection={(p) => !isBagProduct(p.handle, p.title ?? "")}
+              />
             )}
           </div>
         </section>
