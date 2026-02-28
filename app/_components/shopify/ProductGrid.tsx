@@ -228,7 +228,7 @@ function ProductCard({
       </div>
       <div className="mt-2 flex flex-nowrap items-center justify-between gap-x-2 md:flex-wrap md:gap-y-1">
         <Link href={`/produkt/${product.handle}`} className="block shrink-0">
-          <p className="text-sm text-neutral-600">{priceStr}</p>
+          <p className="text-[12.6px] text-neutral-600">{priceStr}</p>
         </Link>
         {hasSizeOptions && sizeValues.length > 1 && (
           <div className="flex flex-wrap justify-end gap-1 shrink-0 scale-90 origin-right md:scale-100 md:origin-center md:justify-start">
@@ -261,11 +261,14 @@ function ProductCard({
         disabled={!effectiveVariantId}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="group/btn relative mt-2 flex w-full items-center justify-center rounded-none border border-black bg-transparent py-1 transition-[filter,background-color] duration-200 hover:bg-neutral-950 disabled:opacity-50"
+        className={cn(
+          "group/btn relative mt-2 flex w-full items-center justify-center rounded-none border border-black py-1 transition-[filter,background-color] duration-200 disabled:opacity-50",
+          justAdded ? "bg-neutral-950" : "bg-transparent md:hover:bg-neutral-950",
+        )}
         aria-label={justAdded ? "In den Warenkorb gelegt" : "In den Warenkorb"}
       >
         <ButtonCta
-          className="scale-[0.7] transition-[filter] duration-200 invert group-hover/btn:invert-0"
+          className="scale-[0.7] transition-[filter] duration-200 invert md:group-hover/btn:invert-0"
           invisible={justAdded}
           isHovered={isHovered}
         />

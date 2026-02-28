@@ -156,14 +156,14 @@ export default function CartDrawer({
                           <button
                             type="button"
                             onClick={() => cart.setQty(l.product.id, l.qty - 1, l.variantId ?? l.product.firstVariantId)}
-                            className="rounded-full border border-black/10 bg-white px-3 py-1 text-xs hover:bg-neutral-50"
+                            className="rounded-none border border-black/10 bg-white px-3 py-1 text-xs hover:bg-neutral-50"
                           >
                             −
                           </button>
                           <button
                             type="button"
                             onClick={() => cart.setQty(l.product.id, l.qty + 1, l.variantId ?? l.product.firstVariantId)}
-                            className="rounded-full border border-black/10 bg-white px-3 py-1 text-xs hover:bg-neutral-50"
+                            className="rounded-none border border-black/10 bg-white px-3 py-1 text-xs hover:bg-neutral-50"
                           >
                             +
                           </button>

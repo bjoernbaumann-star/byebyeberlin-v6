@@ -112,8 +112,8 @@ const MENU_DRAWER = {
   },
   titleBlockPaddingTop: 24,  // padding above "BYE BYE BERLIN"
   closeButton: {
-    top: 15,           // 5px up from 20
-    right: 24,
+    top: 20,
+    right: 20,
     size: 62,          // 10% bigger than 56
     iconSize: 48,      // 10% bigger than 44
   },

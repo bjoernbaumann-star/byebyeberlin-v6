@@ -250,7 +250,7 @@ export function ProductDetailAddToCart({
         <div className="font-sangbleu mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
           {priceStr != null && (
             <p
-              className={`font-sangbleu text-xl ${priceStr === "Preis auf Anfrage" ? "text-neutral-500" : "text-neutral-950"}`}
+              className={`font-sangbleu text-lg ${priceStr === "Preis auf Anfrage" ? "text-neutral-500" : "text-neutral-950"}`}
             >
               {priceStr}
             </p>
@@ -288,11 +288,13 @@ export function ProductDetailAddToCart({
         disabled={!canAdd}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="group/btn relative flex w-full items-center justify-center rounded-none border border-black bg-transparent py-1 transition-[filter,background-color] duration-200 hover:bg-neutral-950 disabled:opacity-50"
+        className={`group/btn relative flex w-full items-center justify-center rounded-none border border-black py-1 transition-[filter,background-color] duration-200 disabled:opacity-50 ${
+          justAdded ? "bg-neutral-950" : "bg-transparent md:hover:bg-neutral-950"
+        }`}
         aria-label={justAdded ? "In den Warenkorb gelegt" : "Zum Warenkorb hinzufügen"}
       >
         <ButtonCta
-          className="scale-[0.7] transition-[filter] duration-200 invert group-hover/btn:invert-0"
+          className="scale-[0.7] transition-[filter] duration-200 invert md:group-hover/btn:invert-0"
           invisible={justAdded}
           isHovered={isHovered}
         />

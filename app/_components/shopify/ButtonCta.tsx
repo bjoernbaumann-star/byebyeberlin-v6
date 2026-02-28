@@ -34,6 +34,7 @@ export default function ButtonCta({
           .star-spin{transform-origin:39px 38px;animation:star-spin 3s linear infinite}
           .star-spin-right{transform-origin:607px 38px;animation:star-spin 3s linear infinite}
           @media(prefers-reduced-motion:reduce){.star-spin,.star-spin-right{animation:none}}
+          @media(max-width:767px){.btn-cls-1{font-size:64.55px}}
         `}</style>
       </defs>
       <g id="Ebene_1-2">

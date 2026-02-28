@@ -222,14 +222,6 @@ export default function LandingPage() {
   const { scrollY } = useScroll();
 
   const marqueeOpacity = useTransform(scrollY, [0, 600], [1, 0]) as any;
-  const [showDoNotPress, setShowDoNotPress] = React.useState(false);
-  React.useEffect(() => {
-    const check = () =>
-      setShowDoNotPress(window.scrollY > 0.7 * window.innerHeight);
-    check();
-    window.addEventListener("scroll", check, { passive: true });
-    return () => window.removeEventListener("scroll", check);
-  }, []);
 
   const [products, setProducts] = React.useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -356,34 +348,6 @@ export default function LandingPage() {
           </div>
         </div>
       )}
-      {showDoNotPress && (
-        <button
-          type="button"
-          onClick={async () => {
-            const needsPermission =
-              typeof DeviceOrientationEvent !== "undefined" &&
-              typeof (DeviceOrientationEvent as any).requestPermission === "function";
-            if (needsPermission) {
-              try {
-                await (DeviceOrientationEvent as any).requestPermission();
-              } catch {
-                // Nutzer hat abgelehnt oder Fehler – Overlay trotzdem öffnen
-              }
-            }
-            setIsChaos((c) => !c);
-            setIsLeoExpanded(true);
-          }}
-          className="group fixed bottom-4 right-4 z-[150] p-2 transition-colors hover:bg-black"
-          aria-label="Do not press"
-        >
-          <object
-            data="/donotpress.svg"
-            type="image/svg+xml"
-            className="h-8 w-auto block pointer-events-none transition-[filter] group-hover:invert"
-            aria-hidden
-          />
-        </button>
-      )}
 
       <ShopNav transparentOnTop />
 
@@ -408,22 +372,22 @@ export default function LandingPage() {
             opacity={marqueeOpacity}
           />
 
-          <div className="absolute inset-x-0 bottom-6 z-20 flex justify-center gap-24 sm:gap-32 md:gap-40 lg:gap-48">
+          <div className="absolute inset-x-0 bottom-6 z-20 flex justify-center gap-6 px-4 sm:gap-24 md:gap-32 lg:gap-40">
             <Link
               href="/bags"
-              className="font-sangbleu text-white text-base font-medium uppercase tracking-[0.2em] hover:font-bold hover:opacity-80 transition-opacity"
+              className="font-sangbleu text-white text-xs font-medium uppercase tracking-[0.15em] hover:font-bold hover:opacity-80 transition-opacity sm:tracking-[0.2em] sm:text-base shrink-0"
             >
               BAGS
             </Link>
             <Link
               href="/clothes"
-              className="font-sangbleu text-white text-base font-medium uppercase tracking-[0.2em] hover:font-bold hover:opacity-80 transition-opacity"
+              className="font-sangbleu text-white text-xs font-medium uppercase tracking-[0.15em] hover:font-bold hover:opacity-80 transition-opacity sm:tracking-[0.2em] sm:text-base shrink-0"
             >
               CLOTHES
             </Link>
             <Link
               href="/accessoires"
-              className="font-sangbleu text-white text-base font-medium uppercase tracking-[0.2em] hover:font-bold hover:opacity-80 transition-opacity"
+              className="font-sangbleu text-white text-xs font-medium uppercase tracking-[0.15em] hover:font-bold hover:opacity-80 transition-opacity sm:tracking-[0.2em] sm:text-base shrink-0"
             >
               ACCESSOIRES
             </Link>
