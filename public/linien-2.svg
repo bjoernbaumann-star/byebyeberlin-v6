@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 60">
+  <!-- Outline funnel variant: slightly different flare -->
+  <path fill="none" stroke="#1d1d1b" stroke-width="2" stroke-linecap="square"
+    d="M 0 28 L 260 28 L 400 8 L 400 52 L 260 32 L 0 32 Z"/>
+</svg>

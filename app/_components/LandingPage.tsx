@@ -12,6 +12,93 @@ function cn(...parts: Array<string | false | undefined | null>) {
   return parts.filter(Boolean).join(" ");
 }
 
+function XSlider({
+  value,
+  onChange,
+  min,
+  max,
+  trackSrc,
+}: {
+  value: number;
+  onChange: (v: number) => void;
+  min: number;
+  max: number;
+  trackSrc: string;
+}) {
+  const trackRef = React.useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = React.useState(false);
+
+  const updateFromEvent = React.useCallback(
+    (e: MouseEvent | TouchEvent) => {
+      const rect = trackRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const clientX = "touches" in e ? e.touches[0]?.clientX : e.clientX;
+      if (clientX == null) return;
+      const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      const val = min + pct * (max - min);
+      onChange(val);
+    },
+    [min, max, onChange],
+  );
+
+  React.useEffect(() => {
+    if (!isDragging) return;
+    const onMove = (e: MouseEvent | TouchEvent) => {
+      if ("touches" in e) e.preventDefault();
+      updateFromEvent(e);
+    };
+    const onEnd = () => setIsDragging(false);
+    window.addEventListener("mousemove", onMove as (e: MouseEvent) => void);
+    window.addEventListener("mouseup", onEnd);
+    window.addEventListener("touchmove", onMove as (e: TouchEvent) => void, { passive: false });
+    window.addEventListener("touchend", onEnd);
+    return () => {
+      window.removeEventListener("mousemove", onMove as (e: MouseEvent) => void);
+      window.removeEventListener("mouseup", onEnd);
+      window.removeEventListener("touchmove", onMove as (e: TouchEvent) => void);
+      window.removeEventListener("touchend", onEnd);
+    };
+  }, [isDragging, updateFromEvent]);
+
+  const pct = (value - min) / (max - min);
+
+  return (
+    <div
+      ref={trackRef}
+      className="relative flex h-14 w-full items-center"
+      onMouseDown={(e) => {
+        e.preventDefault();
+        setIsDragging(true);
+        updateFromEvent(e.nativeEvent);
+      }}
+      onTouchStart={(e) => {
+        setIsDragging(true);
+        updateFromEvent(e.nativeEvent);
+      }}
+    >
+      <div className="absolute inset-x-0 flex h-14 items-center overflow-hidden">
+        <img
+          src={trackSrc}
+          alt=""
+          className="h-full w-full object-contain object-center"
+        />
+      </div>
+      <div
+        className="absolute top-1/2 flex -translate-y-1/2 -translate-x-1/2 cursor-grab items-center justify-center active:cursor-grabbing"
+        style={{ left: `${pct * 100}%` }}
+      >
+        <img
+          src="/x.svg"
+          alt=""
+          width={56}
+          height={56}
+          className="h-14 w-14 min-h-14 min-w-14 shrink-0 touch-none select-none animate-spin motion-reduce:animate-none"
+        />
+      </div>
+    </div>
+  );
+}
+
 function HeroMarquee({
   text,
   reducedMotion,
@@ -197,21 +284,6 @@ export default function LandingPage() {
     return () => cancelAnimationFrame(raf);
   }, [isLeoExpanded]);
 
-  React.useEffect(() => {
-    if (!isLeoExpanded) return;
-    const handleOrientation = (e: DeviceOrientationEvent) => {
-      const gamma = e.gamma ?? 0;
-      const intensity = Math.min(1, Math.abs(gamma) / 90);
-      setWiggleIntensity(intensity);
-      const beta = e.beta ?? 0;
-      const betaForward = Math.max(0, Math.min(90, beta));
-      const doublings = Math.min(6, Math.floor((betaForward / 90) * 6));
-      const count = Math.min(64, Math.pow(2, doublings));
-      setLeoCount(count);
-    };
-    window.addEventListener("deviceorientation", handleOrientation);
-    return () => window.removeEventListener("deviceorientation", handleOrientation);
-  }, [isLeoExpanded]);
   const reducedMotion = useReducedMotion();
   const { scrollY } = useScroll();
 
@@ -275,14 +347,11 @@ export default function LandingPage() {
           tabIndex={0}
           onClick={() => setIsLeoExpanded(false)}
           onKeyDown={(e) => e.key === "Escape" && setIsLeoExpanded(false)}
-          aria-label="Schließen"
+          aria-label="Close"
         >
           {(() => {
-            const h = typeof window !== "undefined" ? window.innerHeight : 800;
             const w = typeof window !== "undefined" ? window.innerWidth : 1200;
-            const yRatio = Math.max(0, Math.min(1, 1 - cursorPos.y / h));
             const xRatio = Math.max(0, Math.min(1, 1 - cursorPos.x / w));
-            const size = 24 + yRatio * 56;
             const rotDeg = (tick * 0.15 * xRatio) % 360;
             return (
               <div
@@ -296,8 +365,9 @@ export default function LandingPage() {
                 <img
                   src="/x.svg"
                   alt=""
-                  style={{ width: size, height: "auto" }}
-                  className="block"
+                  width={56}
+                  height={56}
+                  className="h-14 w-14 block"
                   aria-hidden
                 />
               </div>
@@ -461,32 +531,66 @@ export default function LandingPage() {
       </main>
 
       {showDoNotPress && (
-        <button
-          type="button"
-          onClick={async () => {
-            const needsPermission =
-              typeof DeviceOrientationEvent !== "undefined" &&
-              typeof (DeviceOrientationEvent as any).requestPermission === "function";
-            if (needsPermission) {
-              try {
-                await (DeviceOrientationEvent as any).requestPermission();
-              } catch {
-                // Nutzer hat abgelehnt oder Fehler – Overlay trotzdem öffnen
-              }
-            }
-            setIsChaos((c) => !c);
-            setIsLeoExpanded(true);
-          }}
-          className="group fixed bottom-4 right-4 z-[150] p-2 transition-colors hover:bg-black"
-          aria-label="Do not press"
-        >
-          <object
-            data="/donotpress.svg"
-            type="image/svg+xml"
-            className="h-8 w-auto block pointer-events-none transition-[filter] group-hover:invert"
-            aria-hidden
-          />
-        </button>
+        <>
+          <button
+            type="button"
+            onClick={() => {
+              setIsChaos((c) => !c);
+              setIsLeoExpanded(true);
+            }}
+            className="group fixed bottom-4 right-4 z-[150] bg-black p-2 transition-colors"
+            aria-label="Do not press"
+          >
+            <object
+              data="/donotpress.svg"
+              type="image/svg+xml"
+              className="h-8 w-auto block pointer-events-none brightness-0 invert"
+              aria-hidden
+            />
+          </button>
+
+          {isLeoExpanded && (
+            <div
+              className="fixed bottom-20 right-4 left-4 z-[220] block md:hidden p-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => setIsLeoExpanded(false)}
+                className="absolute right-2 top-2 p-1 hover:opacity-70"
+                aria-label="Close"
+              >
+                <img
+                  src="/x.svg"
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="h-5 w-5 brightness-0 invert"
+                />
+              </button>
+              <div className="space-y-4">
+                <div>
+                  <XSlider
+                    trackSrc="/regler-1.svg"
+                    min={0}
+                    max={100}
+                    value={Math.round(wiggleIntensity * 100)}
+                    onChange={(v) => setWiggleIntensity(v / 100)}
+                  />
+                </div>
+                <div>
+                  <XSlider
+                    trackSrc="/regler-2.svg"
+                    min={0}
+                    max={6}
+                    value={Math.min(6, Math.max(0, Math.log2(leoCount) || 0))}
+                    onChange={(v) => setLeoCount(Math.min(64, Math.max(1, Math.round(Math.pow(2, v)))))}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       <ShopFooter />

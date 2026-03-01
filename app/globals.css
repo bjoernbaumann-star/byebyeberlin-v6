@@ -352,3 +352,31 @@ video::-webkit-media-controls-overlay-play-button {
   }
 }
 
+/* Leo control sliders – minimal black/white */
+.leo-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  width: 100%;
+  background: #e5e5e5;
+  border-radius: 0;
+}
+.leo-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border: 1px solid #171717;
+  border-radius: 0;
+  cursor: pointer;
+}
+.leo-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: white;
+  border: 1px solid #171717;
+  border-radius: 0;
+  cursor: pointer;
+}
+

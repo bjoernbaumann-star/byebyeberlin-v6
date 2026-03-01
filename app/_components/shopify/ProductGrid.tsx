@@ -271,7 +271,7 @@ function ProductCard({
           "group/btn relative mt-2 flex w-full items-center justify-center rounded-none border border-black py-1 transition-[filter,background-color] duration-200 disabled:opacity-50",
           justAdded ? "bg-neutral-950" : "bg-transparent md:hover:bg-neutral-950",
         )}
-        aria-label={justAdded ? "In den Warenkorb gelegt" : "In den Warenkorb"}
+        aria-label={justAdded ? "Added to cart" : "Add to cart"}
       >
         <ButtonCta
           className="scale-[0.7] transition-[filter] duration-200 invert md:group-hover/btn:invert-0"
@@ -303,9 +303,9 @@ export default function ProductGrid({
   if (!products.length) {
     return (
       <div className="rounded-2xl border border-black/10 bg-white p-12 text-center">
-        <p className="text-neutral-600">Keine Produkte gefunden</p>
+        <p className="text-neutral-600">No products found</p>
         <p className="mt-2 text-sm text-neutral-500">
-          Der Shop ist vorübergehend nicht verfügbar.
+          The shop is temporarily unavailable.
         </p>
       </div>
     );

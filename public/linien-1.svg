@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 60">
+  <!-- Outline funnel: two parallel lines, flaring right -->
+  <path fill="none" stroke="#1d1d1b" stroke-width="2" stroke-linecap="square"
+    d="M 0 25 L 280 25 L 400 5 L 400 55 L 280 35 L 0 35 Z"/>
+</svg>

@@ -13,15 +13,15 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   try {
     const { handle } = await params;
-    if (!handle) return { title: "Produkt nicht gefunden" };
+    if (!handle) return { title: "Product not found" };
     const product = await getProductByHandle(handle);
-    if (!product) return { title: "Produkt nicht gefunden" };
+    if (!product) return { title: "Product not found" };
     return {
       title: `${product.title ?? "Produkt"} | BYE BYE BERLIN`,
       description: product.description?.replace(/<[^>]*>/g, "").slice(0, 160) ?? undefined,
     };
   } catch {
-    return { title: "Produkt nicht gefunden" };
+    return { title: "Product not found" };
   }
 }
 
@@ -52,7 +52,7 @@ export default async function ProductPage({
   if (!product) {
     return (
       <div className="flex min-h-dvh items-center justify-center bg-white text-neutral-950">
-        <p className="font-sangbleu text-lg">Produkt nicht gefunden</p>
+        <p className="font-sangbleu text-lg">Product not found</p>
       </div>
     );
   }
@@ -121,7 +121,7 @@ export default async function ProductPage({
 
               <ProductDetailAddToCart
                 product={product}
-                priceStr={priceStr ?? "Preis auf Anfrage"}
+                priceStr={priceStr ?? "Price on request"}
                 className="mt-4"
               />
 

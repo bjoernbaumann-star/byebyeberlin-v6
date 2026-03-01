@@ -535,7 +535,7 @@ export default function ShopNav({ transparentOnTop = false }: { transparentOnTop
               type="button"
               onClick={() => router.back()}
               className="absolute left-2 z-20 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-inherit hover:opacity-70 sm:left-4 sm:h-10 sm:w-10 lg:left-6"
-              aria-label="Zurück"
+              aria-label="Back"
             >
               <IconBack className="h-[1.25rem] w-[1.25rem] sm:h-[1.4rem] sm:w-[1.4rem]" />
             </button>
