@@ -318,6 +318,34 @@ video::-webkit-media-controls-overlay-play-button {
   transform-style: preserve-3d;
 }
 
+/* Chaos mode Leo jitter – GPU-accelerated, no React re-renders */
+@keyframes leo-jitter {
+  0%, 100% {
+    transform: translate(-50%, -50%) translate3d(0, 0, 0);
+  }
+  25% {
+    transform: translate(-50%, -50%) translate3d(var(--wiggle-range, 0), 0, 0);
+  }
+  50% {
+    transform: translate(-50%, -50%) translate3d(0, var(--wiggle-range, 0), 0);
+  }
+  75% {
+    transform: translate(-50%, -50%) translate3d(calc(-1 * var(--wiggle-range, 0)), 0, 0);
+  }
+}
+
+.leo-jitter {
+  will-change: transform;
+  animation: leo-jitter 2s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leo-jitter {
+    animation: none;
+  }
+}
+
 /* Hamburger menu – wellen animation */
 @keyframes menu-wave {
   0%, 100% {

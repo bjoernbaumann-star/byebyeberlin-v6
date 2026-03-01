@@ -252,22 +252,39 @@ function GapMarquee({
   );
 }
 
+const MOBILE_MAX_DOUBLINGS = 4;
+const DESKTOP_MAX_DOUBLINGS = 6;
+
 export default function LandingPage() {
   const [isChaos, setIsChaos] = React.useState(false);
   const [isLeoExpanded, setIsLeoExpanded] = React.useState(false);
   const [wiggleIntensity, setWiggleIntensity] = React.useState(0);
   const [leoCount, setLeoCount] = React.useState(1);
-  const [tick, setTick] = React.useState(0);
   const [cursorPos, setCursorPos] = React.useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = React.useState(false);
+  const cursorRef = React.useRef<HTMLDivElement>(null);
+  const cursorPosRef = React.useRef(cursorPos);
   const leoObjectRef = React.useRef<HTMLObjectElement>(null);
   const leoReverseObjectRef = React.useRef<HTMLObjectElement>(null);
+  cursorPosRef.current = cursorPos;
+
+  React.useEffect(() => {
+    const m = window.matchMedia("(max-width: 767px)");
+    setIsMobile(m.matches);
+    const handler = () => setIsMobile(m.matches);
+    m.addEventListener("change", handler);
+    return () => m.removeEventListener("change", handler);
+  }, []);
 
   React.useEffect(() => {
     const onMove = (e: MouseEvent) => {
       setCursorPos({ x: e.clientX, y: e.clientY });
       setWiggleIntensity(e.clientX / window.innerWidth);
       const yRatio = Math.max(0, Math.min(1, 1 - e.clientY / window.innerHeight));
-      const doublings = Math.min(6, Math.floor(yRatio * 6));
+      const maxDoublings = window.matchMedia("(max-width: 767px)").matches
+        ? MOBILE_MAX_DOUBLINGS
+        : DESKTOP_MAX_DOUBLINGS;
+      const doublings = Math.min(maxDoublings, Math.floor(yRatio * maxDoublings));
       setLeoCount(Math.pow(2, doublings));
     };
     window.addEventListener("mousemove", onMove);
@@ -275,10 +292,16 @@ export default function LandingPage() {
   }, []);
 
   React.useEffect(() => {
-    if (!isLeoExpanded) return;
+    if (!isLeoExpanded || !cursorRef.current) return;
     let raf = 0;
+    const w = typeof window !== "undefined" ? window.innerWidth : 1200;
     const loop = () => {
-      setTick(Date.now());
+      const { x } = cursorPosRef.current;
+      const xRatio = Math.max(0, Math.min(1, 1 - x / w));
+      const rotDeg = (Date.now() * 0.15 * xRatio) % 360;
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate(-50%, -50%) rotate(${rotDeg}deg)`;
+      }
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
@@ -350,52 +373,46 @@ export default function LandingPage() {
           onKeyDown={(e) => e.key === "Escape" && setIsLeoExpanded(false)}
           aria-label="Close"
         >
-          {(() => {
-            const w = typeof window !== "undefined" ? window.innerWidth : 1200;
-            const xRatio = Math.max(0, Math.min(1, 1 - cursorPos.x / w));
-            const rotDeg = (tick * 0.15 * xRatio) % 360;
-            return (
-              <div
-                className="pointer-events-none fixed z-[210] hidden md:block"
-                style={{
-                  left: cursorPos.x,
-                  top: cursorPos.y,
-                  transform: `translate(-50%, -50%) rotate(${rotDeg}deg)`,
-                }}
-              >
-                <img
-                  src="/x.svg"
-                  alt=""
-                  width={56}
-                  height={56}
-                  className="h-14 w-14 block"
-                  aria-hidden
-                />
-              </div>
-            );
-          })()}
+          <div
+            ref={cursorRef}
+            className="pointer-events-none fixed z-[210] hidden md:block"
+            style={{
+              left: cursorPos.x,
+              top: cursorPos.y,
+            }}
+          >
+            <img
+              src="/x.svg"
+              alt=""
+              width={56}
+              height={56}
+              className="h-14 w-14 block"
+              aria-hidden
+            />
+          </div>
           <div
             className="absolute inset-0 overflow-visible animate-spin-y transition-all duration-300"
             onClick={(e) => e.stopPropagation()}
+            style={{ "--wiggle-range": `${wiggleIntensity * 5}px` } as React.CSSProperties}
           >
-            {Array.from({ length: leoCount }).map((_, i) => {
-              const cols = Math.max(1, Math.ceil(Math.sqrt(leoCount)));
-              const rows = Math.ceil(leoCount / cols);
+            {Array.from({
+              length: isMobile ? Math.min(leoCount, 16) : leoCount,
+            }).map((_, i) => {
+              const count = isMobile ? Math.min(leoCount, 16) : leoCount;
+              const cols = Math.max(1, Math.ceil(Math.sqrt(count)));
+              const rows = Math.ceil(count / cols);
               const col = i % cols;
               const row = Math.floor(i / cols);
               const left = cols > 1 ? (col / (cols - 1)) * 100 : 50;
               const top = rows > 1 ? (row / (rows - 1)) * 100 : 50;
-              const jitterRange = wiggleIntensity * 5;
-              const jitterX = Math.sin(tick * 0.8 + i * 2.1) * jitterRange;
-              const jitterY = Math.cos(tick * 0.7 + i * 1.7) * jitterRange;
               return (
                 <div
                   key={i}
-                  className="absolute w-[180vw] h-auto flex items-center justify-center"
+                  className="leo-jitter absolute w-[180vw] h-auto flex items-center justify-center"
                   style={{
                     left: `${left}%`,
                     top: `${top}%`,
-                    transform: `translate(-50%, -50%) translate(${jitterX}px, ${jitterY}px)`,
+                    animationDelay: `-${i * 0.5}s`,
                   }}
                 >
                   <object
@@ -583,9 +600,17 @@ export default function LandingPage() {
                   <XSlider
                     trackSrc="/regler-2.svg"
                     min={0}
-                    max={6}
-                    value={Math.min(6, Math.max(0, Math.log2(leoCount) || 0))}
-                    onChange={(v) => setLeoCount(Math.min(64, Math.max(1, Math.round(Math.pow(2, v)))))}
+                    max={isMobile ? MOBILE_MAX_DOUBLINGS : DESKTOP_MAX_DOUBLINGS}
+                    value={Math.min(
+                      isMobile ? MOBILE_MAX_DOUBLINGS : DESKTOP_MAX_DOUBLINGS,
+                      Math.max(0, Math.log2(leoCount) || 0),
+                    )}
+                    onChange={(v) => {
+                      const maxVal = isMobile
+                        ? Math.pow(2, MOBILE_MAX_DOUBLINGS)
+                        : Math.pow(2, DESKTOP_MAX_DOUBLINGS);
+                      setLeoCount(Math.min(maxVal, Math.max(1, Math.round(Math.pow(2, v)))));
+                    }}
                   />
                 </div>
               </div>
