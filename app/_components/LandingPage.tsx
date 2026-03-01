@@ -217,6 +217,15 @@ export default function LandingPage() {
 
   const marqueeOpacity = useTransform(scrollY, [0, 600], [1, 0]) as any;
 
+  const [showDoNotPress, setShowDoNotPress] = React.useState(false);
+  React.useEffect(() => {
+    const check = () =>
+      setShowDoNotPress(window.scrollY > 0.7 * window.innerHeight);
+    check();
+    window.addEventListener("scroll", check, { passive: true });
+    return () => window.removeEventListener("scroll", check);
+  }, []);
+
   const [products, setProducts] = React.useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -450,6 +459,35 @@ export default function LandingPage() {
           </div>
         </section>
       </main>
+
+      {showDoNotPress && (
+        <button
+          type="button"
+          onClick={async () => {
+            const needsPermission =
+              typeof DeviceOrientationEvent !== "undefined" &&
+              typeof (DeviceOrientationEvent as any).requestPermission === "function";
+            if (needsPermission) {
+              try {
+                await (DeviceOrientationEvent as any).requestPermission();
+              } catch {
+                // Nutzer hat abgelehnt oder Fehler – Overlay trotzdem öffnen
+              }
+            }
+            setIsChaos((c) => !c);
+            setIsLeoExpanded(true);
+          }}
+          className="group fixed bottom-4 right-4 z-[150] p-2 transition-colors hover:bg-black"
+          aria-label="Do not press"
+        >
+          <object
+            data="/donotpress.svg"
+            type="image/svg+xml"
+            className="h-8 w-auto block pointer-events-none transition-[filter] group-hover:invert"
+            aria-hidden
+          />
+        </button>
+      )}
 
       <ShopFooter />
     </div>
