@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import type { ShopifyProduct } from "../../lib/shopify-types";
 import ShopNav from "./ShopNav";
@@ -289,6 +290,7 @@ export default function LandingPage() {
 
   const marqueeOpacity = useTransform(scrollY, [0, 600], [1, 0]) as any;
 
+  const pathname = usePathname();
   const [showDoNotPress, setShowDoNotPress] = React.useState(false);
   React.useEffect(() => {
     const check = () =>
@@ -341,8 +343,7 @@ export default function LandingPage() {
 
       {isLeoExpanded && (
         <div
-          className="fixed inset-0 z-[200] flex items-center justify-center bg-transparent [perspective:1200px] [transform-style:preserve-3d]"
-          style={{ cursor: "none" }}
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-transparent [perspective:1200px] [transform-style:preserve-3d] md:cursor-none"
           role="button"
           tabIndex={0}
           onClick={() => setIsLeoExpanded(false)}
@@ -355,7 +356,7 @@ export default function LandingPage() {
             const rotDeg = (tick * 0.15 * xRatio) % 360;
             return (
               <div
-                className="pointer-events-none fixed z-[210]"
+                className="pointer-events-none fixed z-[210] hidden md:block"
                 style={{
                   left: cursorPos.x,
                   top: cursorPos.y,
@@ -530,7 +531,7 @@ export default function LandingPage() {
         </section>
       </main>
 
-      {showDoNotPress && (
+      {pathname === "/" && showDoNotPress && (
         <>
           <button
             type="button"

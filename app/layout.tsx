@@ -27,6 +27,10 @@ export const metadata: Metadata = {
   },
   description:
     "Luxury Essentials & Statements by BYE BYE BERLIN. Editorial, minimal, high-quality.",
+  icons: {
+    icon: "/x.svg",
+    apple: "/x.svg",
+  },
 };
 
 export default function RootLayout({
