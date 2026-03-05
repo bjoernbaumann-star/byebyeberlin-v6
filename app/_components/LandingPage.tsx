@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { throttle, debounce } from "../_utils/throttle";
 import type { ShopifyProduct } from "../../lib/shopify-types";
 import ShopNav from "./ShopNav";
 import ShopFooter from "./ShopFooter";
@@ -29,6 +30,12 @@ function XSlider({
   const trackRef = React.useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = React.useState(false);
 
+  // Throttled update to prevent excessive onChange calls
+  const throttledOnChange = React.useCallback(
+    throttle((val: number) => onChange(val), 16), // 60fps
+    [onChange]
+  );
+
   const updateFromEvent = React.useCallback(
     (e: MouseEvent | TouchEvent) => {
       const rect = trackRef.current?.getBoundingClientRect();
@@ -37,9 +44,9 @@ function XSlider({
       if (clientX == null) return;
       const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
       const val = min + pct * (max - min);
-      onChange(val);
+      throttledOnChange(val);
     },
-    [min, max, onChange],
+    [min, max, throttledOnChange],
   );
 
   React.useEffect(() => {
@@ -112,26 +119,11 @@ function HeroMarquee({
   opacity: React.CSSProperties["opacity"];
 }) {
   return (
-    <motion.div
+    <div
       className="pointer-events-none absolute inset-x-0 top-1/2 z-10 -translate-y-1/2 overflow-hidden"
       style={{ opacity }}
     >
-      <motion.div
-        className="flex w-max shrink-0 items-center gap-[5vw]"
-        style={{ willChange: "transform" }}
-        animate={reducedMotion ? undefined : { x: ["0%", "-50%"] }}
-        transition={
-          reducedMotion
-            ? undefined
-            : {
-                duration: 51,
-                ease: "linear",
-                repeat: Infinity,
-                repeatDelay: 0,
-                repeatType: "loop",
-              }
-        }
-      >
+      <div className={cn("flex w-max shrink-0 items-center gap-[5vw]", !reducedMotion && "hero-marquee")}>
         <div className="flex items-center gap-[5vw]">
           {Array.from({ length: 8 }).map((_, i) => (
             <span
@@ -154,8 +146,8 @@ function HeroMarquee({
             </span>
           ))}
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }
 
@@ -173,21 +165,13 @@ function GapMarquee({
       style={{ height: BX_STRIP_HEIGHT_PX }}
     >
       <div className="w-full overflow-hidden">
-        <motion.div
+        <div
           aria-hidden="true"
-          className="flex w-max shrink-0 items-center justify-center gap-10"
-          style={{ willChange: "transform", minHeight: BX_STRIP_HEIGHT_PX }}
-          animate={
-            reducedMotion
-              ? undefined
-              : { x: ["0%", "-50%"] }
-          }
-          transition={{
-            duration: 40,
-            ease: "linear",
-            repeat: Infinity,
-            repeatType: "loop",
-          }}
+          className={cn(
+            "flex w-max shrink-0 items-center justify-center gap-10",
+            !reducedMotion && "gap-marquee"
+          )}
+          style={{ minHeight: BX_STRIP_HEIGHT_PX }}
         >
           {[0, 1].map((repeat) => (
             <div key={repeat} className="flex items-center justify-center gap-10">
@@ -246,7 +230,7 @@ function GapMarquee({
               ))}
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </div>
   );
@@ -258,15 +242,20 @@ const DESKTOP_MAX_DOUBLINGS = 6;
 export default function LandingPage() {
   const [isChaos, setIsChaos] = React.useState(false);
   const [isLeoExpanded, setIsLeoExpanded] = React.useState(false);
-  const [wiggleIntensity, setWiggleIntensity] = React.useState(0);
-  const [leoCount, setLeoCount] = React.useState(1);
-  const [cursorPos, setCursorPos] = React.useState({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = React.useState(false);
+  
+  // Use refs instead of state for animation values to prevent re-renders
+  const wiggleIntensityRef = React.useRef(0);
+  const leoCountRef = React.useRef(1);
+  const cursorPosRef = React.useRef({ x: 0, y: 0 });
   const cursorRef = React.useRef<HTMLDivElement>(null);
-  const cursorPosRef = React.useRef(cursorPos);
+  const leoContainerRef = React.useRef<HTMLDivElement>(null);
   const leoObjectRef = React.useRef<HTMLObjectElement>(null);
   const leoReverseObjectRef = React.useRef<HTMLObjectElement>(null);
-  cursorPosRef.current = cursorPos;
+  
+  // State for UI updates that actually need re-renders
+  const [leoCount, setLeoCount] = React.useState(1);
+  const [wiggleIntensity, setWiggleIntensity] = React.useState(0);
 
   React.useEffect(() => {
     const m = window.matchMedia("(max-width: 767px)");
@@ -276,20 +265,39 @@ export default function LandingPage() {
     return () => m.removeEventListener("change", handler);
   }, []);
 
-  React.useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      setCursorPos({ x: e.clientX, y: e.clientY });
-      setWiggleIntensity(e.clientX / window.innerWidth);
+  // Throttled mousemove handler to prevent excessive re-renders
+  const throttledMouseMove = React.useCallback(
+    throttle((e: MouseEvent) => {
+      const newPos = { x: e.clientX, y: e.clientY };
+      const newIntensity = e.clientX / window.innerWidth;
       const yRatio = Math.max(0, Math.min(1, 1 - e.clientY / window.innerHeight));
       const maxDoublings = window.matchMedia("(max-width: 767px)").matches
         ? MOBILE_MAX_DOUBLINGS
         : DESKTOP_MAX_DOUBLINGS;
       const doublings = Math.min(maxDoublings, Math.floor(yRatio * maxDoublings));
-      setLeoCount(Math.pow(2, doublings));
-    };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, []);
+      const newLeoCount = Math.pow(2, doublings);
+      
+      // Update refs immediately for smooth animations
+      cursorPosRef.current = newPos;
+      wiggleIntensityRef.current = newIntensity;
+      leoCountRef.current = newLeoCount;
+      
+      // Update CSS variable for wiggle effect
+      if (leoContainerRef.current) {
+        leoContainerRef.current.style.setProperty('--wiggle-range', `${newIntensity * 5}px`);
+      }
+      
+      // Only update state for UI elements that need re-rendering (sliders)
+      setWiggleIntensity(newIntensity);
+      setLeoCount(newLeoCount);
+    }, 16), // 60fps throttling
+    []
+  );
+
+  React.useEffect(() => {
+    window.addEventListener("mousemove", throttledMouseMove);
+    return () => window.removeEventListener("mousemove", throttledMouseMove);
+  }, [throttledMouseMove]);
 
   React.useEffect(() => {
     if (!isLeoExpanded || !cursorRef.current) return;
@@ -301,6 +309,8 @@ export default function LandingPage() {
       const rotDeg = (Date.now() * 0.15 * xRatio) % 360;
       if (cursorRef.current) {
         cursorRef.current.style.transform = `translate(-50%, -50%) rotate(${rotDeg}deg)`;
+        cursorRef.current.style.left = `${cursorPosRef.current.x}px`;
+        cursorRef.current.style.top = `${cursorPosRef.current.y}px`;
       }
       raf = requestAnimationFrame(loop);
     };
@@ -315,13 +325,21 @@ export default function LandingPage() {
 
   const pathname = usePathname();
   const [showDoNotPress, setShowDoNotPress] = React.useState(false);
-  React.useEffect(() => {
-    const check = () =>
+  
+  // Debounced scroll handler to prevent excessive re-renders
+  const debouncedScroll = React.useCallback(
+    debounce(() => {
       setShowDoNotPress(window.scrollY > 0.7 * window.innerHeight);
+    }, 100),
+    []
+  );
+
+  React.useEffect(() => {
+    const check = () => setShowDoNotPress(window.scrollY > 0.7 * window.innerHeight);
     check();
-    window.addEventListener("scroll", check, { passive: true });
-    return () => window.removeEventListener("scroll", check);
-  }, []);
+    window.addEventListener("scroll", debouncedScroll, { passive: true });
+    return () => window.removeEventListener("scroll", debouncedScroll);
+  }, [debouncedScroll]);
 
   const [products, setProducts] = React.useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -376,10 +394,6 @@ export default function LandingPage() {
           <div
             ref={cursorRef}
             className="pointer-events-none fixed z-[210] hidden md:block"
-            style={{
-              left: cursorPos.x,
-              top: cursorPos.y,
-            }}
           >
             <img
               src="/x.svg"
@@ -391,6 +405,7 @@ export default function LandingPage() {
             />
           </div>
           <div
+            ref={leoContainerRef}
             className="absolute inset-0 overflow-visible animate-spin-y transition-all duration-300"
             onClick={(e) => e.stopPropagation()}
             style={{ "--wiggle-range": `${wiggleIntensity * 5}px` } as React.CSSProperties}
@@ -504,7 +519,7 @@ export default function LandingPage() {
               href="/accessoires"
               className="font-sangbleu text-white text-xs font-medium uppercase tracking-[0.15em] hover:font-bold hover:opacity-80 transition-opacity sm:tracking-[0.2em] sm:text-base shrink-0"
             >
-              ACCESSOIRES
+              THINGS
             </Link>
             <img
               src="/x.svg"

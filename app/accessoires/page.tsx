@@ -35,7 +35,7 @@ export default async function AccessoiresPage() {
             BYE BYE BERLIN
           </div>
           <h1 className="mt-3 font-sangbleu text-5xl font-bold tracking-tight">
-            ACCESSOIRES
+            THINGS
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-neutral-700">
             Scarves, belts and more — the finishing touches.

@@ -294,7 +294,7 @@ function MenuDrawer({
                       { label: "for him & here", href: "/clothes?filter=for-him-here" },
                     ],
                   },
-                  { label: "ACCESSOIRES", href: "/accessoires" },
+                  { label: "THINGS", href: "/accessoires" },
                   { label: "STORY", href: "/story", separatorBefore: true },
                   { label: "BOUNDARIES AND VALUES", href: "/boundaries-and-values" },
                 ].map((x) => (
