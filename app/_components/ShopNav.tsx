@@ -290,8 +290,8 @@ function MenuDrawer({
                     label: "CLOTHES",
                     href: "/clothes",
                     children: [
-                      { label: "for here & him", href: "/clothes?filter=for-here-him" },
-                      { label: "for him & here", href: "/clothes?filter=for-him-here" },
+                      { label: "for her & him", href: "/clothes?filter=for-her-him" },
+                      { label: "for him & her", href: "/clothes?filter=for-him-her" },
                     ],
                   },
                   { label: "THINGS", href: "/accessoires" },
